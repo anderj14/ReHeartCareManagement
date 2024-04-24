@@ -1,0 +1,109 @@
+[
+    {
+        "Id": 1,
+        "Date": "2023-08-20",
+        "Time": "14:30:00",
+        "Description": "Follow-up appointment",
+        "AppointmentStatusId": 1,
+        "PatientId": 1
+    },
+    {
+        "Id": 2,
+        "Date": "2023-08-22",
+        "Time": "10:00:00",
+        "Description": "Initial consultation",
+        "AppointmentStatusId": 1,
+        "PatientId": 2
+    },
+    {
+        "Id": 3,
+        "Date": "2023-08-29",
+        "Time": "10:00:00",
+        "Description": "Checkup appointment",
+        "AppointmentStatusId": 3,
+        "PatientId": 2
+    },
+    {
+        "Id": 4,
+        "Date": "2023-08-22T15:45:00",
+        "Time": "15:45:00",
+        "Description": "Consultation appointment",
+        "AppointmentStatusId": 2,
+        "PatientId": 1
+    },
+    {
+        "Id": 5,
+        "Date": "2023-08-20",
+        "Time": "14:30:00",
+        "Description": "Follow-up appointment",
+        "AppointmentStatusId": 3,
+        "PatientId": 1
+    },
+    {
+        "Id": 6,
+        "Date": "2023-08-21",
+        "Time": "10:00:00",
+        "Description": "Annual check-up",
+        "AppointmentStatusId": 1,
+        "PatientId": 2
+    },
+    {
+        "Id": 7,
+        "Date": "2023-08-22",
+        "Time": "15:45:00",
+        "Description": "Consultation",
+        "AppointmentStatusId": 3,
+        "PatientId": 3
+    },
+    {
+        "Id": 8,
+        "Date": "2023-08-23",
+        "Time": "09:30:00",
+        "Description": "Follow-up appointment",
+        "AppointmentStatusId": 3,
+        "PatientId": 4
+    },
+    {
+        "Id": 9,
+        "Date": "2023-08-24",
+        "Time": "16:15:00",
+        "Description": "Routine check-up",
+        "AppointmentStatusId": 3,
+        "PatientId": 5
+    },
+    {
+        "Id": 10,
+        "Date": "2023-08-25",
+        "Time": "11:45:00",
+        "Description": "Follow-up appointment",
+        "AppointmentStatusId": 2,
+        "PatientId": 6
+    },
+    {
+        "Id": 13,
+        "Date": "2023-08-28",
+        "Time": "15:45:00",
+        "Description": "Follow-up appointment",
+        "AppointmentStatusId": 1,
+        "PatientId": 3
+    },
+    {
+        "Id": 14,
+        "Date": "2023-08-29",
+        "Time": "09:30:00",
+        "Description": "Annual check-up",
+        "AppointmentStatusId": 1,
+
+        "PatientId": 4
+    },
+    {
+        "Id": 15,
+        "Date": "2023-08-30",
+        "Time": "16:15:00",
+        "Description": "Follow-up appointment",
+        "AppointmentStatusId": 1,
+        "PatientId": 5
+    }
+    
+    
+]

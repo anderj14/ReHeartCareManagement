@@ -1,0 +1,81 @@
+[
+    {
+        "Id": 1,
+        "Title": "Patient review",
+        "Content": "Perform daily review of patients in room 301.",
+        "Date": "2023-12-18",
+        "Time": "14:30:00",
+        "NoteStatusId": 2
+    },
+    {
+        "Id": 2,
+        "Title": "Call with the specialist",
+        "Content": "Call the cardiologist to discuss Patient Smith's case.",
+        "Date": "2023-12-18",
+        "Time": "10:00:00",
+        "NoteStatusId": 1
+    },
+    {
+        "Id": 3,
+        "Title": "Preparations for surgery",
+        "Content": "Making sure everything is ready for bypass surgery tomorrow.",
+        "Date": "2023-12-19",
+        "Time": "10:00:00",
+        "NoteStatusId": 2
+    },
+    {
+        "Id": 4,
+        "Title": "Team meeting",
+        "Content": "Conduct the surgical team meeting at 11:00 AM.",
+        "Date": "2023-12-19",
+        "Time": "15:45:00",
+        "NoteStatusId": 3
+    },
+    {
+        "Id": 5,
+        "Title": "Postoperative follow-up",
+        "Content": "Perform postoperative follow-up with patient Johnson.",
+        "Date": "2023-12-20",
+        "Time": "14:30:00",
+        "NoteStatusId": 2
+    },
+    {
+        "Id": 6,
+        "Title": "Staff training",
+        "Content": "Deliver training on new protocols at 3:00 p.m.",
+        "Date": "2023-12-20",
+        "Time": "10:00:00",
+        "NoteStatusId": 1
+    },
+    {
+        "Id": 7,
+        "Title": "Consult with the head of surgery",
+        "Content": "Schedule consultation with the head of surgery for next week.",
+        "Date": "2023-12-21",
+        "NoteStatusId": 2
+    },
+    {
+        "Id": 8,
+        "Title": "Software upDate",
+        "Content": "Coordinate software upDate in the operating room.",
+        "Date": "2023-12-21",
+        "Time": "15:45:00",
+        "NoteStatusId": 1
+    },
+    {
+        "Id": 9,
+        "Title": "Research Review",
+        "Content": "Review the latest medical research in cardiology.",
+        "Date": "2023-12-22",
+        "Time": "15:45:00",
+        "NoteStatusId": 2
+    },
+    {
+        "Id": 10,
+        "Title": "Preparations for conference",
+        "Content": "Prepare presentation for next month's medical conference.",
+        "Date": "2023-12-22",
+        "Time": "16:15:00",
+        "NoteStatusId": 3
+    }
+]

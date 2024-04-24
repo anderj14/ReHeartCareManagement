@@ -1,0 +1,14 @@
+[
+    {
+        "Id": 1,
+        "AppointmentStatusName": "Pending"
+    },
+    {
+        "Id": 2,
+        "AppointmentStatusName": "Canceled"
+    },
+    {
+        "Id": 3,
+        "AppointmentStatusName": "Realiced"
+    }
+]

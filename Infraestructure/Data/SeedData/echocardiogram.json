@@ -1,0 +1,86 @@
+[
+    {
+        "Id": 1,
+        "Date": "2023-08-25",
+        "CardiacDimensions": "Normal",
+        "EjectionFraction": "60%",
+        "ValveFunction": "Normal",
+        "VelocitiesBloodFlows": "Within normal limits",
+        "MovementCardiacWalls": "Good",
+        "PulmonaryArterialPressure": "25 mmHg",
+        "BloodFlow": "Normal",
+        "PatientId": 1
+    },
+    {
+        "Id": 2,
+        "Date": "2023-08-27",
+        "CardiacDimensions": "Mildly Enlarged",
+        "EjectionFraction": "50%",
+        "ValveFunction": "Mitral Valve Regurgitation",
+        "VelocitiesBloodFlows": "Reduced",
+        "MovementCardiacWalls": "Hypokinesis",
+        "PulmonaryArterialPressure": "30 mmHg",
+        "BloodFlow": "Stenosis",
+        "PatientId": 2
+    },
+    {
+        "Id": 3,
+        "Date": "2023-08-21",
+        "CardiacDimensions": "Mild dilation",
+        "EjectionFraction": "45%",
+        "ValveFunction": "Mild regurgitation",
+        "VelocitiesBloodFlows": "Reduced",
+        "MovementCardiacWalls": "Hypokinesia",
+        "PulmonaryArterialPressure": "30 mmHg",
+        "BloodFlow": "Impaired",
+        "PatientId": 2
+    },
+    {
+        "Id": 4,
+        "Date": "2023-09-05",
+        "CardiacDimensions": "Mild hypertrophy",
+        "EjectionFraction": "55%",
+        "ValveFunction": "Mild regurgitation",
+        "VelocitiesBloodFlows": "Slightly elevated",
+        "MovementCardiacWalls": "Reduced",
+        "PulmonaryArterialPressure": "30 mmHg",
+        "BloodFlow": "Reduced",
+        "PatientId": 3
+    },
+    {
+        "Id": 5,
+        "Date": "2023-09-10",
+        "CardiacDimensions": "Normal",
+        "EjectionFraction": "60%",
+        "ValveFunction": "Normal",
+        "VelocitiesBloodFlows": "Within normal limits",
+        "MovementCardiacWalls": "Good",
+        "PulmonaryArterialPressure": "25 mmHg",
+        "BloodFlow": "Normal",
+        "PatientId": 4
+    },
+    {
+        "Id": 6,
+        "Date": "2023-09-15",
+        "CardiacDimensions": "Moderate hypertrophy",
+        "EjectionFraction": "50%",
+        "ValveFunction": "Mild regurgitation",
+        "VelocitiesBloodFlows": "Slightly elevated",
+        "MovementCardiacWalls": "Reduced",
+        "PulmonaryArterialPressure": "32 mmHg",
+        "BloodFlow": "Reduced",
+        "PatientId": 5
+    },
+    {
+        "Id": 7,
+        "Date": "2023-09-20",
+        "CardiacDimensions": "Normal",
+        "EjectionFraction": "65%",
+        "ValveFunction": "Normal",
+        "VelocitiesBloodFlows": "Within normal limits",
+        "MovementCardiacWalls": "Good",
+        "PulmonaryArterialPressure": "28 mmHg",
+        "BloodFlow": "Normal",
+        "PatientId": 6
+    }
+]

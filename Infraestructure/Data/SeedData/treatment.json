@@ -1,0 +1,68 @@
+[
+    {
+        "Id": 1,
+        "Date": "2023-08-05",
+        "Medication": "Lisinopril",
+        "Dosage": "10 mg once daily",
+        "Instructions": "Take with food",
+        "OtherTreatments": "Lifestyle changes",
+        "SideEffects": "Dry cough",
+        "TreatmentMonitoring": "Blood pressure checks",
+        "PatientId": 3
+    },
+    {
+        "Id": 2,
+        "Date": "2023-08-25",
+        "Medication": "Metformin",
+        "Dosage": "1000 mg twice daily",
+        "Instructions": "Take with meals",
+        "OtherTreatments": "Regular exercise",
+        "SideEffects": "Nausea",
+        "TreatmentMonitoring": "Blood glucose levels",
+        "PatientId": 2
+    },
+    {
+        "Id": 3,
+        "Date": "2023-08-20",
+        "Medication": "Lisinopril",
+        "Dosage": "10 mg daily",
+        "Instructions": "Take with food",
+        "OtherTreatments": "Diet and exercise",
+        "SideEffects": "Cough",
+        "TreatmentMonitoring": "Blood pressure checks",
+        "PatientId": 1
+    },
+    {
+        "Id": 4,
+        "Date": "2022-06-10",
+        "Medication": "Aspirin",
+        "Dosage": "81 mg once daily",
+        "Instructions": "Take in the morning",
+        "OtherTreatments": "Dietary changes",
+        "SideEffects": "Upset stomach",
+        "TreatmentMonitoring": "Regular check-ups",
+        "PatientId": 4
+    },
+    {
+        "Id": 5,
+        "Date": "2022-07-05",
+        "Medication": "Metformin",
+        "Dosage": "1000 mg twice daily",
+        "Instructions": "Take with meals",
+        "OtherTreatments": "Exercise routine",
+        "SideEffects": "Nausea",
+        "TreatmentMonitoring": "Blood sugar checks",
+        "PatientId": 6
+    },
+    {
+        "Id": 6,
+        "Date": "2022-07-20",
+        "Medication": "Atorvastatin",
+        "Dosage": "20 mg once daily",
+        "Instructions": "Take before bedtime",
+        "OtherTreatments": "Dietary changes",
+        "SideEffects": "Muscle pain",
+        "TreatmentMonitoring": "Cholesterol tests",
+        "PatientId": 5
+    }
+]

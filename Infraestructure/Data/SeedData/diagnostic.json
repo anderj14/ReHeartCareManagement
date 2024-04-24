@@ -1,0 +1,79 @@
+[
+  {
+    "Id": 1,
+    "Date": "2023-08-10",
+    "ConditionName": "Hypertension",
+    "Description": "Elevated blood pressure readings",
+    "ClassificationCondition": "Primary",
+    "Severity": "Moderate",
+    "RiskAssessment": "Increased risk of heart disease",
+    "Conclusions": "Lifestyle modifications recommended",
+    "PatientId": 1
+  },
+  {
+    "Id": 2,
+    "Date": "2023-08-18",
+    "ConditionName": "Type 2 Diabetes",
+    "Description": "Elevated blood glucose levels",
+    "ClassificationCondition": "Secondary",
+    "Severity": "Mild",
+    "RiskAssessment": "Increased risk of complications",
+    "Conclusions": "Medication and lifestyle changes recommended",
+    "PatientId": 4
+  },
+  {
+    "Id": 3,
+    "Date": "2023-08-20",
+    "ConditionName": "Hypertension",
+    "Description": "High blood pressure readings consistently",
+    "ClassificationCondition": "Chronic",
+    "Severity": "Moderate",
+    "RiskAssessment": "Increased risk of heart disease",
+    "Conclusions": "Recommend lifestyle changes and medication",
+    "PatientId": 3
+  },
+  {
+    "Id": 4,
+    "Date": "2023-08-21",
+    "ConditionName": "Diabetes",
+    "Description": "Elevated blood sugar levels",
+    "ClassificationCondition": "Chronic",
+    "Severity": "Severe",
+    "RiskAssessment": "Increased risk of cardiovascular complications",
+    "Conclusions": "Start insulin therapy and monitor regularly",
+    "PatientId": 2
+  },
+  {
+    "Id": 5,
+    "Date": "2023-08-18",
+    "ConditionName": "Asthma",
+    "Description": "Chronic respiratory condition",
+    "ClassificationCondition": "Mild persistent",
+    "Severity": "Mild",
+    "RiskAssessment": "Increased risk of respiratory infections",
+    "Conclusions": "Prescription for inhaler provided",
+    "PatientId": 2
+  },
+  {
+    "Id": 6,
+    "Date": "2023-08-20",
+    "ConditionName": "High Cholesterol",
+    "Description": "Elevated cholesterol levels",
+    "ClassificationCondition": "Hypercholesterolemia",
+    "Severity": "Moderate",
+    "RiskAssessment": "Increased risk of heart disease",
+    "Conclusions": "Prescription for cholesterol-lowering medication given",
+    "PatientId": 5
+  },
+  {
+    "Id": 7,
+    "Date": "2023-08-20",
+    "ConditionName": "High Cholesterol",
+    "Description": "Elevated cholesterol levels",
+    "ClassificationCondition": "Hypercholesterolemia",
+    "Severity": "Moderate",
+    "RiskAssessment": "Increased risk of heart disease",
+    "Conclusions": "Prescription for cholesterol-lowering medication given",
+    "PatientId": 6
+  }
+]

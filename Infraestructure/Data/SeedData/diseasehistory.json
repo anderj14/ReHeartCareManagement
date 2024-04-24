@@ -1,0 +1,44 @@
+[
+    {
+        "Id": 1,
+        "StartDate": "2022-05-10",
+        "Description": "Hypertension",
+        "Treatment": "Lifestyle modifications",
+        "PatientId": 1
+    },
+    {
+        "Id": 2,
+        "StartDate": "2021-07-15",
+        "Description": "Type 2 Diabetes",
+        "Treatment": "Medication, diet, and exercise",
+        "PatientId": 2
+    },
+    {
+        "Id": 3,
+        "StartDate": "2020-03-15",
+        "Description": "Chronic obstructive pulmonary disease",
+        "Treatment": "Bronchodilators and inhalers",
+        "PatientId": 1
+    },
+    {
+        "Id": 4,
+        "StartDate": "2022-06-15",
+        "Description": "Type 2 Diabetes",
+        "Treatment": "Insulin therapy",
+        "PatientId": 3
+    },
+    {
+        "Id": 5,
+        "StartDate": "2022-08-05",
+        "Description": "High Cholesterol",
+        "Treatment": "Statins medication",
+        "PatientId": 6
+    },
+    {
+        "Id": 6,
+        "StartDate": "2022-07-20",
+        "Description": "Asthma",
+        "Treatment": "Bronchodilator inhaler",
+        "PatientId": 5
+    }
+]

@@ -1,0 +1,14 @@
+[
+    {
+        "Id": 1,
+        "NoteStatusName": "Pending"
+    },
+    {
+        "Id": 2,
+        "NoteStatusName": "In Progress"
+    },
+    {
+        "Id": 3,
+        "NoteStatusName": "Completed"
+    }
+]
