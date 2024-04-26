@@ -5,6 +5,7 @@ namespace Core.Dtos
         public int Id { get; set; }
         public string SurgeryName { get; set; }
         public DateTime Date { get; set; }
+        public string Time { get; set; }
         public string ProcedureDescription { get; set; }
         public string Notes { get; set; }
         public string IsEmergency { get; set; }

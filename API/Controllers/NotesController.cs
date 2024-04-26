@@ -1,13 +1,9 @@
-using System.Security.Claims;
 using API.Extensions;
-using API.Helper;
 using AutoMapper;
 using Core.Dtos;
-using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Entities.Identity;
 using Core.Interfaces;
-using Core.Specification.NoteSpec;
 using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

@@ -25,7 +25,5 @@ namespace Core.Dtos
         public IReadOnlyList<DiagnosticDto> Diagnostics { get; set; }
         public IReadOnlyList<TreatmentDto> Treatments { get; set; }
         public IReadOnlyList<CardiologySurgeryDto> CardiologySurgeries { get; set; }
-
-
     }
 }

@@ -23,6 +23,9 @@ namespace Infraestructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("AppointmentStatusId")
                         .HasColumnType("INTEGER");
 
@@ -39,6 +42,8 @@ namespace Infraestructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("AppointmentStatusId");
 
@@ -195,6 +200,9 @@ namespace Infraestructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CardiacCondition")
                         .HasColumnType("TEXT");
 
@@ -241,6 +249,8 @@ namespace Infraestructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("PatientId");
 
@@ -579,6 +589,9 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CarnetIdentification")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -606,6 +619,8 @@ namespace Infraestructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Patients");
                 });
@@ -795,13 +810,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "503b40c8-4317-4b00-9364-8b6f134d8fdc",
+                            Id = "009e157f-d0d9-406c-8e0e-65a7d7d41377",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9219d6af-d470-4709-97d1-560e25262d06",
+                            Id = "6dd9c264-ccaa-44ad-ac01-6fd1cd9a4e8d",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -911,6 +926,11 @@ namespace Infraestructure.Data.Migrations
 
             modelBuilder.Entity("Core.Entities.Appointment", b =>
                 {
+                    b.HasOne("Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("Appointments")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Core.Entities.AppointmentStatus", "AppointmentStatus")
                         .WithMany()
                         .HasForeignKey("AppointmentStatusId")
@@ -922,6 +942,8 @@ namespace Infraestructure.Data.Migrations
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AppUser");
 
                     b.Navigation("AppointmentStatus");
 
@@ -952,11 +974,18 @@ namespace Infraestructure.Data.Migrations
 
             modelBuilder.Entity("Core.Entities.CardiologySurgery", b =>
                 {
+                    b.HasOne("Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("CardiologySurgeries")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Core.Entities.Patient", "Patient")
                         .WithMany("CardiologySurgery")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AppUser");
 
                     b.Navigation("Patient");
                 });
@@ -1032,6 +1061,16 @@ namespace Infraestructure.Data.Migrations
                     b.HasOne("Core.Entities.Identity.AppUser", "AppUser")
                         .WithMany("Notes")
                         .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("Core.Entities.Patient", b =>
+                {
+                    b.HasOne("Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("Patients")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AppUser");
                 });
@@ -1133,7 +1172,13 @@ namespace Infraestructure.Data.Migrations
 
             modelBuilder.Entity("Core.Entities.Identity.AppUser", b =>
                 {
+                    b.Navigation("Appointments");
+
+                    b.Navigation("CardiologySurgeries");
+
                     b.Navigation("Notes");
+
+                    b.Navigation("Patients");
                 });
 
             modelBuilder.Entity("Core.Entities.Patient", b =>

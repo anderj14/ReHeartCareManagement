@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Core.Entities;
 using Core.Entities.Identity;
 using Core.Interfaces;
@@ -39,6 +40,26 @@ namespace Infraestructure.Data.Repository
             return await ApplySpecification(spec).ToListAsync();
         }
 
+
+        public async Task<IReadOnlyList<T>> ListAllByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec)
+        {
+            var query = ApplySpecification(spec);
+
+            query = query.Where(filter);
+
+            return await query.ToListAsync();
+        }
+
+
+        public async Task<T> GetEntityByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec)
+        {
+            var query = ApplySpecification(spec);
+
+            query = query.Where(filter);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<int> CountAsync(ISpecification<T> spec)
         {
             return await ApplySpecification(spec).CountAsync();
@@ -64,6 +85,5 @@ namespace Infraestructure.Data.Repository
         {
             return SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), spec);
         }
-
     }
 }

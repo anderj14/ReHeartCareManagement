@@ -10,6 +10,12 @@ namespace Infraestructure.config
         {
             builder.HasOne(a => a.AppointmentStatus).WithMany()
                 .HasForeignKey(i => i.AppointmentStatusId);
+            
+            builder
+            .HasOne(u => u.AppUser)
+            .WithMany(u => u.Appointments)
+            .HasForeignKey(a => a.AppUserId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

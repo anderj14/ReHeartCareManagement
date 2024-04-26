@@ -7,7 +7,7 @@ namespace Core.Dtos.CreateDto
         [Required]
         public DateTime Date { get; set; }
 
-        [Required]
+        // [Required]
         public string Time { get; set; }
 
         [Required]
@@ -16,7 +16,7 @@ namespace Core.Dtos.CreateDto
         [Required]
         public int AppointmentStatusId { get; set; }
 
-        // [Required]
+        [Required]
         public int PatientId { get; set; }
     }
 }

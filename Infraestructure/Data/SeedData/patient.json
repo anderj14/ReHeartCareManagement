@@ -8,9 +8,7 @@
         "Address": "123 Main St",
         "Phone": 1234567890,
         "Email": "john.doe@example.com",
-        "SocialSecurity": "987654321",
-        "DoctorId": "562dc946-011f-404b-b0c8-a0464f359885"
-
+        "SocialSecurity": "987654321"
     },
     {
         "Id": 2,

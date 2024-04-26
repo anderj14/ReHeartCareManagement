@@ -66,10 +66,11 @@ namespace API.Controllers
 
         // Create
         [HttpPost]
-        [Authorize(Roles = "Admin, Member")]
+        [Authorize]
         public async Task<ActionResult<BloodTest>> CreateBloodTest(BloodTestCreateDto bloodTestCreateDto)
         {
             var bloodTest = _mapper.Map<BloodTestCreateDto, BloodTest>(bloodTestCreateDto);
+            
             _unitOfWork.Repository<BloodTest>().Add(bloodTest);
 
             var result = await _unitOfWork.Complete();
@@ -80,7 +81,7 @@ namespace API.Controllers
 
         // Update
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin, Member")]
+        [Authorize]
         public async Task<ActionResult<BloodTest>> UpdateBloodTesT(int id, BloodTestCreateDto bloodTestUpdateDto)
         {
             var bloodTest = await _unitOfWork.Repository<BloodTest>().GetByIdAsync(id);
@@ -94,7 +95,7 @@ namespace API.Controllers
 
         //Delete
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin, Member")]
+        [Authorize]
         public async Task<ActionResult> DeleteBloodTest(int id)
         {
             var bloodTest = await _unitOfWork.Repository<BloodTest>().GetByIdAsync(id);

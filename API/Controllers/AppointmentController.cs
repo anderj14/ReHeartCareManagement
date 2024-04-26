@@ -1,13 +1,18 @@
 
+using System.Linq.Expressions;
 using API.Errors;
+using API.Extensions;
 using API.Helper;
 using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.CreateDto;
 using Core.Entities;
+using Core.Entities.Identity;
 using Core.Interfaces;
 using Core.Specification;
+using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -16,14 +21,24 @@ namespace API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ManagementContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AppointmentController(IUnitOfWork unitOfWork, IMapper mapper)
+        public AppointmentController(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ManagementContext context,
+            UserManager<AppUser> userManager
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
+            _userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet("allappointments")]
+        [Authorize]
         public async Task<ActionResult<Pagination<AppointmentDto>>> GetAppointments(
             [FromQuery] AppointmentSpecParams appointmentParams
         )
@@ -37,6 +52,42 @@ namespace API.Controllers
             var data = _mapper.Map<IReadOnlyList<AppointmentDto>>(appointments);
 
             return Ok(new Pagination<AppointmentDto>(appointmentParams.PageIndex, appointmentParams.PageSize, totalItems, data));
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<Pagination<AppointmentDto>>> GetAppointmentByUser(
+            [FromQuery] AppointmentSpecParams appointmentParams
+        )
+        {
+            try
+            {
+                var username = User.GetUsername();
+                var appUser = await _userManager.FindByNameAsync(username);
+
+                if (appUser == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                Expression<Func<Appointment, bool>> filter = (appointment) => appointment.AppUserId == appUser.Id;
+
+                var spec = new AppointmentSpecification(appointmentParams);
+                var countSpec = new AppointmentFilterForCountSpecification(appointmentParams);
+                var totalItems = await _unitOfWork.Repository<Appointment>().CountAsync(countSpec);
+
+                var userAppointment = await _unitOfWork.Repository<Appointment>().ListAllByUserAsync(filter, spec);
+
+                var data = _mapper.Map<IReadOnlyList<AppointmentDto>>(userAppointment);
+
+                return Ok(new Pagination<AppointmentDto>(
+                    appointmentParams.PageIndex, appointmentParams.PageSize, totalItems, data
+                ));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
@@ -53,23 +104,52 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Member")]
-
-        public async Task<ActionResult<Appointment>> CreateAppointment(AppointmentCreateDto appointmentCreateDto)
+        [Authorize]
+        public async Task<ActionResult> CreateAppointmentByUser([FromBody] AppointmentCreateDto appointmentCreateDto)
         {
-            var appointment = _mapper.Map<AppointmentCreateDto, Appointment>(appointmentCreateDto);
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
 
-            _unitOfWork.Repository<Appointment>().Add(appointment);
 
-            var result = await _unitOfWork.Complete();
+            if (appointmentCreateDto == null)
+            {
+                return BadRequest("You can not create an invalid patient");
+            }
 
-            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating Appointment"));
-            return Ok(appointment);
+            if (appUser == null)
+            {
+                return BadRequest("This user is not allowed to use this endpoint");
+            }
+
+            var newAppointment = new Appointment
+            {
+                AppUserId = appUser.Id,
+                Date = appointmentCreateDto.Date,
+                Time = TimeSpan.Parse(appointmentCreateDto.Time),
+                Description = appointmentCreateDto.Description,
+                AppointmentStatusId = appointmentCreateDto.AppointmentStatusId,
+                PatientId = appointmentCreateDto.PatientId
+            };
+
+            _context.Appointments.Add(newAppointment);
+            await _context.SaveChangesAsync();
+
+            var appointment = new AppointmentDto
+            {
+                Id = newAppointment.Id,
+                Date = newAppointment.Date,
+                Time = newAppointment.Time,
+                Description = newAppointment.Description,
+                // AppointmentStatus = newAppointment.AppointmentStatusId.ToString(),
+                // Patient = newAppointment.PatientId.ToString()
+            };
+
+            return CreatedAtAction(nameof(GetAppointment), new { id = newAppointment.Id }, appointment);
+
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin, Member")]
-
+        // [Authorize(Roles = "Admin, Member")]
         public async Task<ActionResult<Appointment>> UpdatePatient(int id, AppointmentCreateDto appointmentUpdateDto)
         {
             var appointment = await _unitOfWork.Repository<Appointment>().GetByIdAsync(id);
@@ -82,8 +162,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin, Member")]
-
+        // [Authorize(Roles = "Admin, Member")]
         public async Task<ActionResult> DeleteAppointment(int id)
         {
             var appointment = await _unitOfWork.Repository<Appointment>().GetByIdAsync(id);

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infraestructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Entity : Migration
+    public partial class Entities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -63,26 +63,6 @@ namespace Infraestructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Patients",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    PatientName = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    CarnetIdentification = table.Column<string>(type: "TEXT", nullable: false),
-                    DOB = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Gender = table.Column<string>(type: "TEXT", nullable: false),
-                    Address = table.Column<string>(type: "TEXT", nullable: true),
-                    Phone = table.Column<long>(type: "INTEGER", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    SocialSecurity = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Patients", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -213,11 +193,39 @@ namespace Infraestructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Patients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AppUserId = table.Column<string>(type: "TEXT", nullable: true),
+                    PatientName = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    CarnetIdentification = table.Column<string>(type: "TEXT", nullable: false),
+                    DOB = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Gender = table.Column<string>(type: "TEXT", nullable: false),
+                    Address = table.Column<string>(type: "TEXT", nullable: true),
+                    Phone = table.Column<long>(type: "INTEGER", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: true),
+                    SocialSecurity = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patients", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Patients_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    AppUserId = table.Column<string>(type: "TEXT", nullable: true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Time = table.Column<TimeSpan>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
@@ -231,6 +239,12 @@ namespace Infraestructure.Data.Migrations
                         name: "FK_Appointments_AppointmentStatuses_AppointmentStatusId",
                         column: x => x.AppointmentStatusId,
                         principalTable: "AppointmentStatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appointments_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -317,6 +331,7 @@ namespace Infraestructure.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    AppUserId = table.Column<string>(type: "TEXT", nullable: true),
                     SurgeryName = table.Column<string>(type: "TEXT", nullable: true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Time = table.Column<TimeSpan>(type: "TEXT", nullable: false),
@@ -336,6 +351,12 @@ namespace Infraestructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CardiologySurgeries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CardiologySurgeries_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CardiologySurgeries_Patients_PatientId",
                         column: x => x.PatientId,
@@ -616,14 +637,19 @@ namespace Infraestructure.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "503b40c8-4317-4b00-9364-8b6f134d8fdc", null, "Admin", "ADMIN" },
-                    { "9219d6af-d470-4709-97d1-560e25262d06", null, "User", "USER" }
+                    { "009e157f-d0d9-406c-8e0e-65a7d7d41377", null, "Admin", "ADMIN" },
+                    { "6dd9c264-ccaa-44ad-ac01-6fd1cd9a4e8d", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_AppointmentStatusId",
                 table: "Appointments",
                 column: "AppointmentStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_AppUserId",
+                table: "Appointments",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_PatientId",
@@ -678,6 +704,11 @@ namespace Infraestructure.Data.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CardiologySurgeries_AppUserId",
+                table: "CardiologySurgeries",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CardiologySurgeries_PatientId",
                 table: "CardiologySurgeries",
                 column: "PatientId");
@@ -715,6 +746,11 @@ namespace Infraestructure.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Notes_AppUserId",
                 table: "Notes",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Patients_AppUserId",
+                table: "Patients",
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
@@ -805,13 +841,13 @@ namespace Infraestructure.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "CardiologySurgeries");
 
             migrationBuilder.DropTable(
                 name: "Patients");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

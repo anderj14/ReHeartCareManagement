@@ -18,6 +18,13 @@ namespace Infraestructure.config
             builder.Property(p => p.Email);
             builder.Property(p => p.SocialSecurity).IsRequired();
 
+
+            builder
+            .HasOne(u => u.AppUser)
+            .WithMany(u => u.Patients)
+            .HasForeignKey(p => p.AppUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
             // Relationship appointment
             builder.HasMany(p => p.Appointments).WithOne(a => a.Patient)
             .HasForeignKey(a => a.PatientId);

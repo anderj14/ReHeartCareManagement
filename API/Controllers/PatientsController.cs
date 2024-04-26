@@ -1,13 +1,17 @@
-using System.Security.Claims;
+using System.Linq.Expressions;
 using API.Errors;
+using API.Extensions;
 using API.Helper;
 using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.CreateDto;
 using Core.Entities;
+using Core.Entities.Identity;
 using Core.Interfaces;
 using Core.Specification;
+using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -17,17 +21,28 @@ namespace API.Controllers
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGenericRepository<Patient> _patientRepo;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly ManagementContext _context;
 
+        public PatientsController(
+            IUnitOfWork unitOfwork,
+            IMapper mapper,
+            IGenericRepository<Patient> patientRepo,
+            UserManager<AppUser> userManager,
+            ManagementContext context
 
-        public PatientsController(IUnitOfWork unitOfwork, IMapper mapper, IGenericRepository<Patient> patientRepo)
+            )
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
             _patientRepo = patientRepo;
+            _userManager = userManager;
+            _context = context;
         }
 
         [HttpGet("notpag")]
-        public async Task<ActionResult<IReadOnlyList<PatientDto>>> GetPatientsNotPage([FromQuery] int pageSize = 100)
+        public async Task<ActionResult<IReadOnlyList<PatientDto>>> GetPatientsNotPage(
+            [FromQuery] int pageSize = 100)
         {
             var patientParams = new PatientSpecParams { PageSize = pageSize };
             var spec = new PatientWithAllSpecification(patientParams);
@@ -38,32 +53,61 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<Pagination<PatientDto>>> GetPatients(
-            [FromQuery] PatientSpecParams patientParams)
+        public async Task<ActionResult<Pagination<PatientDto>>> GetPatientsByUser(
+        [FromQuery] PatientSpecParams noteSpecParams
+        )
         {
-            var spec = new PatientWithAllSpecification(patientParams);
+            try
+            {
+                var username = User.GetUsername();
+                var appUser = await _userManager.FindByNameAsync(username);
 
-            var countSpec = new PatientWithFiltersForCountSpecification(patientParams);
+                if (appUser == null)
+                {
+                    return NotFound("User not found");
+                }
 
-            var totalItems = await _unitOfWork.Repository<Patient>().CountAsync(countSpec);
+                // Lambda expression to filter notes by current user
+                Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == appUser.Id;
 
-            var patients = await _unitOfWork.Repository<Patient>().ListAsync(spec);
+                var spec = new PatientWithAllSpecification(noteSpecParams);
+                var countSpec = new PatientWithFiltersForCountSpecification(noteSpecParams);
+                var totalItems = await _unitOfWork.Repository<Patient>().CountAsync(countSpec);
 
-            var data = _mapper.Map<IReadOnlyList<PatientDto>>(patients);
 
-            return Ok(new Pagination<PatientDto>(patientParams.PageIndex,
-            patientParams.PageSize, totalItems, data));
+                var userPatient = await _unitOfWork.Repository<Patient>().ListAllByUserAsync(filter, spec);
+
+                var data = _mapper.Map<IReadOnlyList<PatientDto>>(userPatient);
+
+                return Ok(new Pagination<PatientDto>(
+                    noteSpecParams.PageIndex, noteSpecParams.PageSize, totalItems, data
+                ));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PatientDto>> GetPatient(int id)
         {
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+
+            if (appUser == null)
+            {
+                return NotFound("User not found");
+            }
+
+            Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == appUser.Id;
+
             var spec = new PatientWithAllSpecification(id);
 
-            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(spec);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityByUserAsync(filter, spec);
 
             if (patient == null) return NotFound(new ApiResponse(404));
 
@@ -71,17 +115,60 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Patient>> CreatePatient(PatientCreateDto patientToCreate)
+        [Authorize]
+        public async Task<IActionResult> AddPatientByUser([FromBody] PatientCreateDto patientDto)
         {
-            var patient = _mapper.Map<PatientCreateDto, Patient>(patientToCreate);
+            try
+            {
+                var username = User.GetUsername();
+                var appUser = await _userManager.FindByNameAsync(username);
 
-            _unitOfWork.Repository<Patient>().Add(patient);
 
-            var result = await _unitOfWork.Complete();
+                if (patientDto == null)
+                {
+                    return BadRequest("You can not create an invalid patient");
+                }
 
-            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating patient information"));
+                if (appUser == null)
+                {
+                    return BadRequest("This user is not allowed to use this endpoint");
+                }
 
-            return Ok(patient);
+                var newPatient = new Patient
+                {
+                    AppUserId = appUser.Id,
+                    PatientName = patientDto.PatientName,
+                    CarnetIdentification = patientDto.CarnetIdentification,
+                    DOB = patientDto.DOB,
+                    Gender = patientDto.Gender,
+                    Address = patientDto.Address,
+                    Phone = patientDto.Phone,
+                    Email = patientDto.Email,
+                    SocialSecurity = patientDto.SocialSecurity
+                };
+
+                _context.Patients.Add(newPatient);
+                await _context.SaveChangesAsync();
+
+                var patient = new PatientDto
+                {
+                    Id = newPatient.Id,
+                    PatientName = newPatient.PatientName,
+                    CarnetIdentification = newPatient.CarnetIdentification,
+                    DOB = newPatient.DOB,
+                    Gender = newPatient.Gender,
+                    Address = newPatient.Address,
+                    Phone = newPatient.Phone,
+                    Email = newPatient.Email,
+                    SocialSecurity = newPatient.SocialSecurity
+                };
+
+                return CreatedAtAction(nameof(GetPatient), new { id = newPatient.Id }, patient);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]

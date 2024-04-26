@@ -7,12 +7,12 @@ namespace Infraestructure.Data
     {
         public static async Task SeedAsync(ManagementContext context)
         {
-            if (!context.Patients.Any())
-            {
-                var patientsData = File.ReadAllText("../Infraestructure/Data/SeedData/patient.json");
-                var patient = JsonSerializer.Deserialize<List<Patient>>(patientsData);
-                context.Patients.AddRange(patient);
-            }
+            // if (!context.Patients.Any())
+            // {
+            //     var patientsData = File.ReadAllText("../Infraestructure/Data/SeedData/patient.json");
+            //     var patient = JsonSerializer.Deserialize<List<Patient>>(patientsData);
+            //     context.Patients.AddRange(patient);
+            // }
             if (!context.Appointments.Any())
             {
                 var appointmentsData = File.ReadAllText("../Infraestructure/Data/SeedData/appointment.json");

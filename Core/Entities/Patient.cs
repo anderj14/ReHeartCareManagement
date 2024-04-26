@@ -5,6 +5,8 @@ namespace Core.Entities
 
     public class Patient : BaseEntity
     {
+        public string AppUserId { get; set; }
+
         public string PatientName { get; set; }
         public string CarnetIdentification { get; set; }
         public DateTime DOB { get; set; }
@@ -13,6 +15,8 @@ namespace Core.Entities
         public long Phone { get; set; }
         public string Email { get; set; }
         public string SocialSecurity { get; set; }
+        
+        public AppUser AppUser { get; set; }
         
         public ICollection<Appointment> Appointments { get; set; }
         public ICollection<DiseaseHistory> DiseaseHistories { get; set; }

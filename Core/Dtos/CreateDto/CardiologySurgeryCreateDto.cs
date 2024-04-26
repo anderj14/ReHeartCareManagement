@@ -1,30 +1,39 @@
-using Core.Entities.Identity;
 
-namespace Core.Entities
+using System.ComponentModel.DataAnnotations;
+
+namespace Core.Dtos.CreateDto
 {
-    public class CardiologySurgery : BaseEntity
+    public class CardiologySurgeryCreateDto
     {
-        public string AppUserId { get; set; }
-
+        [Required]
         public string SurgeryName { get; set; }
+        [Required]
         public DateTime Date { get; set; }
-        public TimeSpan Time { get; set; }
+        [Required]
+        public string Time { get; set; }
+        [Required]
         public string ProcedureDescription { get; set; }
+        [Required]
         public string Notes { get; set; }
+        [Required]
         public string IsEmergency { get; set; }
+        [Required]
         public string IsElective { get; set; }
+        [Required]
         public string OperationRoom { get; set; }
+        [Required]
         public string PreOpDiagnosis { get; set; }
+        [Required]
         public string PostOpDiagnosis { get; set; }
+        [Required]
         public string IsSuccessful { get; set; }
+        [Required]
         public int Duration { get; set; }
+        [Required]
         public string CardiacCondition { get; set; }
+        [Required]
         public string IsMinimallyInvasive { get; set; }
-
-        public AppUser AppUser { get; set; }
-
+        [Required]
         public int PatientId { get; set; }
-        public Patient Patient { get; set; }
     }
-
 }
