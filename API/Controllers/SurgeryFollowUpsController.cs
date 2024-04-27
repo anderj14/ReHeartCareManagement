@@ -2,6 +2,7 @@ using API.Errors;
 using API.Helper;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification.SurgeryFollowUpSpec;
@@ -72,6 +73,20 @@ namespace API.Controllers
             var surgeryFollowUpDto = _mapper.Map<SurgeryFollowUpDto>(surgeryFollowUp);
 
             return Ok(surgeryFollowUpDto);
+        }
+
+        [HttpPost]
+        // [Authorize]
+        public async Task<ActionResult<SurgeryFollowUp>> CreateSurgeryFollowUp(SurgeryFollowUpsCreateDto surgeryFollowUpsCreateDto)
+        {
+            var surgeryFollowUp = _mapper.Map<SurgeryFollowUpsCreateDto, SurgeryFollowUp>(surgeryFollowUpsCreateDto);
+
+            _unitOfWork.Repository<SurgeryFollowUp>().Add(surgeryFollowUp);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating surgery follow-up"));
+            return Ok(surgeryFollowUp);
         }
     }
 }

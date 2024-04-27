@@ -1,9 +1,11 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -42,6 +44,7 @@ namespace API.Controllers
         [HttpGet("patient/{patientId}/diagnostics")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<IReadOnlyList<DiagnosticDto>>> GetDiagnosticsByPatientId(int patientId)
         {
             var spec = new DiagnosticSpecification(patientId);
@@ -54,6 +57,7 @@ namespace API.Controllers
         [HttpGet("patient/{patientId}/diagnostics/{diagnosticId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<DiagnosticDto>> GetDiagnosticIdByPatientId(
             int patientId, int diagnosticId)
         {
@@ -62,6 +66,22 @@ namespace API.Controllers
             var diagnosticDto = _mapper.Map<DiagnosticDto>(diagnostic);
 
             return Ok(diagnosticDto);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<Diagnostic>> CreateDiagnostic(DiagnosticCreateDto diagnosticCreateDto)
+        {
+            var diagnostic = _mapper.Map<DiagnosticCreateDto, Diagnostic>(diagnosticCreateDto);
+
+            _unitOfWork.Repository<Diagnostic>().Add(diagnostic);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating diagnostic"));
+
+            return Ok(diagnostic);
+
         }
     }
 }

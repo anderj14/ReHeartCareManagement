@@ -1,9 +1,11 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -62,6 +64,20 @@ namespace API.Controllers
             var echocardiogramDto = _mapper.Map<EchocardiogramDto>(echocardiogram);
 
             return Ok(echocardiogramDto);
+        }
+
+        [HttpPost]
+        // [Authorize]
+        public async Task<ActionResult<Echocardiogram>> CreateEchocardiogram(EchocardiogramCreateDto echocardiogramCreateDto)
+        {
+            var echocardiogram = _mapper.Map<EchocardiogramCreateDto, Echocardiogram>(echocardiogramCreateDto);
+
+            _unitOfWork.Repository<Echocardiogram>().Add(echocardiogram);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating echocardiogram"));
+            return Ok(echocardiogram);
         }
 
     }

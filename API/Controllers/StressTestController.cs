@@ -1,6 +1,7 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
@@ -63,6 +64,20 @@ namespace API.Controllers
             var stressTestsDtos = _mapper.Map<StressTestDto>(stressTests);
 
             return Ok(stressTestsDtos);
+        }
+
+        [HttpPost]
+        // [Authorize]
+        public async Task<ActionResult<StressTest>> CreateStressTest(StressTestCreateDto stressTestCreateDto)
+        {
+            var stressTest = _mapper.Map<StressTestCreateDto, StressTest>(stressTestCreateDto);
+
+            _unitOfWork.Repository<StressTest>().Add(stressTest);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating stress test"));
+            return Ok(stressTest);
         }
     }
 }

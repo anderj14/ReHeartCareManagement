@@ -1,6 +1,7 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
@@ -61,6 +62,20 @@ namespace API.Controllers
             var holterStudyDto = _mapper.Map<HolterStudyDto>(holterStudy);
 
             return Ok(holterStudyDto);
+        }
+
+        [HttpPost]
+        // [Authorize]
+        public async Task<ActionResult<HolterStudy>> CreateHolterStudy(HolterStudyCreateDto holterStudyCreateDto)
+        {
+            var holterStudy = _mapper.Map<HolterStudyCreateDto, HolterStudy>(holterStudyCreateDto);
+
+            _unitOfWork.Repository<HolterStudy>().Add(holterStudy);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating Appointment"));
+            return Ok(holterStudy);
         }
     }
 }

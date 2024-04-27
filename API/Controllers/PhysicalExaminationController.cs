@@ -1,6 +1,7 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
@@ -63,6 +64,20 @@ namespace API.Controllers
             var physicalExaminationDto = _mapper.Map<PhysicalExaminationDto>(physicalExamination);
 
             return Ok(physicalExaminationDto);
+        }
+
+        [HttpPost]
+        // [Authorize]
+        public async Task<ActionResult<PhysicalExamination>> CreatePhysicalExamination(PhysicalExaminationCreateDto physicalExaminationCreateDto)
+        {
+            var physicalExamination = _mapper.Map<PhysicalExaminationCreateDto, PhysicalExamination>(physicalExaminationCreateDto);
+
+            _unitOfWork.Repository<PhysicalExamination>().Add(physicalExamination);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating physical examination"));
+            return Ok(physicalExamination);
         }
     }
 }

@@ -1,9 +1,11 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -60,7 +62,21 @@ namespace API.Controllers
             var electrocardiogram = await _unitOfWork.Repository<Electrocardiogram>().GetEntityWithSpec(spec);
             var electrocardiogramDto = _mapper.Map<ElectrocardiogramDto>(electrocardiogram);
 
-            return Ok(electrocardiogramDto); 
+            return Ok(electrocardiogramDto);
+        }
+
+        [HttpPost]
+        // [Authorize]
+        public async Task<ActionResult<Electrocardiogram>> CreateElectrocardiogram(ElectrocardiogramCreateDto electrocardiogramCreateDto)
+        {
+            var electrocardiogram = _mapper.Map<ElectrocardiogramCreateDto, Electrocardiogram>(electrocardiogramCreateDto);
+
+            _unitOfWork.Repository<Electrocardiogram>().Add(electrocardiogram);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating electrocardiogram"));
+            return Ok(electrocardiogram);
         }
     }
 }

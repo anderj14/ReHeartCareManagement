@@ -1,9 +1,11 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -62,6 +64,22 @@ namespace API.Controllers
 
             return Ok(diseaseHistoryDto);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<DiseaseHistory>> CreateDiseaseHistory(DiseaseHistoryCreateDto diseaseHistoryCreateDto)
+        {
+            var diseaseHistory = _mapper.Map<DiseaseHistoryCreateDto, DiseaseHistory>(diseaseHistoryCreateDto);
+
+            _unitOfWork.Repository<DiseaseHistory>().Add(diseaseHistory);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating disease history"));
+
+            return Ok(diseaseHistory);
+        }
+
     }
 }
 

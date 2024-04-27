@@ -1,6 +1,7 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
@@ -63,6 +64,20 @@ namespace API.Controllers
             var treatmentDto = _mapper.Map<TreatmentDto>(treatment);
 
             return Ok(treatmentDto);
+        }
+
+        [HttpPost]
+        // [Authorize]
+        public async Task<ActionResult<Treatment>> CreateTreatment(TreatmentCreateDto treatmentCreateDto)
+        {
+            var treatment = _mapper.Map<TreatmentCreateDto, Treatment>(treatmentCreateDto);
+
+            _unitOfWork.Repository<Treatment>().Add(treatment);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating treatment"));
+            return Ok(treatment);
         }
     }
 }

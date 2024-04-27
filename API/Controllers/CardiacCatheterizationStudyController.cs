@@ -2,9 +2,11 @@
 using API.Errors;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -63,6 +65,21 @@ namespace API.Controllers
             var cardiacCathStudyDto = _mapper.Map<CardiacCatheterizationStudyDto>(cardiacCathStudy);
 
             return Ok(cardiacCathStudyDto);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<CardiacCatheterizationStudy>> CreateCardiacCathStudy(CardiacCathStudyCreateDto cardiacCathStudyCreateDto)
+        {
+            var cardiacCathStudy = _mapper.Map<CardiacCathStudyCreateDto, CardiacCatheterizationStudy>(cardiacCathStudyCreateDto);
+
+            _unitOfWork.Repository<CardiacCatheterizationStudy>().Add(cardiacCathStudy);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating cardiac catheterization study"));
+
+            return Ok(cardiacCathStudy);
         }
 
     }
