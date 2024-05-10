@@ -50,6 +50,20 @@ namespace API.Controllers
 
             return Ok(_mapper.Map<IReadOnlyList<Patient>, IReadOnlyList<PatientDto>>(products));
         }
+        [HttpGet("notpag/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<PatientDto>> GetPatientNotPage(int id)
+        {
+
+            var spec = new PatientWithAllSpecification(id);
+
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(spec);
+
+            if (patient == null) return NotFound(new ApiResponse(404));
+
+            return _mapper.Map<Patient, PatientDto>(patient);
+        }
 
         [HttpGet]
         [Authorize]
