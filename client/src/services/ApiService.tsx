@@ -74,7 +74,7 @@ const ApiService = {
             throw error;
         }
     },
-    getDiseaseHistoryId: async (patientId: number) => {
+    getDiseaseHistoryByPatientId: async (patientId: number) => {
         try {
             const response = await axios.get(`${baseUrl}/diseasehistory/patient/${patientId}/diseaseshistories`);
             return response.data;
@@ -83,7 +83,7 @@ const ApiService = {
             throw error;
         }
     },
-    getMedicalHistoryId: async (patientId: number) => {
+    getMedicalHistoryByPatientId: async (patientId: number) => {
         try {
             const response = await axios.get(`${baseUrl}/medicalhistory/patient/${patientId}/medicalhistories`);
             return response.data;
@@ -92,7 +92,7 @@ const ApiService = {
             throw error;
         }
     },
-    getDiagnosticId: async (patientId: number) => {
+    getDiagnosticByPatientId: async (patientId: number) => {
         try {
             const response = await axios.get(`${baseUrl}/diagnostic/patient/${patientId}/diagnostics`);
             return response.data;
@@ -101,7 +101,7 @@ const ApiService = {
             throw error;
         }
     },
-    getTreatmentId: async (patientId: number) => {
+    getTreatmentByPatientId: async (patientId: number) => {
         try {
             const response = await axios.get(`${baseUrl}/treatment/patient/${patientId}/treatments`);
             return response.data;
@@ -110,6 +110,16 @@ const ApiService = {
             throw error;
         }
     },
+    getCardiologySurgeryId: async (surgeryId: number) => {
+        try {
+            const response = await axios.get(`${baseUrl}/cardiologySurgeries/${surgeryId}`);
+            return response.data;
+        } catch (error) {
+            console.log('Error fetching cardiology surgeries: ', error);
+            throw error;
+
+        }
+    }
 };
 
 export default ApiService;

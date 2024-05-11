@@ -1,0 +1,76 @@
+@import './_variables';
+
+.contentSurgery {
+    // width: 100v;
+    margin: 25px;
+    // background-color: red;
+    height: 100%;
+
+    .filtersContainer {
+        background-color: #ffffff;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0 0 0;
+
+        .pager {
+            margin-top: 10px;
+
+            p {
+                font-weight: 300;
+            }
+        }
+
+        .search {
+            display: flex;
+            align-items: center;
+        }
+
+        .button {
+            padding: 6px 15px;
+            text-transform: capitalize;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .addPatientButton .button {
+            background-color: $green;
+            color: $white;
+        }
+
+        .addFilterButton .button {
+            border: 1px solid $black;
+            color: $black;
+        }
+    }
+}
+
+.container {
+    margin: 25px;
+
+    .surgeryDetails {
+
+        .contents {
+            margin-top: 10px;
+            display: flex;
+            gap: 35px;
+
+            .contentInfo {
+                display: flex;
+                gap: 20px;
+                max-width: 600px;
+
+                .surgeryInfoData p {
+                    font-weight: 200;
+                }
+
+                p {
+                    font-size: 18px;
+                }
+
+                .surgeryInfoData {
+                    font-weight: 220;
+                }
+            }
+        }
+    }
+}

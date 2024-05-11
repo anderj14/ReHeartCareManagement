@@ -39,9 +39,9 @@ export default function Sidebar({ closeMenu, handleCloseMenu }: any) {
                         <img src={Patients} alt="patients" />
                         <a href="/patients">Patients</a>
                     </li>
-                    <li className={location.pathname === "/surgeries" ? "active" : ""}>
+                    <li className={location.pathname === "/cardiologysurgeries" ? "active" : ""}>
                         <img src={Surgeries} alt="surgeries" />
-                        <a href="/surgeries">Surgeries</a>
+                        <a href="/cardiologysurgeries">Surgeries</a>
                     </li>
                     <li className={location.pathname === "/notes" ? "active" : ""}>
                         <img src={Notes} alt="notes" />

@@ -37,7 +37,7 @@ namespace API.Controllers
         }
 
         [HttpGet("allSurgeries")]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<Pagination<CardiologySurgeryDto>>> GetCardiologySurgeries(
             [FromQuery] CardiologySurgerySpecParams cardiologySurgeryParams
         )

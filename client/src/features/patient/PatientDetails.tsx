@@ -168,7 +168,7 @@ export default function PatientDetail() {
         };
         const fetchDiseaseHistory = async () => {
             try {
-                const diseaseHistoryData = await ApiService.getDiseaseHistoryId(id);
+                const diseaseHistoryData = await ApiService.getDiseaseHistoryByPatientId(id);
                 setDiseaseHistory(diseaseHistoryData);
             } catch (error) {
                 console.error('Error fetching disease history:', error);
@@ -178,7 +178,7 @@ export default function PatientDetail() {
         };
         const fetchMedicalHistory = async () => {
             try {
-                const medicalHistoryData = await ApiService.getMedicalHistoryId(id);
+                const medicalHistoryData = await ApiService.getMedicalHistoryByPatientId(id);
                 setMedicalHistory(medicalHistoryData);
             } catch (error) {
                 console.error('Error fetching medical history:', error);
@@ -188,7 +188,7 @@ export default function PatientDetail() {
         };
         const fetchDiagnostic = async () => {
             try {
-                const diagnosticData = await ApiService.getDiagnosticId(id);
+                const diagnosticData = await ApiService.getDiagnosticByPatientId(id);
                 setDiagnostic(diagnosticData);
             } catch (error) {
                 console.error('Error fetching diagnostic:', error);
@@ -198,7 +198,7 @@ export default function PatientDetail() {
         };
         const fetchTreatment = async () => {
             try {
-                const treatmentData = await ApiService.getTreatmentId(id);
+                const treatmentData = await ApiService.getTreatmentByPatientId(id);
                 setTreatment(treatmentData);
             } catch (error) {
                 console.error('Error fetching treatment:', error);

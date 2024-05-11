@@ -5,8 +5,9 @@ import Patients from '../../features/patient/Patients';
 import PatientDetail from '../../features/patient/PatientDetails';
 import Sidebar from '../components/Sidebar';
 import { useState } from 'react';
-import Surgeries from '../../features/surgery/Surgeries';
 import Notes from '../../features/notes/Notes';
+import CardiologySurgeries from '../../features/surgery/CardiologySurgeries';
+import CardiologySurgeryDetails from '../../features/surgery/CardiologySurgeryDetails';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);
@@ -26,7 +27,8 @@ function App() {
                 <Route path='/' element={< Dashboard />}></Route>
                 <Route path='/patients' element={< Patients />}></Route>
                 <Route path='/patients/:id' element={< PatientDetail />}></Route>
-                <Route path='/surgeries' element={< Surgeries />}></Route>
+                <Route path='/cardiologysurgeries' element={< CardiologySurgeries />}></Route>
+                <Route path='/cardiologysurgeries/:id' element={< CardiologySurgeryDetails />}></Route>
                 <Route path='/notes' element={< Notes />}></Route>
                 {/* <Route path='/about' element={< AboutPage />}></Route> */}
                 {/* <Route path='/contact' element={< ContactPage />}></Route> */}
