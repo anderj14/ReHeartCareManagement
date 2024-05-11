@@ -73,7 +73,43 @@ const ApiService = {
             console.log('Error fetching physical examination by patient Id: ', error);
             throw error;
         }
-    }
+    },
+    getDiseaseHistoryId: async (patientId: number) => {
+        try {
+            const response = await axios.get(`${baseUrl}/diseasehistory/patient/${patientId}/diseaseshistories`);
+            return response.data;
+        } catch (error) {
+            console.log('Error fetching disease history by patient Id: ', error);
+            throw error;
+        }
+    },
+    getMedicalHistoryId: async (patientId: number) => {
+        try {
+            const response = await axios.get(`${baseUrl}/medicalhistory/patient/${patientId}/medicalhistories`);
+            return response.data;
+        } catch (error) {
+            console.log('Error fetching medical history by patient Id: ', error);
+            throw error;
+        }
+    },
+    getDiagnosticId: async (patientId: number) => {
+        try {
+            const response = await axios.get(`${baseUrl}/diagnostic/patient/${patientId}/diagnostics`);
+            return response.data;
+        } catch (error) {
+            console.log('Error fetching diagnostic by patient Id: ', error);
+            throw error;
+        }
+    },
+    getTreatmentId: async (patientId: number) => {
+        try {
+            const response = await axios.get(`${baseUrl}/treatment/patient/${patientId}/treatments`);
+            return response.data;
+        } catch (error) {
+            console.log('Error fetching treatment by patient Id: ', error);
+            throw error;
+        }
+    },
 };
 
 export default ApiService;

@@ -21,6 +21,14 @@ import HolterStudyPatient from "./components/HolterStudyPatient";
 import { HolterStudy } from "../../app/Models/holterStudy";
 import { PhysicalExamination } from "../../app/Models/physicalExamination";
 import PhysicalExaminationPatient from "./components/PhysicalExaminationPatient";
+import { DiseaseHistory } from "../../app/Models/DiseaseHistory";
+import DiseaseHistoryPatient from "./components/DiseaseHistoryPatient";
+import { MedicalHistory } from "../../app/Models/MedicalHistory";
+import MedicalHistoryPatient from "./components/MedicalHistoryPatient";
+import { Diagnostic } from "../../app/Models/diagnostic";
+import DiagnosticPatient from "./components/DiagnosticPatient";
+import { Treatment } from "../../app/Models/treatment";
+import TreatmentPatient from "./components/TreatmentPatient";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -66,6 +74,10 @@ export default function PatientDetail() {
     const [cardiacCathStudy, setCardiacCathStudy] = useState<CardiacCathStudy[]>([]);
     const [holterStudy, setholterStudy] = useState<HolterStudy[]>([]);
     const [physicalexamination, setPhysicalExamination] = useState<PhysicalExamination[]>([]);
+    const [diseaseHistory, setDiseaseHistory] = useState<DiseaseHistory[]>([]);
+    const [medicalHistory, setMedicalHistory] = useState<MedicalHistory[]>([]);
+    const [diagnostic, setDiagnostic] = useState<Diagnostic[]>([]);
+    const [treatment, setTreatment] = useState<Treatment[]>([]);
     const [value, setValue] = useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -153,7 +165,47 @@ export default function PatientDetail() {
             } finally {
                 setLoading(false);
             }
-        }
+        };
+        const fetchDiseaseHistory = async () => {
+            try {
+                const diseaseHistoryData = await ApiService.getDiseaseHistoryId(id);
+                setDiseaseHistory(diseaseHistoryData);
+            } catch (error) {
+                console.error('Error fetching disease history:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        const fetchMedicalHistory = async () => {
+            try {
+                const medicalHistoryData = await ApiService.getMedicalHistoryId(id);
+                setMedicalHistory(medicalHistoryData);
+            } catch (error) {
+                console.error('Error fetching medical history:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        const fetchDiagnostic = async () => {
+            try {
+                const diagnosticData = await ApiService.getDiagnosticId(id);
+                setDiagnostic(diagnosticData);
+            } catch (error) {
+                console.error('Error fetching diagnostic:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        const fetchTreatment = async () => {
+            try {
+                const treatmentData = await ApiService.getTreatmentId(id);
+                setTreatment(treatmentData);
+            } catch (error) {
+                console.error('Error fetching treatment:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
         fetchPatient();
         fetchAppointments();
@@ -163,6 +215,10 @@ export default function PatientDetail() {
         fetchCardiacCathStudy();
         fetchHolterStudy();
         fetchPhysicalExamination();
+        fetchDiseaseHistory();
+        fetchMedicalHistory();
+        fetchDiagnostic();
+        fetchTreatment()
     }, [id]);
 
     function calculateAge(dob: any) {
@@ -310,10 +366,24 @@ export default function PatientDetail() {
                         </Box>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        Item Two
+                        <Box className="componentContainer">
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
+                                <DiseaseHistoryPatient diseaseHistory={diseaseHistory} />
+                            </section>
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
+                                <MedicalHistoryPatient medicalHistory={medicalHistory} />
+                            </section>
+                        </Box>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
-                        Item Three
+                        <Box className="componentContainer">
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
+                                <DiagnosticPatient diagnostic={diagnostic} />
+                            </section>
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
+                                <TreatmentPatient treatment={treatment} />
+                            </section>
+                        </Box>
                     </CustomTabPanel>
                 </Card>
             </div>

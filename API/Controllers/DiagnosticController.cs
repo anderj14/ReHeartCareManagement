@@ -44,7 +44,7 @@ namespace API.Controllers
         [HttpGet("patient/{patientId}/diagnostics")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<IReadOnlyList<DiagnosticDto>>> GetDiagnosticsByPatientId(int patientId)
         {
             var spec = new DiagnosticSpecification(patientId);
@@ -57,7 +57,7 @@ namespace API.Controllers
         [HttpGet("patient/{patientId}/diagnostics/{diagnosticId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<DiagnosticDto>> GetDiagnosticIdByPatientId(
             int patientId, int diagnosticId)
         {

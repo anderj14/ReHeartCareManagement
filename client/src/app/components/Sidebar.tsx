@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
 import Icon from "../../Images/Icon.svg";
 import Profile from "../../Images/profile.png";
 import Dashboard from "../../Images/dashboard.svg";
-import Transactions from "../../Images/transactions.svg";
-import Performance from "../../Images/performance.svg";
-import News from "../../Images/news.svg";
+import Patients from "../../Images/patients.svg";
+import Surgeries from "../../Images/surgeries.svg";
+import Notes from "../../Images/notes.svg";
 import { useLocation } from 'react-router-dom';
 
 export default function Sidebar({ closeMenu, handleCloseMenu }: any) {
@@ -37,17 +36,25 @@ export default function Sidebar({ closeMenu, handleCloseMenu }: any) {
                         <a href="/">Dashboard</a>
                     </li>
                     <li className={location.pathname === "/patients" ? "active" : ""}>
-                        <img src={Transactions} alt="transactions" />
+                        <img src={Patients} alt="patients" />
                         <a href="/patients">Patients</a>
                     </li>
-                    <li className={location.pathname === "/about" ? "active" : ""}>
+                    <li className={location.pathname === "/surgeries" ? "active" : ""}>
+                        <img src={Surgeries} alt="surgeries" />
+                        <a href="/surgeries">Surgeries</a>
+                    </li>
+                    <li className={location.pathname === "/notes" ? "active" : ""}>
+                        <img src={Notes} alt="notes" />
+                        <a href="/notes">Notes</a>
+                    </li>
+                    {/* <li className={location.pathname === "/about" ? "active" : ""}>
                         <img src={Performance} alt="performance" />
                         <a href="/about">About</a>
                     </li>
                     <li className={location.pathname === "/contact" ? "active" : ""}>
                         <img src={News} alt="News" />
                         <a href="/contact">Contact</a>
-                    </li>
+                    </li> */}
                 </ul>
             </div>
         </div >
