@@ -48,7 +48,7 @@ namespace API.Helper
             CreateMap<SurgeryFollowUp, SurgeryFollowUpDto>()
             .ForMember(d => d.CardiologySurgery, o => o.MapFrom(s => s.CardiologySurgery.SurgeryName));
 
-            // CreateMap<Notes, NotesDto>()
+            CreateMap<Notes, NotesDto>();
             // .ForMember(d => d.NoteStatus, o => o.MapFrom(s => s.NoteStatus.NoteStatusName));
 
             // CreateMap<NoteStatus, NoteStatusDto>();

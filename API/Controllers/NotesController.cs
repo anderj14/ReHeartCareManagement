@@ -1,9 +1,11 @@
 using API.Extensions;
+using API.Helper;
 using AutoMapper;
 using Core.Dtos;
 using Core.Entities;
 using Core.Entities.Identity;
 using Core.Interfaces;
+using Core.Specification.NoteSpec;
 using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -49,22 +51,22 @@ namespace API.Controllers
         }
 
 
-        // [HttpGet]
-        // public async Task<ActionResult<Pagination<NotesDto>>> GetNotes(
-        //    [FromQuery] NoteSpecParams notesParams
-        // )
-        // {
-        //     var spec = new NoteSpecification(notesParams);
-        //     var countSpec = new NoteWithFiltersForCountSpecification(notesParams);
-        //     var totalItems = await _unitOfWork.Repository<Notes>().CountAsync(countSpec);
+        [HttpGet("all")]
+        public async Task<ActionResult<Pagination<NotesDto>>> GetNotes(
+           [FromQuery] NoteSpecParams notesParams
+        )
+        {
+            var spec = new NoteSpecification(notesParams);
+            var countSpec = new NoteWithFiltersForCountSpecification(notesParams);
+            var totalItems = await _unitOfWork.Repository<Notes>().CountAsync(countSpec);
 
-        //     var notes = await _unitOfWork.Repository<Notes>().ListAsync(spec);
-        //     var data = _mapper.Map<IReadOnlyList<NotesDto>>(notes);
+            var notes = await _unitOfWork.Repository<Notes>().ListAsync(spec);
+            var data = _mapper.Map<IReadOnlyList<NotesDto>>(notes);
 
-        //     return Ok(new Pagination<NotesDto>(
-        //         notesParams.PageSize, notesParams.PageSize, totalItems, data
-        //     ));
-        // }
+            return Ok(new Pagination<NotesDto>(
+                notesParams.PageSize, notesParams.PageSize, totalItems, data
+            ));
+        }
 
 
         // [HttpPost]
