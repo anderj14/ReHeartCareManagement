@@ -1,24 +1,21 @@
 import axios from "axios";
+import agent from "../app/api/agent";
 
 const baseUrl = "https://localhost:5001/api/v1";
 
 const ApiService = {
+
     getPatientById: async (id: number) => {
         try {
-            const response = await axios.get(`${baseUrl}/patients/notpag/${id}`);
-            return response.data;
+            const response = agent.Patient.details(id);
+            return response;
         } catch (error) {
             throw error;
         }
     },
     getAppointmentsByPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/appointment/patient/${patientId}/appointments`);
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching appointments by patient ID:', error);
-            throw error;
-        }
+        const response = await axios.get(`${baseUrl}/appointment/patient/${patientId}/appointments`);
+        return response.data;
     },
     getBloodTestByPatientId: async (patientId: number) => {
         try {

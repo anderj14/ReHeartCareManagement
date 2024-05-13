@@ -29,6 +29,7 @@ import { Diagnostic } from "../../app/Models/diagnostic";
 import DiagnosticPatient from "./components/DiagnosticPatient";
 import { Treatment } from "../../app/Models/treatment";
 import TreatmentPatient from "./components/TreatmentPatient";
+import NotFound from "../../app/errors/NotFound";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -90,7 +91,7 @@ export default function PatientDetail() {
                 const patientData = await ApiService.getPatientById(id);
                 setPatient(patientData);
             } catch (error) {
-                console.error("Error fetching patient:", error);
+                console.error(error);
             } finally {
                 setLoading(false);
             }
@@ -239,7 +240,8 @@ export default function PatientDetail() {
     const age = calculateAge(patient?.dob);
 
     if (loading) return <h3>Loading...</h3>;
-    if (!patient) return <h3>Patient not found</h3>;
+    // if (!patient) return <h3>Patient not found</h3>;
+    if (!patient) return <NotFound />;
 
     return (
         <div className="container">

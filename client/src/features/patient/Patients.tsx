@@ -7,17 +7,19 @@ import SearchIcon from "@mui/icons-material/Search";
 import Breadcrumb from "../../app/components/Breadcrumb";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
+import agent from "../../app/api/agent";
 
 export default function Patients() {
 
     const [patients, setPatients] = useState<Patient[]>([]);
 
     useEffect(() => {
-        fetch('https://localhost:5001/api/v1/patients/notpag')
-            .then(res => res.json())
-            .then(data => {
-                setPatients(data);
-            });
+        // fetch('https://localhost:5001/api/v1/patients/notpag')
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         setPatients(data);
+        //     });
+        agent.Patient.list().then(patients => setPatients(patients));
     }, []);
 
     return (

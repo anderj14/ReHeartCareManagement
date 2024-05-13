@@ -24,7 +24,7 @@ export default function Sidebar({ closeMenu, handleCloseMenu }: any) {
             <div className={closeMenu === false ? "profileContainer" : "profileContainer active"}>
                 <img src={Profile} alt="profile" className="profile" />
                 <div className="profileContents">
-                    <p className="name">Hello, Dr John</p>
+                    <p className="name">Hello, Dr Hitler</p>
                     {/* <p>johndoe@example.com</p> */}
                 </div>
             </div>
@@ -47,14 +47,14 @@ export default function Sidebar({ closeMenu, handleCloseMenu }: any) {
                         <img src={Notes} alt="notes" />
                         <a href="/notes">Notes</a>
                     </li>
-                    {/* <li className={location.pathname === "/about" ? "active" : ""}>
-                        <img src={Performance} alt="performance" />
+                    <li className={location.pathname === "/about" ? "active" : ""}>
+                        <img src={Notes} alt="performance" />
                         <a href="/about">About</a>
                     </li>
                     <li className={location.pathname === "/contact" ? "active" : ""}>
-                        <img src={News} alt="News" />
+                        <img src={Notes} alt="News" />
                         <a href="/contact">Contact</a>
-                    </li> */}
+                    </li>
                 </ul>
             </div>
         </div >
