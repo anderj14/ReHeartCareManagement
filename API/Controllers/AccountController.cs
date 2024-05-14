@@ -32,22 +32,16 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            //finding a user
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
-
-            if (user == null) return Unauthorized(new ApiResponse(401));
-
-            // Success or not
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
-
-            if (!result.Succeeded) return Unauthorized(new ApiResponse(401));
+            var user = await _userManager.FindByNameAsync(loginDto.Username);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password)) return Unauthorized();
 
             return new UserDto()
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user)
+                Token = await _tokenService.CreateToken(user)
             };
+
         }
 
 
@@ -61,16 +55,6 @@ namespace API.Controllers
                     return BadRequest(ModelState);
                 }
 
-                // if (CheckEmailExistsAsync(registerDto.Email).Result.Value)
-                // {
-                //     return new BadRequestObjectResult(
-                //         new ApiValidationErrorResponse
-                //         {
-                //             Errors = new[] { "Email address is in use" }
-                //         }
-                //     );
-                // }
-
                 var appUser = new AppUser
                 {
                     UserName = registerDto.Username,
@@ -81,14 +65,14 @@ namespace API.Controllers
 
                 if (!result.Succeeded) return BadRequest(new ApiResponse(400));
 
-                var roleAddResult = await _userManager.AddToRoleAsync(appUser, "User");
+                var roleAddResult = await _userManager.AddToRoleAsync(appUser, "USER");
 
                 if (!roleAddResult.Succeeded) return BadRequest("Failed to add to role");
 
                 return new UserDto
                 {
                     UserName = appUser.UserName,
-                    Token = _tokenService.CreateToken(appUser),
+                    Token = await _tokenService.CreateToken(appUser),
                     Email = appUser.Email
                 };
             }
@@ -97,52 +81,5 @@ namespace API.Controllers
                 return StatusCode(500, e);
             }
         }
-
-        // [Authorize]
-        // [HttpGet]
-        // public async Task<ActionResult<UserDto>> GetCurrentUser()
-        // {
-        //     var email = User.FindFirstValue(ClaimTypes.Email);
-
-        //     var user = await _userManager.FindByEmailAsync(email);
-
-        //     return new UserDto()
-        //     {
-
-        //         Email = user.Email,
-        //         Token = _tokenService.CreateToken(user),
-        //         DisplayName = user.DisplayName
-        //         // Notes = user.Notes
-        //     };
-        // }
-
-        // [HttpGet("emailexists")]
-        // public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery] string email)
-        // {
-        //     return await _userManager.FindByEmailAsync(email) != null;
-        // }
-
-        // [HttpGet("userId")]
-        // public async Task<ActionResult<string>> GetUserId()
-        // {
-        //     // Obtener el email del claim del usuario autenticado
-        //     var userEmail = User.FindFirstValue(ClaimTypes.Email);
-
-        //     // Obtener el usuario basado en el email
-        //     var user = await _userManager.FindByEmailAsync(userEmail);
-
-        //     // Verificar si el usuario existe
-        //     if (user == null)
-        //     {
-        //         // Devolver un error si el usuario no existe
-        //         return BadRequest("Usuario no encontrado");
-        //     }
-
-        //     // Crear el token para el usuario actual
-        //     // var token = await _tokenService.CreateToken(user);
-
-        //     // Devolver el ID del usuario
-        //     return Ok(new { UserId = user.Id });
-        // }
     }
 }
