@@ -32,8 +32,15 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.FindByNameAsync(loginDto.Username);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password)) return Unauthorized();
+            //finding a user
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
+
+            if (user == null) return Unauthorized(new ApiResponse(401));
+
+            // Success or not
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+            if (!result.Succeeded) return Unauthorized(new ApiResponse(401));
 
             return new UserDto()
             {
@@ -41,7 +48,6 @@ namespace API.Controllers
                 Email = user.Email,
                 Token = await _tokenService.CreateToken(user)
             };
-
         }
 
 
@@ -82,13 +88,23 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("currentUser")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userName = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(401, "User not found"));
 
             return new UserDto()
             {
+                UserName = user.UserName,
                 Email = user.Email,
                 Token = await _tokenService.CreateToken(user),
             };

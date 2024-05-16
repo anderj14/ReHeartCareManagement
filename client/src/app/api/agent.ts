@@ -1,10 +1,17 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
-import { router } from "../router/Routes";
+import { store } from "../store/configureStore";
 
 axios.defaults.baseURL = 'https://localhost:5001/api/v1/';
 
 const responseBody = (response: AxiosResponse) => response.data;
+
+axios.interceptors.request.use(config => {
+    const token = store.getState().account.user?.token;
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+
+    return config;
+})
 
 axios.interceptors.response.use(
     response => response,
@@ -38,7 +45,6 @@ axios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
 
 const requests = {
     get: (url: string) => axios.get(url).then(responseBody),

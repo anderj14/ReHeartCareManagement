@@ -4,7 +4,7 @@ import Dashboard from '../../features/dashboard/Dashboard';
 import Patients from '../../features/patient/Patients';
 import PatientDetail from '../../features/patient/PatientDetails';
 import Sidebar from '../components/Sidebar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Notes from '../../features/notes/Notes';
 import CardiologySurgeries from '../../features/surgery/CardiologySurgeries';
 import CardiologySurgeryDetails from '../../features/surgery/CardiologySurgeryDetails';
@@ -16,8 +16,8 @@ import ServerError from '../errors/ServerError';
 import NotFound from '../errors/NotFound';
 import Login from '../../features/account/Login';
 import Register from '../../features/account/Register';
-
-
+import { useAppDispatch } from '../store/configureStore';
+import { fetchCurrentUser } from '../../features/account/accountSlice';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);
@@ -26,6 +26,12 @@ function App() {
     setCloseMenu(!closeMenu);
   }
 
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch])
+  
   return (
     <Router>
       <div className="App">
@@ -54,7 +60,6 @@ function App() {
         </div>
       </div>
     </Router>
-
   );
 }
 

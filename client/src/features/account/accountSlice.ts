@@ -2,6 +2,8 @@ import { FieldValues } from "react-hook-form";
 import { User } from "../../app/Models/user";
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import agent from "../../app/api/agent";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface AccountState {
     user: User | null;
@@ -26,14 +28,21 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
 
 // persistent data
 export const fetchCurrentUser = createAsyncThunk<User>(
-    'account/login',
+    'account/currentUser',
     async (_, thunkAPI) => {
+        thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem('user')!)));
         try {
             const user = await agent.Account.currentUser();
             localStorage.setItem('user', JSON.stringify(user));
             return user;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data })
+        }
+    },
+    {
+        // no more request
+        condition: () => {
+            if (!localStorage.getItem('user')) return false;
         }
     }
 )
@@ -42,22 +51,31 @@ export const accountSlice = createSlice({
     name: 'account',
     initialState,
     reducers: {
-        
+
         signOut: (state) => {
             state.user = null;
             localStorage.removeItem('user');
+        },
+        setUser: (state, action) => {
+            state.user = action.payload;
         }
     },
     extraReducers: (builder) => {
+
+        builder.addCase(fetchCurrentUser.rejected, (state, action) => {
+            state.user = null;
+            localStorage.removeItem('user');
+            toast.error('Session expired - please login again');
+        });
         builder.addMatcher(isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled), (state, action) => {
             state.user = action.payload;
         });
 
-        builder.addMatcher(isAnyOf(signInUser.rejected, fetchCurrentUser.rejected), (state, action) => {
+        builder.addMatcher(isAnyOf(signInUser.rejected), (state, action) => {
             console.log(action.payload);
         });
     }
 })
 
-export const { signOut } = accountSlice.actions;
+export const { signOut, setUser } = accountSlice.actions;
 export default accountSlice.reducer;

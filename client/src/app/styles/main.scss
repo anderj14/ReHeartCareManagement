@@ -25,12 +25,8 @@ strong {
 
 .flex {
     display: flex;
-    // background-color: blue;
 }
 
-// .sidebar {
-//     flex: 0 0 auto;
-// }
 
 .content-wrapper {
     flex: 1;
@@ -41,7 +37,6 @@ strong {
 .content {
     margin-left: 5.5rem;
     transition: 0.5s all;
-    // background-color: green;
     width: 100%;
 }
 
@@ -290,8 +285,6 @@ strong {
 }
 
 .settings {
-    // margin-top: 100px;
-
     .rotate-hover {
         transition: transform 0.3s !important;
         font-size: 40px !important;
@@ -303,13 +296,10 @@ strong {
     }
 
     .MuiPaper-root {
-        // top: 510px !important;
-        // left: 45px !important;
     }
 }
 
 .MuiList-root {
-    // display: flex !important;
     padding: 10px 10px 10px 10px !important;
 }
 
