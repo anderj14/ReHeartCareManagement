@@ -81,5 +81,17 @@ namespace API.Controllers
                 return StatusCode(500, e);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            return new UserDto()
+            {
+                Email = user.Email,
+                Token = await _tokenService.CreateToken(user),
+            };
+        }
     }
 }

@@ -22,14 +22,15 @@ span,
 strong {
     font-family: "Helvetica Neue";
 }
+
 .flex {
     display: flex;
     // background-color: blue;
 }
 
-.sidebar {
-    flex: 0 0 auto;
-}
+// .sidebar {
+//     flex: 0 0 auto;
+// }
 
 .content-wrapper {
     flex: 1;
@@ -58,7 +59,10 @@ strong {
     height: 100vh;
     transition: 0.5s all;
     box-sizing: border-box;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
 
     .logoContainer {
         margin: 0;
@@ -285,7 +289,31 @@ strong {
     }
 }
 
-// .sidebar {
-//     height: 100vh;
-//     box-sizing: border-box;
-// }
+.settings {
+    // margin-top: 100px;
+
+    .rotate-hover {
+        transition: transform 0.3s !important;
+        font-size: 40px !important;
+        color: $blackGrey;
+    }
+
+    .rotate-hover:hover {
+        transform: rotate(180deg);
+    }
+
+    .MuiPaper-root {
+        // top: 510px !important;
+        // left: 45px !important;
+    }
+}
+
+.MuiList-root {
+    // display: flex !important;
+    padding: 10px 10px 10px 10px !important;
+}
+
+.menu {
+    top: -23px !important;
+    left: 55px !important;
+}

@@ -14,6 +14,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ServerError from '../errors/ServerError';
 import NotFound from '../errors/NotFound';
+import Login from '../../features/account/Login';
+import Register from '../../features/account/Register';
 
 
 
@@ -43,6 +45,8 @@ function App() {
                 <Route path='/contact' element={< ContactPage />}></Route>
                 <Route path='/server-error' element={< ServerError />}></Route>
                 <Route path='/not-found' element={< NotFound />}></Route>
+                <Route path='/login' element={< Login />}></Route>
+                <Route path='/register' element={< Register />}></Route>
                 <Route path='*' element={< Navigate replace to={'/not-found'} />}></Route>
               </Routes>
             </div>
