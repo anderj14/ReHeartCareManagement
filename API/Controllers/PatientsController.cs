@@ -13,6 +13,7 @@ using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -50,6 +51,7 @@ namespace API.Controllers
 
             return Ok(_mapper.Map<IReadOnlyList<Patient>, IReadOnlyList<PatientDto>>(products));
         }
+
         [HttpGet("notpag/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
@@ -73,16 +75,21 @@ namespace API.Controllers
         {
             try
             {
-                var username = User.GetUsername();
-                var appUser = await _userManager.FindByNameAsync(username);
+                var userName = User.Identity.Name;
 
-                if (appUser == null)
+                if (string.IsNullOrEmpty(userName))
                 {
-                    return NotFound("User not found");
+                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
+
                 // Lambda expression to filter notes by current user
-                Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == appUser.Id;
+                Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == user.Id;
 
                 var spec = new PatientWithAllSpecification(noteSpecParams);
                 var countSpec = new PatientWithFiltersForCountSpecification(noteSpecParams);
@@ -109,15 +116,19 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PatientDto>> GetPatient(int id)
         {
-            var username = User.GetUsername();
-            var appUser = await _userManager.FindByNameAsync(username);
+            var userName = User.Identity.Name;
 
-            if (appUser == null)
+            if (string.IsNullOrEmpty(userName))
             {
-                return NotFound("User not found");
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
             }
 
-            Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == appUser.Id;
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(401, "User not found"));
+
+            Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == user.Id;
 
             var spec = new PatientWithAllSpecification(id);
 
@@ -134,23 +145,22 @@ namespace API.Controllers
         {
             try
             {
-                var username = User.GetUsername();
-                var appUser = await _userManager.FindByNameAsync(username);
+                var userName = User.Identity.Name;
 
-
-                if (patientDto == null)
+                if (string.IsNullOrEmpty(userName))
                 {
-                    return BadRequest("You can not create an invalid patient");
+                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                if (appUser == null)
-                {
-                    return BadRequest("This user is not allowed to use this endpoint");
-                }
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
 
                 var newPatient = new Patient
                 {
-                    AppUserId = appUser.Id,
+                    AppUserId = user.Id,
                     PatientName = patientDto.PatientName,
                     CarnetIdentification = patientDto.CarnetIdentification,
                     DOB = patientDto.DOB,
@@ -186,6 +196,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult<Patient>> UpdatePatient(int id, PatientCreateDto patientToUpdate)
         {
             var patient = await _unitOfWork.Repository<Patient>().GetByIdAsync(id);
@@ -201,6 +212,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> DeletePatient(int id)
         {
             var patient = await _unitOfWork.Repository<Patient>().GetByIdAsync(id);

@@ -7,18 +7,14 @@ import { useEffect, useState } from 'react';
 import { Note } from '../../app/Models/note';
 import Calendar from "../../Images/calendar.svg";
 import Thunder from "../../Images/thunder.svg";
+import agent from '../../app/api/agent';
 
 export default function Notes() {
 
   const [notes, setNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    fetch('https://localhost:5001/api/notes/all')
-      .then(res => res.json())
-      .then(data => {
-        setNotes(data.data);
-        console.log(data);
-      })
+    agent.Note.list().then(notes => setNotes(notes));
   }, []);
 
   return (
@@ -64,7 +60,7 @@ export default function Notes() {
         </Box>
       </Box>
       <Box className="containerCards">
-        <Typography variant='subtitle1' sx={{marginBottom: '20px'}}>All notes</Typography>
+        <Typography variant='subtitle1' sx={{ marginBottom: '20px' }}>All notes</Typography>
         <NoteCard notes={notes} />
       </Box>
     </div>

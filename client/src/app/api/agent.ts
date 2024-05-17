@@ -54,8 +54,18 @@ const requests = {
 }
 
 const Patient = {
-    list: () => requests.get('patients/notpag'),
-    details: (id: number) => requests.get(`patients/notpag/${id}`)
+    list: () => requests.get('patients'),
+    details: (id: number) => requests.get(`patients/${id}`)
+}
+
+const CardiologySurgery = {
+    list: () => requests.get('cardiologysurgeries'),
+    details: (id: number) => requests.get(`cardiologysurgeries/${id}`)
+}
+
+const Note = {
+    list: () => requests.get('notes'),
+    details: (id: number) => requests.get(`notes/${id}`)
 }
 
 const TestErrors = {
@@ -73,6 +83,8 @@ const Account = {
 
 const agent = {
     Patient,
+    CardiologySurgery,
+    Note,
     TestErrors,
     Account
 }

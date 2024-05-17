@@ -14,6 +14,7 @@ using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -54,22 +55,26 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<Pagination<CardiologySurgeryDto>>> GetCardiologySurgeriesByUser(
         [FromQuery] CardiologySurgerySpecParams cardiologySurgeryParams
         )
         {
             try
             {
-                var username = User.GetUsername();
-                var appUser = await _userManager.FindByNameAsync(username);
+                var userName = User.Identity.Name;
 
-                if (appUser == null)
+                if (string.IsNullOrEmpty(userName))
                 {
-                    return NotFound("User not found");
+                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                Expression<Func<CardiologySurgery, bool>> filter = (cardiologySurgery) => cardiologySurgery.AppUserId == appUser.Id;
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
+                Expression<Func<CardiologySurgery, bool>> filter = (cardiologySurgery) => cardiologySurgery.AppUserId == user.Id;
 
 
                 var spec = new CardiologySurgerySpecification(cardiologySurgeryParams);
@@ -94,6 +99,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<CardiologySurgeryDto>> GetCardiologySurgery(int id)
         {
             var spec = new CardiologySurgerySpecification(id);
@@ -111,23 +117,22 @@ namespace API.Controllers
         {
             try
             {
-                var username = User.GetUsername();
-                var appUser = await _userManager.FindByNameAsync(username);
+                var userName = User.Identity.Name;
 
-
-                if (surgeryCreateDto == null)
+                if (string.IsNullOrEmpty(userName))
                 {
-                    return BadRequest("You can not create an invalid surgery");
+                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                if (appUser == null)
-                {
-                    return BadRequest("This user is not allowed to use this endpoint");
-                }
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
 
                 var newSurgery = new CardiologySurgery
                 {
-                    AppUserId = appUser.Id,
+                    AppUserId = user.Id,
                     SurgeryName = surgeryCreateDto.SurgeryName,
                     Date = surgeryCreateDto.Date,
                     Time = TimeSpan.Parse(surgeryCreateDto.Time),

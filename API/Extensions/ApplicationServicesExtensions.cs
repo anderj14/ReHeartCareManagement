@@ -38,7 +38,7 @@ namespace API.Extensions
                 opt.Password.RequireNonAlphanumeric = true;
                 opt.Password.RequiredLength = 8;
             })
-            .AddRoles<IdentityRole>()
+            // .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ManagementContext>();
 
 

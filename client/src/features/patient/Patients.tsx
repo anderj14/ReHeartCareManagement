@@ -14,12 +14,7 @@ export default function Patients() {
     const [patients, setPatients] = useState<Patient[]>([]);
 
     useEffect(() => {
-        // fetch('https://localhost:5001/api/v1/patients/notpag')
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         setPatients(data);
-        //     });
-        agent.Patient.list().then(patients => setPatients(patients));
+        agent.Patient.list().then(patients => setPatients(patients.data));
     }, []);
 
     return (

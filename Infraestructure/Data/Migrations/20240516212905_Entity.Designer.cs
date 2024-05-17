@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Data.Migrations
 {
     [DbContext(typeof(ManagementContext))]
-    [Migration("20240514012815_AdminUser")]
-    partial class AdminUser
+    [Migration("20240516212905_Entity")]
+    partial class Entity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -813,13 +813,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "cd9cca4a-6ee5-4277-9f9d-d5a7f4b3c9e6",
+                            Id = "ae483a66-1cac-4417-805c-9c91dc92f01d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1643bf91-5bee-43f2-bf89-0f1a95f274d1",
+                            Id = "d906bdf3-8ca3-43aa-9135-fdbf2c1ba03c",
                             Name = "User",
                             NormalizedName = "USER"
                         });

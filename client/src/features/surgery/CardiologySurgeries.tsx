@@ -7,6 +7,7 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import CardiologySurgeryList from "./CardiologySurgeryList";
 import '../../app/styles/surgery.scss'
+import agent from "../../app/api/agent";
 
 
 export default function CardiologySurgeries() {
@@ -14,12 +15,7 @@ export default function CardiologySurgeries() {
   const [cardiologySurgery, setCardiologySurgery] = useState<CardiologySurgery[]>([]);
 
   useEffect(() => {
-    fetch('https://localhost:5001/api/v1/CardiologySurgeries/allSurgeries')
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        setCardiologySurgery(data.data);
-      });
+    agent.CardiologySurgery.list().then(cardiologySurgery => setCardiologySurgery(cardiologySurgery.data));
   }, []);
 
   return (

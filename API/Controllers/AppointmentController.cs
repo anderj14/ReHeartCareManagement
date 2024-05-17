@@ -14,6 +14,7 @@ using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -62,15 +63,20 @@ namespace API.Controllers
         {
             try
             {
-                var username = User.GetUsername();
-                var appUser = await _userManager.FindByNameAsync(username);
+                var userName = User.Identity.Name;
 
-                if (appUser == null)
+                if (string.IsNullOrEmpty(userName))
                 {
-                    return NotFound("User not found");
+                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                Expression<Func<Appointment, bool>> filter = (appointment) => appointment.AppUserId == appUser.Id;
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
+
+                Expression<Func<Appointment, bool>> filter = (appointment) => appointment.AppUserId == user.Id;
 
                 var spec = new AppointmentSpecification(appointmentParams);
                 var countSpec = new AppointmentFilterForCountSpecification(appointmentParams);
@@ -107,23 +113,22 @@ namespace API.Controllers
         [Authorize]
         public async Task<ActionResult> CreateAppointmentByUser([FromBody] AppointmentCreateDto appointmentCreateDto)
         {
-            var username = User.GetUsername();
-            var appUser = await _userManager.FindByNameAsync(username);
+            var userName = User.Identity.Name;
 
-
-            if (appointmentCreateDto == null)
+            if (string.IsNullOrEmpty(userName))
             {
-                return BadRequest("You can not create an invalid patient");
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
             }
 
-            if (appUser == null)
-            {
-                return BadRequest("This user is not allowed to use this endpoint");
-            }
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(401, "User not found"));
+
 
             var newAppointment = new Appointment
             {
-                AppUserId = appUser.Id,
+                AppUserId = user.Id,
                 Date = appointmentCreateDto.Date,
                 Time = TimeSpan.Parse(appointmentCreateDto.Time),
                 Description = appointmentCreateDto.Description,
@@ -149,7 +154,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        // [Authorize(Roles = "Admin, Member")]
+        [Authorize]
         public async Task<ActionResult<Appointment>> UpdatePatient(int id, AppointmentCreateDto appointmentUpdateDto)
         {
             var appointment = await _unitOfWork.Repository<Appointment>().GetByIdAsync(id);
@@ -163,6 +168,7 @@ namespace API.Controllers
 
         [HttpDelete("{id}")]
         // [Authorize(Roles = "Admin, Member")]
+        [Authorize]
         public async Task<ActionResult> DeleteAppointment(int id)
         {
             var appointment = await _unitOfWork.Repository<Appointment>().GetByIdAsync(id);

@@ -1,3 +1,4 @@
+using API.Errors;
 using API.Extensions;
 using API.Helper;
 using AutoMapper;
@@ -10,12 +11,11 @@ using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [Route("api/notes")]
-    [ApiController]
-    public class NotesController : ControllerBase
+    public class NotesController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
 
@@ -40,13 +40,25 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        // [Authorize]
         public async Task<IActionResult> GetUserNote()
         {
-            var username = User.GetUsername();
-            var appUser = await _userManager.FindByNameAsync(username);
+            var userName = User.Identity.Name;
 
-            var userNote = await _repository.GetUserNote(appUser);
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(401, "User not found"));
+
+            // var username = User.GetUsername();
+            // var appUser = await _userManager.FindByNameAsync(username);
+
+            var userNote = await _repository.GetUserNote(user);
             return Ok(userNote);
         }
 
@@ -69,62 +81,28 @@ namespace API.Controllers
         }
 
 
-        // [HttpPost]
-        // [Authorize]
-        // public async Task<IActionResult> AddNote(NoteCreateDto notesDto)
-        // {
-        //     try
-        //     {
-        //         var username = User.GetUsername();
-        //         var appUser = await _userManager.FindByNameAsync(username);
-
-        //         if (appUser == null)
-        //         {
-        //             return BadRequest("User not found");
-        //         }
-
-        //         var noteModel = new Notes
-        //         {
-        //             AppUserId = appUser.Id,
-        //             Title = notesDto.Title,
-        //             Content = notesDto.Content,
-        //             Date = DateTime.Now
-        //         };
-
-        //         await _repository.CreateAsync(noteModel);
-
-        //         return CreatedAtAction(nameof(AddNote), new { id = noteModel.Id }, noteModel);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return StatusCode(500, $"An error occurred: {ex.Message}");
-        //     }
-        // }
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddNote([FromBody] NotesDto notesDto)
         {
             try
             {
-                var username = User.GetUsername();
-                var appUser = await _userManager.FindByNameAsync(username);
+                var userName = User.Identity.Name;
 
-
-                if (notesDto == null)
+                if (string.IsNullOrEmpty(userName))
                 {
-                    return BadRequest("You can not create an invalid note");
-
+                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                if (appUser == null)
-                {
-                    return BadRequest("This user is not allowed to use this endpoint");
-                }
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
 
                 var newNote = new Notes
                 {
-                    AppUserId = appUser.Id,
+                    AppUserId = user.Id,
                     Title = notesDto.Title,
                     Content = notesDto.Content,
                     Date = DateTime.Now,
