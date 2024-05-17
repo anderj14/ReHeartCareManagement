@@ -82,10 +82,11 @@ namespace API.Controllers
                     return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+                // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+                var user = await _userManager.FindByNameAsync(userName);
 
                 if (user == null)
-                    return Unauthorized(new ApiResponse(401, "User not found"));
+                    return Unauthorized(new ApiResponse(400, "User not found"));
 
 
                 // Lambda expression to filter notes by current user
@@ -123,7 +124,8 @@ namespace API.Controllers
                 return Unauthorized(new ApiResponse(401, "User not authenticated"));
             }
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+            // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+            var user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
                 return Unauthorized(new ApiResponse(401, "User not found"));

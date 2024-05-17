@@ -33,9 +33,10 @@ namespace API.Controllers
             }
 
             //finding a user
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
+            var user = await _userManager.FindByNameAsync(loginDto.Username);
 
-            if (user == null) return Unauthorized(new ApiResponse(401));
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+                return Unauthorized();
 
             // Success or not
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
@@ -60,6 +61,13 @@ namespace API.Controllers
                 {
                     return BadRequest(ModelState);
                 }
+
+                if (CheckEmailExistsAsync(registerDto.Email).Result.Value)
+                {
+                    return new BadRequestObjectResult(new ApiValidationErrorResponse
+                    { Errors = new[] { "Email address is in use", registerDto.Email } });
+                }
+
 
                 var appUser = new AppUser
                 {
@@ -88,6 +96,13 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("emailexists")]
+        public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery] string email)
+        {
+            return await _userManager.FindByEmailAsync(email) != null;
+        }
+
+
         [HttpGet("currentUser")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
@@ -97,8 +112,9 @@ namespace API.Controllers
             {
                 return Unauthorized(new ApiResponse(401, "User not authenticated"));
             }
-            
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+
+            // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+            var user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
                 return Unauthorized(new ApiResponse(401, "User not found"));

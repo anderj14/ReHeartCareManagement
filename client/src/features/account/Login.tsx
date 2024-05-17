@@ -9,31 +9,23 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import { FieldValues, useForm } from 'react-hook-form';
-import { signInUser } from './accountSlice';
 import { useAppDispatch } from '../../app/store/configureStore';
+import { signInUser } from './accountSlice';
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
     const { register, handleSubmit, formState: { isSubmitting, errors, isValid } } = useForm({
         mode: 'onTouched'
-    }) // Hook
-
-    // async function submitForm(data: FieldValues) {
-    //     try {
-    //         await agent.Account.login(data);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
+    });
 
     async function submitForm(data: FieldValues) {
-        await dispatch(signInUser(data));
-        navigate('/patients');
+        const resultAction = await dispatch(signInUser(data));
+        if (signInUser.fulfilled.match(resultAction)) {
+            navigate('/patients');
+        }
     }
 
     return (

@@ -69,7 +69,8 @@ namespace API.Controllers
                     return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+                // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+                var user = await _userManager.FindByNameAsync(userName);
 
                 if (user == null)
                     return Unauthorized(new ApiResponse(401, "User not found"));
@@ -124,7 +125,8 @@ namespace API.Controllers
                     return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+                // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+                var user = await _userManager.FindByNameAsync(userName);
 
                 if (user == null)
                     return Unauthorized(new ApiResponse(401, "User not found"));
