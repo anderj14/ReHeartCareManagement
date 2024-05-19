@@ -9,3 +9,10 @@ export interface Patient {
     email: string
     socialSecurity: string
 }
+
+export interface PatientParams {
+    sort: string;
+    search?: string;
+    pageIndex: number;
+    pageSize: number;
+}

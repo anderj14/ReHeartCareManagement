@@ -1,26 +1,39 @@
 import PatientList from "./PatientList";
-import { Patient } from "../../app/Models/patient";
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Fade, FormControl, FormControlLabel, FormLabel, Pagination, Popper, Radio, RadioGroup, Typography } from "@mui/material";
 import '../../app/styles/patient.scss'
-import SearchIcon from "@mui/icons-material/Search";
 import Breadcrumb from "../../app/components/Breadcrumb";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
-import agent from "../../app/api/agent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { fetchPatientAsync, fetchPatientsAsync, patientSelectors } from "./patientSlice";
+import { fetchPatientsAsync, patientSelectors, setPatientParams } from "./patientSlice";
+import PatientSearch from "./PatientSearch";
+import RadioButtonGroup from "../../app/components/RadioButtonGroup";
+
+const sortOptions = [
+    { value: 'patientName', label: 'Alphabetical' },
+    { value: 'dobAsc', label: 'DOB - Asc to Desc' },
+    { value: 'dobDesc', label: 'DOB - Desc to Asc' },
+]
 
 export default function Patients() {
     const patients = useAppSelector(patientSelectors.selectAll);
-    const {patientLoaded} = useAppSelector(state => state.patient);
+    const { patientsLoaded, patientParams } = useAppSelector(state => state.patient);
     const dispatch = useAppDispatch();
-    // const [patients, setPatients] = useState<Patient[]>([]);
+    const [open, setOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+        setOpen((previousOpen) => !previousOpen);
+    };
+
+    const canBeOpen = open && Boolean(anchorEl);
+    const id = canBeOpen ? 'spring-popper' : undefined;
 
     useEffect(() => {
-        if (!patientLoaded) dispatch(fetchPatientsAsync());
-        // agent.Patient.list().then(patients => setPatients(patients.data));
-    }, [patientLoaded, dispatch]);
+        if (!patientsLoaded) dispatch(fetchPatientsAsync());
+    }, [patientsLoaded, dispatch]);
 
     return (
         <div className="contentPatient">
@@ -42,23 +55,22 @@ export default function Patients() {
                         </Box>
                         <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '-35px' }}>
                             <div className="search">
-                                <TextField
-                                    id="search-bar"
-                                    className="text"
-                                    label="Search by name"
-                                    variant="outlined"
-                                    placeholder="Search..."
-                                    size="small"
-                                />
-                                <IconButton type="submit" aria-label="search">
-                                    <SearchIcon style={{ fill: "#5a9580", fontSize: '30px' }} />
-                                </IconButton>
+                                <PatientSearch />
                             </div>
                             <div className="addPatientButton">
                                 <Button className="button" startIcon={<AddRoundedIcon />}>Add Patient</Button>
                             </div>
                             <div className="addFilterButton">
-                                <Button className="button" startIcon={<SortRoundedIcon />}>Filter</Button>
+                                <Button className="button" startIcon={<SortRoundedIcon />} onClick={handleClick}>Filter</Button>
+                                <RadioButtonGroup
+                                    selectedValue={patientParams.sort}
+                                    options={sortOptions}
+                                    onChange={(e) => dispatch(setPatientParams({ sort: e.target.value }))}
+                                    id={id}
+                                    open={open}
+                                    anchorEl={anchorEl}
+                                />
+
                             </div>
                         </Box>
                     </div>
@@ -69,6 +81,12 @@ export default function Patients() {
                 <div className="patientList">
                     <PatientList patients={patients} />
                 </div>
+            </Box>
+            <Box display='flex' justifyContent='space-between' alignItems='center' marginTop='30px'>
+                <p>
+                    Showing <strong>1 - 6</strong> of <strong>6</strong> result
+                </p>
+                <Pagination count={10} />
             </Box>
         </div>
     )

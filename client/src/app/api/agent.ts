@@ -47,15 +47,15 @@ axios.interceptors.response.use(
 );
 
 const requests = {
-    get: (url: string) => axios.get(url).then(responseBody),
+    get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responseBody),
     post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
     put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
 }
 
 const Patient = {
-    list: () => requests.get('patients'),
-    details: (id: number) => requests.get(`patients/${id}`)
+    list: (params: URLSearchParams) => requests.get('patients', params),
+    details: (id: number) => requests.get(`patients/${id}`),
 }
 
 const CardiologySurgery = {

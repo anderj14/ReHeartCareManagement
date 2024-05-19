@@ -1,15 +1,32 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { Patient } from "../../app/Models/patient";
+import { Patient, PatientParams } from "../../app/Models/patient";
 import agent from "../../app/api/agent";
 import { RootState } from "../../app/store/configureStore";
 
+interface PatientState {
+    patientsLoaded: boolean;
+    status: string;
+    patientParams: PatientParams;
+}
+
 const patientsAdapter = createEntityAdapter<Patient>();
 
-export const fetchPatientsAsync = createAsyncThunk<Patient[]>(
+function getAxiosParams(patientParams: PatientParams) {
+    const params = new URLSearchParams();
+    params.append('pageIndex', patientParams.pageIndex.toString());
+    params.append('pageSize', patientParams.pageSize.toString());
+    params.append('sort', patientParams.sort.toString());
+
+    if (patientParams.search) params.append('search', patientParams.search);
+    return params;
+}
+
+export const fetchPatientsAsync = createAsyncThunk<Patient[], void, { state: RootState }>(
     'patient/fetchPatientsAsync',
     async (_, thunkAPI) => {
+        const params = getAxiosParams(thunkAPI.getState().patient.patientParams);
         try {
-            const patients = await agent.Patient.list();
+            const patients = await agent.Patient.list(params!);
             return patients.data;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data });
@@ -29,13 +46,30 @@ export const fetchPatientAsync = createAsyncThunk<Patient, number>(
     }
 );
 
+function initParams() {
+    return {
+        pageIndex: 1,
+        pageSize: 6,
+        sort: 'patientName'
+    }
+}
+
 export const patientSlice = createSlice({
     name: 'patient',
-    initialState: patientsAdapter.getInitialState({
-        patientLoaded: false,
-        status: 'idle'
+    initialState: patientsAdapter.getInitialState<PatientState>({
+        patientsLoaded: false,
+        status: 'idle',
+        patientParams: initParams()
     }),
-    reducers: {},
+    reducers: {
+        setPatientParams: (state, action) => {
+            state.patientsLoaded = false;
+            state.patientParams = { ...state.patientParams, ...action.payload };
+        },
+        resetPatientParams: (state) => {
+            state.patientParams = initParams();
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchPatientsAsync.pending, (state) => {
             state.status = 'pendingFetchPatients';
@@ -43,7 +77,7 @@ export const patientSlice = createSlice({
         builder.addCase(fetchPatientsAsync.fulfilled, (state, action) => {
             patientsAdapter.setAll(state, action.payload);
             state.status = 'idle';
-            state.patientLoaded = true;
+            state.patientsLoaded = true;
         });
         builder.addCase(fetchPatientsAsync.rejected, (state, action) => {
             console.log(action.payload);
@@ -64,3 +98,5 @@ export const patientSlice = createSlice({
 });
 
 export const patientSelectors = patientsAdapter.getSelectors((state: RootState) => state.patient);
+
+export const { setPatientParams, resetPatientParams } = patientSlice.actions;
