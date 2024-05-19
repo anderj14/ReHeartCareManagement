@@ -30,6 +30,8 @@ import DiagnosticPatient from "./components/DiagnosticPatient";
 import { Treatment } from "../../app/Models/treatment";
 import TreatmentPatient from "./components/TreatmentPatient";
 import NotFound from "../../app/errors/NotFound";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { fetchPatientAsync, patientSelectors } from "./patientSlice";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -66,7 +68,10 @@ function a11yProps(index: number) {
 
 export default function PatientDetail() {
     const { id } = useParams<{ id: any }>();
-    const [patient, setPatient] = useState<Patient | null>(null);
+    // const [patient, setPatient] = useState<Patient | null>(null);
+    const dispatch = useAppDispatch();
+    const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+    const { status: patientStatus } = useAppSelector(state => state.patient);
     const [loading, setLoading] = useState(true);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [bloodTests, setBloodTests] = useState<BloodTest[]>([]);
@@ -87,14 +92,7 @@ export default function PatientDetail() {
 
     useEffect(() => {
         const fetchPatient = async () => {
-            try {
-                const patientData = await ApiService.getPatientById(id);
-                setPatient(patientData);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
+            if (!patient) dispatch(fetchPatientAsync(id));
         };
         const fetchAppointments = async () => {
             try {
@@ -220,7 +218,7 @@ export default function PatientDetail() {
         fetchMedicalHistory();
         fetchDiagnostic();
         fetchTreatment()
-    }, [id]);
+    }, [id, dispatch, patient]);
 
     function calculateAge(dob: any) {
         if (dob) {
@@ -239,7 +237,7 @@ export default function PatientDetail() {
 
     const age = calculateAge(patient?.dob);
 
-    if (loading) return <h3>Loading...</h3>;
+    if (patientStatus.includes('pending')) return <h3>Loading...</h3>;
     // if (!patient) return <h3>Patient not found</h3>;
     if (!patient) return <NotFound />;
 

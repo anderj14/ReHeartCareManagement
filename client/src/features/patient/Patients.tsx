@@ -8,14 +8,19 @@ import Breadcrumb from "../../app/components/Breadcrumb";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import agent from "../../app/api/agent";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { fetchPatientAsync, fetchPatientsAsync, patientSelectors } from "./patientSlice";
 
 export default function Patients() {
-
-    const [patients, setPatients] = useState<Patient[]>([]);
+    const patients = useAppSelector(patientSelectors.selectAll);
+    const {patientLoaded} = useAppSelector(state => state.patient);
+    const dispatch = useAppDispatch();
+    // const [patients, setPatients] = useState<Patient[]>([]);
 
     useEffect(() => {
-        agent.Patient.list().then(patients => setPatients(patients.data));
-    }, []);
+        if (!patientLoaded) dispatch(fetchPatientsAsync());
+        // agent.Patient.list().then(patients => setPatients(patients.data));
+    }, [patientLoaded, dispatch]);
 
     return (
         <div className="contentPatient">
