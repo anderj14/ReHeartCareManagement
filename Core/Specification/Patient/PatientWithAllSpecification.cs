@@ -7,20 +7,6 @@ namespace Core.Specification
     {
         public PatientWithAllSpecification()
         {
-            // AddInclude(p => p.Appointments);
-            // AddInclude(p => p.BloodTests);
-            // AddInclude(p => p.CardiacCatheterizationStudies);
-            // AddInclude(p => p.Diagnostics);
-            // AddInclude(p => p.DiseaseHistories);
-            // AddInclude(p => p.Echocardiograms);
-            // AddInclude(p => p.Electrocardiograms);
-            // AddInclude(p => p.HolterStudies);
-            // AddInclude(p => p.MedicalHistories);
-            // AddInclude(p => p.PhysicalExaminations);
-            // AddInclude(p => p.StressTests);
-            // AddInclude(p => p.Treatments);
-            // AddInclude(p => p.CardiologySurgery);
-
         }
 
         public PatientWithAllSpecification(PatientSpecParams patientParams)
@@ -45,7 +31,6 @@ namespace Core.Specification
 
             AddOrderBy(p => p.PatientName);
 
-            // You are configuring the pagination to show a specific results page
             ApplyPaging(patientParams.PageSize * (patientParams.PageIndex - 1), patientParams.PageSize);
 
 

@@ -2,11 +2,13 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 import { Patient, PatientParams } from "../../app/Models/patient";
 import agent from "../../app/api/agent";
 import { RootState } from "../../app/store/configureStore";
+import { Metadata } from "../../app/Models/pagination";
 
 interface PatientState {
     patientsLoaded: boolean;
     status: string;
     patientParams: PatientParams;
+    metaData: Metadata | null;
 }
 
 const patientsAdapter = createEntityAdapter<Patient>();
@@ -18,6 +20,7 @@ function getAxiosParams(patientParams: PatientParams) {
     params.append('sort', patientParams.sort.toString());
 
     if (patientParams.search) params.append('search', patientParams.search);
+
     return params;
 }
 
@@ -26,8 +29,10 @@ export const fetchPatientsAsync = createAsyncThunk<Patient[], void, { state: Roo
     async (_, thunkAPI) => {
         const params = getAxiosParams(thunkAPI.getState().patient.patientParams);
         try {
-            const patients = await agent.Patient.list(params!);
-            return patients.data;
+            const response = await agent.Patient.list(params);
+            thunkAPI.dispatch(setMetaData(response.metadata));
+            console.log(response);
+            return response.items;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data });
         }
@@ -49,7 +54,7 @@ export const fetchPatientAsync = createAsyncThunk<Patient, number>(
 function initParams() {
     return {
         pageIndex: 1,
-        pageSize: 6,
+        pageSize: 8,
         sort: 'patientName'
     }
 }
@@ -59,12 +64,20 @@ export const patientSlice = createSlice({
     initialState: patientsAdapter.getInitialState<PatientState>({
         patientsLoaded: false,
         status: 'idle',
-        patientParams: initParams()
+        patientParams: initParams(),
+        metaData: null
     }),
     reducers: {
         setPatientParams: (state, action) => {
             state.patientsLoaded = false;
             state.patientParams = { ...state.patientParams, ...action.payload };
+        },
+        setPageIndex: (state, action) => {
+            state.patientsLoaded = false;
+            state.patientParams = { ...state.patientParams, ...action.payload }
+        },
+        setMetaData: (state, action) => {
+            state.metaData = action.payload
         },
         resetPatientParams: (state) => {
             state.patientParams = initParams();
@@ -97,6 +110,6 @@ export const patientSlice = createSlice({
     }
 });
 
-export const patientSelectors = patientsAdapter.getSelectors((state: RootState) => state.patient);
+export const { setPatientParams, resetPatientParams, setMetaData, setPageIndex  } = patientSlice.actions;
 
-export const { setPatientParams, resetPatientParams } = patientSlice.actions;
+export const patientSelectors = patientsAdapter.getSelectors((state: RootState) => state.patient);

@@ -1,24 +1,26 @@
-import PatientList from "./PatientList";
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, Fade, FormControl, FormControlLabel, FormLabel, Pagination, Popper, Radio, RadioGroup, Typography } from "@mui/material";
-import '../../app/styles/patient.scss'
+import { Box, Button, Card, CardContent, Pagination, Typography } from "@mui/material";
+import '../../app/styles/patient.scss';
 import Breadcrumb from "../../app/components/Breadcrumb";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchPatientsAsync, patientSelectors, setPatientParams } from "./patientSlice";
+import PatientList from "./PatientList";
 import PatientSearch from "./PatientSearch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
+import PaginationItem from "../../app/components/PaginationItem";
+import Pager from "../../app/components/Pager";
 
 const sortOptions = [
     { value: 'patientName', label: 'Alphabetical' },
     { value: 'dobAsc', label: 'DOB - Asc to Desc' },
     { value: 'dobDesc', label: 'DOB - Desc to Asc' },
-]
+];
 
 export default function Patients() {
     const patients = useAppSelector(patientSelectors.selectAll);
-    const { patientsLoaded, patientParams } = useAppSelector(state => state.patient);
+    const { patientsLoaded, patientParams, metaData } = useAppSelector(state => state.patient);
     const dispatch = useAppDispatch();
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -35,6 +37,13 @@ export default function Patients() {
         if (!patientsLoaded) dispatch(fetchPatientsAsync());
     }, [patientsLoaded, dispatch]);
 
+    if (!patientsLoaded || !metaData) {
+        return (
+            <Typography variant="h6">Loading patients...</Typography>
+        );
+    }
+
+
     return (
         <div className="contentPatient">
             <Breadcrumb page="Patients" />
@@ -48,9 +57,10 @@ export default function Patients() {
                         <Box>
                             <Typography variant="h6">Patient List</Typography>
                             <div className="pager">
-                                <p>
+                                {/* <p>
                                     Showing <strong>1 - 6</strong> of <strong>6</strong> result
-                                </p>
+                                </p> */}
+                                <Pager metaData={metaData}/>
                             </div>
                         </Box>
                         <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '-35px' }}>
@@ -82,11 +92,12 @@ export default function Patients() {
                     <PatientList patients={patients} />
                 </div>
             </Box>
-            <Box display='flex' justifyContent='space-between' alignItems='center' marginTop='30px'>
-                <p>
-                    Showing <strong>1 - 6</strong> of <strong>6</strong> result
-                </p>
-                <Pagination count={10} />
+            <Box marginTop='30px'>
+
+                <PaginationItem
+                    metaData={metaData}
+                    onPageChange={(page: number) => dispatch(setPatientParams({ pageIndex: page }))}
+                />
             </Box>
         </div>
     )

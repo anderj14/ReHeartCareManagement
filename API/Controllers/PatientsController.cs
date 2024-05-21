@@ -67,11 +67,48 @@ namespace API.Controllers
             return _mapper.Map<Patient, PatientDto>(patient);
         }
 
+        // [HttpGet]
+        // [Authorize]
+        // public async Task<ActionResult<PagedList<PatientDto>>> GetPatientsByUser(
+        // [FromQuery] PatientSpecParams noteSpecParams
+        // )
+        // {
+        //     try
+        //     {
+        //         var userName = User.Identity.Name;
+
+        //         if (string.IsNullOrEmpty(userName))
+        //         {
+        //             return Unauthorized(new ApiResponse(401, "User not authenticated"));
+        //         }
+
+        //         var user = await _userManager.FindByNameAsync(userName);
+
+        //         if (user == null)
+        //             return Unauthorized(new ApiResponse(400, "User not found"));
+
+        //         Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == user.Id;
+
+        //         var spec = new PatientWithAllSpecification(noteSpecParams);
+        //         var countSpec = new PatientWithFiltersForCountSpecification(noteSpecParams);
+        //         var totalItems = await _unitOfWork.Repository<Patient>().CountAsync(countSpec);
+
+        //         var userPatient = await _unitOfWork.Repository<Patient>().ListAllByUserAsync(filter, spec);
+
+        //         var data = _mapper.Map<IReadOnlyList<PatientDto>>(userPatient);
+
+        //         return Ok(new Pagination<PatientDto>(
+        //             noteSpecParams.PageIndex, noteSpecParams.PageSize, totalItems, data
+        //         ));
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return StatusCode(500, $"Internal server error: {ex.Message}");
+        //     }
+        // }
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<Pagination<PatientDto>>> GetPatientsByUser(
-        [FromQuery] PatientSpecParams noteSpecParams
-        )
+        public async Task<ActionResult<PagedList<PatientDto>>> GetPatientsByUser([FromQuery] PatientSpecParams noteSpecParams)
         {
             try
             {
@@ -82,28 +119,27 @@ namespace API.Controllers
                     return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
                 var user = await _userManager.FindByNameAsync(userName);
 
                 if (user == null)
                     return Unauthorized(new ApiResponse(400, "User not found"));
 
-
-                // Lambda expression to filter notes by current user
-                Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == user.Id;
+                var userId = user.Id;
 
                 var spec = new PatientWithAllSpecification(noteSpecParams);
                 var countSpec = new PatientWithFiltersForCountSpecification(noteSpecParams);
+
                 var totalItems = await _unitOfWork.Repository<Patient>().CountAsync(countSpec);
 
-
-                var userPatient = await _unitOfWork.Repository<Patient>().ListAllByUserAsync(filter, spec);
+                var userPatient = await _unitOfWork.Repository<Patient>().ListAsync(spec);
 
                 var data = _mapper.Map<IReadOnlyList<PatientDto>>(userPatient);
 
-                return Ok(new Pagination<PatientDto>(
-                    noteSpecParams.PageIndex, noteSpecParams.PageSize, totalItems, data
-                ));
+                var paginatedPatients = new PagedList<PatientDto>(data.ToList(), totalItems, noteSpecParams.PageIndex, noteSpecParams.PageSize);
+
+                Response.AddPaginationHeader(paginatedPatients.MetaData);
+
+                return Ok(paginatedPatients);
             }
             catch (Exception ex)
             {

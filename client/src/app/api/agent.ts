@@ -1,20 +1,30 @@
-import axios, { AxiosResponse } from "axios";
-import { toast } from "react-toastify";
-import { store } from "../store/configureStore";
+// agent.js
+import axios, { AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
+import { store } from '../store/configureStore';
+import { PaginatedResponse } from '../Models/pagination';
 
 axios.defaults.baseURL = 'https://localhost:5001/api/v1/';
 
 const responseBody = (response: AxiosResponse) => response.data;
 
-axios.interceptors.request.use(config => {
+axios.interceptors.request.use((config) => {
     const token = store.getState().account.user?.token;
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
 
 axios.interceptors.response.use(
-    response => response,
-    error => {
+    async (response) => {
+        const pagination = response.headers['pagination'];
+        if (pagination) {
+            response.data = new PaginatedResponse(response.data, JSON.parse(pagination));
+            console.log(response);
+            return response;
+        }
+        return response;
+    },
+    (error) => {
         const { status, data } = error.response;
         switch (status) {
             case 400:
@@ -22,7 +32,7 @@ axios.interceptors.response.use(
                     const modelStateErrors: string[] = [];
                     for (const key in data.errors) {
                         if (data.errors[key]) {
-                            modelStateErrors.push(data.errors[key])
+                            modelStateErrors.push(data.errors[key]);
                         }
                     }
                     throw modelStateErrors.flat();
@@ -47,38 +57,38 @@ axios.interceptors.response.use(
 );
 
 const requests = {
-    get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responseBody),
+    get: (url: string, params?: URLSearchParams) => axios.get(url, { params }).then(responseBody),
     post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
     put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
-}
+};
 
 const Patient = {
     list: (params: URLSearchParams) => requests.get('patients', params),
     details: (id: number) => requests.get(`patients/${id}`),
-}
+};
 
 const CardiologySurgery = {
     list: () => requests.get('cardiologysurgeries'),
-    details: (id: number) => requests.get(`cardiologysurgeries/${id}`)
-}
+    details: (id: number) => requests.get(`cardiologysurgeries/${id}`),
+};
 
 const Note = {
     list: () => requests.get('notes'),
-    details: (id: number) => requests.get(`notes/${id}`)
-}
+    details: (id: number) => requests.get(`notes/${id}`),
+};
 
 const TestErrors = {
     get400Error: () => requests.get('buggy/badrequest'),
     get401Error: () => requests.get('buggy/unauthorized'),
     get404Error: () => requests.get('buggy/notfound'),
     get500Error: () => requests.get('buggy/servererror'),
-}
+};
 
 const Account = {
     login: (values: any) => requests.post('account/login', values),
     register: (values: any) => requests.post('account/register', values),
-    currentUser: () => requests.get('account/currentUser')
+    currentUser: () => requests.get('account/currentUser'),
 };
 
 const agent = {
@@ -86,7 +96,7 @@ const agent = {
     CardiologySurgery,
     Note,
     TestErrors,
-    Account
-}
+    Account,
+};
 
 export default agent;
