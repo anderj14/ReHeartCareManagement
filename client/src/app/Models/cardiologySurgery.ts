@@ -16,3 +16,10 @@ export interface CardiologySurgery {
     isMinimallyInvasive: string
     patient: string
 }
+
+export interface CardiologySurgeryParams {
+    sort: string;
+    search?: string;
+    pageIndex: number;
+    pageSize: number;
+}

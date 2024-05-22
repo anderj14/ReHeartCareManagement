@@ -49,7 +49,14 @@ namespace Infraestructure.Data.Repository
 
             return await query.ToListAsync();
         }
+        public async Task<IReadOnlyList<T>> ListAllByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec, int pageIndex, int pageSize)
+        {
+            var query = ApplySpecification(spec).Where(filter)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
 
+            return await query.ToListAsync();
+        }
 
         public async Task<T> GetEntityByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec)
         {
@@ -64,6 +71,12 @@ namespace Infraestructure.Data.Repository
         {
             return await ApplySpecification(spec).CountAsync();
         }
+        public async Task<int> CountByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec)
+        {
+            var query = ApplySpecification(spec).Where(filter);
+            return await query.CountAsync();
+        }
+
 
         public void Add(T entity)
         {

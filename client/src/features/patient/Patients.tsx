@@ -43,7 +43,6 @@ export default function Patients() {
         );
     }
 
-
     return (
         <div className="contentPatient">
             <Breadcrumb page="Patients" />
@@ -80,7 +79,6 @@ export default function Patients() {
                                     open={open}
                                     anchorEl={anchorEl}
                                 />
-
                             </div>
                         </Box>
                     </div>

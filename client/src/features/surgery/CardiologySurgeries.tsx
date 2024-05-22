@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { CardiologySurgery } from "../../app/Models/cardiologySurgery";
 import { Box, Typography, Card, CardContent, TextField, IconButton, Button } from "@mui/material";
 import Breadcrumb from "../../app/components/Breadcrumb";
 import SearchIcon from "@mui/icons-material/Search";
@@ -7,16 +6,45 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import CardiologySurgeryList from "./CardiologySurgeryList";
 import '../../app/styles/surgery.scss'
-import agent from "../../app/api/agent";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { fetchCardiologySurgeriesAsync, setCardiologySurgeryParams, surgerySelectors } from "./surgerySlice";
+import RadioButtonGroup from "../../app/components/RadioButtonGroup";
+import PatientSearch from "../patient/PatientSearch";
+import CardiologySurgerySearch from "../patient/components/CardiologySurgerySearch";
+import Pager from "../../app/components/Pager";
+import PaginationItem from "../../app/components/PaginationItem";
 
+const sortOptions = [
+  { value: 'patientName', label: 'Alphabetical' },
+  { value: 'dateAsc', label: 'Date - Asc to Desc' },
+  { value: 'dateDesc', label: 'Date - Desc to Asc' },
+]
 
 export default function CardiologySurgeries() {
 
-  const [cardiologySurgery, setCardiologySurgery] = useState<CardiologySurgery[]>([]);
+  const cardiologySurgeries = useAppSelector(surgerySelectors.selectAll);
+  const { surgieriesLoaded, cardiologySurgeryParams, metaData } = useAppSelector(state => state.cardiologySurgery);
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
-    agent.CardiologySurgery.list().then(cardiologySurgery => setCardiologySurgery(cardiologySurgery.data));
-  }, []);
+    if (!surgieriesLoaded) dispatch(fetchCardiologySurgeriesAsync());
+  }, [surgieriesLoaded, dispatch]);
+
+  if (!surgieriesLoaded || !metaData) {
+    return (
+      <Typography variant="h6">Loading Surgieries...</Typography>
+    );
+  }
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((previousOpen) => !previousOpen);
+  }
+
+  const canBeOpen = open && Boolean(anchorEl);
+  const id = canBeOpen ? 'spring-popper' : undefined;
 
   return (
     <div className="contentSurgery">
@@ -31,30 +59,26 @@ export default function CardiologySurgeries() {
             <Box>
               <Typography variant="h6">Surgery List</Typography>
               <div className="pager">
-                <p>
-                  Showing <strong>1 - 10</strong> of <strong>20</strong> result
-                </p>
+                <Pager metaData={metaData} />
               </div>
             </Box>
             <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '-35px' }}>
               <div className="search">
-                <TextField
-                  id="search-bar"
-                  className="text"
-                  label="Search by name"
-                  variant="outlined"
-                  placeholder="Search..."
-                  size="small"
-                />
-                <IconButton type="submit" aria-label="search">
-                  <SearchIcon style={{ fill: "#5a9580", fontSize: '30px' }} />
-                </IconButton>
+                <CardiologySurgerySearch />
               </div>
               <div className="addPatientButton">
                 <Button className="button" startIcon={<AddRoundedIcon />}>Add Surgery</Button>
               </div>
               <div className="addFilterButton">
-                <Button className="button" startIcon={<SortRoundedIcon />}>Filter</Button>
+                <Button className="button" startIcon={<SortRoundedIcon />} onClick={handleClick}>Filter</Button>
+                <RadioButtonGroup
+                  selectedValue={cardiologySurgeryParams.sort}
+                  options={sortOptions}
+                  onChange={(e) => dispatch(setCardiologySurgeryParams({ sort: e.target.value }))}
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                />
               </div>
             </Box>
           </div>
@@ -63,8 +87,14 @@ export default function CardiologySurgeries() {
 
       <Box sx={{ marginTop: '20px' }}>
         <div className="surgeryList">
-          <CardiologySurgeryList cardiologySurgeries={cardiologySurgery} />
+          <CardiologySurgeryList cardiologySurgeries={cardiologySurgeries} />
         </div>
+      </Box>
+      <Box marginTop={'30px'}>
+        <PaginationItem
+          metaData={metaData}
+          onPageChange={(page: number) => dispatch(setCardiologySurgeryParams({ pageIndex: page }))}
+        />
       </Box>
     </div>
   )

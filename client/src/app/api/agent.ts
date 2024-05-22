@@ -19,7 +19,7 @@ axios.interceptors.response.use(
         const pagination = response.headers['pagination'];
         if (pagination) {
             response.data = new PaginatedResponse(response.data, JSON.parse(pagination));
-            console.log(response);
+            // console.log(response);
             return response;
         }
         return response;
@@ -69,7 +69,7 @@ const Patient = {
 };
 
 const CardiologySurgery = {
-    list: () => requests.get('cardiologysurgeries'),
+    list: (params: URLSearchParams) => requests.get('cardiologysurgeries', params),
     details: (id: number) => requests.get(`cardiologysurgeries/${id}`),
 };
 

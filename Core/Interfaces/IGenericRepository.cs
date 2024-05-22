@@ -12,11 +12,14 @@ namespace Core.Interfaces
         Task<IReadOnlyList<T>> ListAllAsync();
         Task<T> GetEntityWithSpec(ISpecification<T> spec);
         Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
-        
+
         Task<IReadOnlyList<T>> ListAllByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec);
         Task<T> GetEntityByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec);
 
         Task<int> CountAsync(ISpecification<T> spec);
+        Task<int> CountByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec);
+        Task<IReadOnlyList<T>> ListAllByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec, int pageIndex, int pageSize);
+
 
         void Add(T entity);
         void Update(T entity);
