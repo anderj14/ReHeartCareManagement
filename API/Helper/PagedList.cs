@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Helper
@@ -20,8 +19,7 @@ namespace API.Helper
         public MetaData MetaData { get; set; }
 
         public static async Task<PagedList<T>> ToPagedList(
-            IQueryable<T> query, int pageIndex, int pageSize
-            )
+            IQueryable<T> query, int pageIndex, int pageSize)
         {
             var count = await query.CountAsync();
             var items = await query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();

@@ -21,7 +21,7 @@ const sortOptions = [
 export default function CardiologySurgeries() {
 
   const cardiologySurgeries = useAppSelector(surgerySelectors.selectAll);
-  const { surgieriesLoaded, cardiologySurgeryParams, metaData } = useAppSelector(state => state.cardiologySurgery);
+  const { surgieriesLoaded, cardiologySurgeryParams, metaData, status } = useAppSelector(state => state.cardiologySurgery);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -29,12 +29,6 @@ export default function CardiologySurgeries() {
   useEffect(() => {
     if (!surgieriesLoaded) dispatch(fetchCardiologySurgeriesAsync());
   }, [surgieriesLoaded, dispatch]);
-
-  if (!surgieriesLoaded || !metaData) {
-    return (
-      <Typography variant="h6">Loading Surgieries...</Typography>
-    );
-  }
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -57,7 +51,9 @@ export default function CardiologySurgeries() {
             <Box>
               <Typography variant="h6">Surgery List</Typography>
               <div className="pager">
-                <Pager metaData={metaData} />
+                {metaData && (
+                  <Pager metaData={metaData} />
+                )}
               </div>
             </Box>
             <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '-35px' }}>
@@ -84,16 +80,28 @@ export default function CardiologySurgeries() {
       </Card>
 
       <Box sx={{ marginTop: '20px' }}>
-        <div className="surgeryList">
-          <CardiologySurgeryList cardiologySurgeries={cardiologySurgeries} />
-        </div>
+        {status === 'pendingFetchCardiologySurgeriesAsync' && (
+          <Typography variant="h6">Loading Surgeries...</Typography>
+        )}
+        {surgieriesLoaded && cardiologySurgeries.length === 0 && (
+          <Typography variant="h6">No Surgeries Found</Typography>
+        )}
+        {surgieriesLoaded && cardiologySurgeries.length > 0 && (
+          <div className="surgeryList">
+            <CardiologySurgeryList cardiologySurgeries={cardiologySurgeries} />
+          </div>
+        )}
       </Box>
-      <Box marginTop={'30px'}>
-        <PaginationItem
-          metaData={metaData}
-          onPageChange={(page: number) => dispatch(setCardiologySurgeryParams({ pageIndex: page }))}
-        />
-      </Box>
+      {surgieriesLoaded && (
+        <Box marginTop={'30px'}>
+          {metaData && (
+            <PaginationItem
+              metaData={metaData}
+              onPageChange={(page: number) => dispatch(setCardiologySurgeryParams({ pageIndex: page }))}
+            />
+          )}
+        </Box>
+      )}
     </div>
   )
 }

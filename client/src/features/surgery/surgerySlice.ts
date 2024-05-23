@@ -32,6 +32,9 @@ export const fetchCardiologySurgeriesAsync = createAsyncThunk<CardiologySurgery[
         try {
             const response = await agent.CardiologySurgery.list(params);
             thunkAPI.dispatch(setMetaData(response.metadata));
+            if (response.length == 0) {
+                return response;
+            }
             console.log(response);
             return response.items;
         } catch (error: any) {

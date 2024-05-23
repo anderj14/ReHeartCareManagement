@@ -93,7 +93,6 @@
         "Time": "09:30:00",
         "Description": "Annual check-up",
         "AppointmentStatusId": 1,
-
         "PatientId": 4
     },
     {
@@ -104,6 +103,4 @@
         "AppointmentStatusId": 1,
         "PatientId": 5
     }
-    
-    
 ]

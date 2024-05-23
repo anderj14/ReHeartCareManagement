@@ -54,46 +54,6 @@ namespace API.Controllers
                 cardiologySurgeryParams.PageSize, totalItems, data));
         }
 
-        // [HttpGet]
-        // [Authorize]
-        // public async Task<ActionResult<Pagination<CardiologySurgeryDto>>> GetCardiologySurgeriesByUser(
-        // [FromQuery] CardiologySurgerySpecParams cardiologySurgeryParams
-        // )
-        // {
-        //     try
-        //     {
-        //         var userName = User.Identity.Name;
-
-        //         if (string.IsNullOrEmpty(userName))
-        //         {
-        //             return Unauthorized(new ApiResponse(401, "User not authenticated"));
-        //         }
-
-        //         // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
-        //         var user = await _userManager.FindByNameAsync(userName);
-
-        //         if (user == null)
-        //             return Unauthorized(new ApiResponse(401, "User not found"));
-
-        //         Expression<Func<CardiologySurgery, bool>> filter = (cardiologySurgery) => cardiologySurgery.AppUserId == user.Id;
-
-
-        //         var spec = new CardiologySurgerySpecification(cardiologySurgeryParams);
-        //         var countSpec = new CardiologySurgeryFilterForCountSpecification(cardiologySurgeryParams);
-        //         var totalItems = await _unitOfWork.Repository<CardiologySurgery>().CountAsync(countSpec);
-
-        //         var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAllByUserAsync(filter, spec);
-        //         var data = _mapper.Map<IReadOnlyList<CardiologySurgeryDto>>(cardiologySurgeries);
-
-        //         return Ok(new Pagination<CardiologySurgeryDto>(cardiologySurgeryParams.PageIndex,
-        //             cardiologySurgeryParams.PageSize, totalItems, data));
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return StatusCode(500, $"Internal server error: {ex.Message}");
-        //     }
-        // }
-
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<PagedList<CardiologySurgeryDto>>> GetCardiologySurgeriesByUser(
@@ -119,9 +79,16 @@ namespace API.Controllers
 
                 var spec = new CardiologySurgerySpecification(cardiologySurgeryParams);
                 var countSpec = new CardiologySurgeryFilterForCountSpecification(cardiologySurgeryParams);
-                var totalItems = await _unitOfWork.Repository<CardiologySurgery>().CountAsync(countSpec);
 
-                var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAllByUserAsync(filter, spec);
+                var totalItems = await _unitOfWork.Repository<CardiologySurgery>().CountByUserAsync(filter, countSpec);
+                
+                if (totalItems == 0)
+                {
+                    return Ok(new PagedList<PatientDto>(new List<PatientDto>(), 0, cardiologySurgeryParams.PageIndex, cardiologySurgeryParams.PageSize));
+                }
+
+                var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAllByUserAsync(filter, spec, cardiologySurgeryParams.PageIndex, cardiologySurgeryParams.PageSize);
+                
                 var data = _mapper.Map<IReadOnlyList<CardiologySurgeryDto>>(cardiologySurgeries);
 
                 var paginatedSurgeries = new PagedList<CardiologySurgeryDto>(
@@ -133,8 +100,6 @@ namespace API.Controllers
 
                 Response.AddPaginationHeader(paginatedSurgeries.MetaData);
 
-                // return Ok(new Pagination<CardiologySurgeryDto>(cardiologySurgeryParams.PageIndex,
-                //     cardiologySurgeryParams.PageSize, totalItems, data));
                 return Ok(paginatedSurgeries);
             }
             catch (Exception ex)

@@ -77,7 +77,6 @@ namespace Infraestructure.Data.Repository
             return await query.CountAsync();
         }
 
-
         public void Add(T entity)
         {
             _context.Set<T>().Add(entity);

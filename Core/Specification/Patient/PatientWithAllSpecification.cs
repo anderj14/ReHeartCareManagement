@@ -31,7 +31,8 @@ namespace Core.Specification
 
             AddOrderBy(p => p.PatientName);
 
-            ApplyPaging(patientParams.PageSize * (patientParams.PageIndex - 1), patientParams.PageSize);
+            // It was implemented in Generic Repository
+            // ApplyPaging(patientParams.PageSize * (patientParams.PageIndex - 1), patientParams.PageSize);
 
 
             if (!string.IsNullOrEmpty(patientParams.Sort))
