@@ -1,17 +1,17 @@
-import { TextField, IconButton, debounce } from '@mui/material'
+import { TextField, debounce, InputAdornment } from '@mui/material'
 import SearchIcon from "@mui/icons-material/Search";
 import { useAppDispatch, useAppSelector } from '../../app/store/configureStore';
-import { setPatientParams } from './patientSlice';
 import { useCallback, useState } from 'react';
+import { setNoteParams } from './noteSlice';
 
-export default function PatientSearch() {
+export default function NoteSearch() {
     const { patientParams } = useAppSelector(state => state.patient);
     const [search, setSearch] = useState(patientParams.search);
     const dispatch = useAppDispatch();
 
     const debouncedSearch = useCallback(
         debounce((value) => {
-            dispatch(setPatientParams({ search: value }));
+            dispatch(setNoteParams({ search: value }));
         }, 1500),
         []
     );
@@ -23,16 +23,22 @@ export default function PatientSearch() {
     return (
         <>
             <TextField
-                label="Search by name"
+                sx={{ width: '300px' }}
+                id="search-bar"
+                className="textField"
+                // label="Search"
                 variant="outlined"
-                placeholder="Search..."
+                placeholder="Search Note..."
                 size="small"
-                value={search || ''}
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <SearchIcon />
+                        </InputAdornment>
+                    ),
+                }}
                 onChange={handleSearchChange}
             />
-            <IconButton type="submit" aria-label="search">
-                <SearchIcon style={{ fill: "#5a9580", fontSize: '30px' }} />
-            </IconButton>
         </>
     )
 }

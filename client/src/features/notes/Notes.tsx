@@ -1,43 +1,39 @@
-import { Box, Button, Card, CardContent, InputAdornment, TextField, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import '../../app/styles/notes.scss';
-import SearchIcon from '@mui/icons-material/Search';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import NoteCard from './NoteCard';
 import { useEffect, useState } from 'react';
-import { Note } from '../../app/Models/note';
 import Calendar from "../../Images/calendar.svg";
 import Thunder from "../../Images/thunder.svg";
-import agent from '../../app/api/agent';
+import { useAppDispatch, useAppSelector } from '../../app/store/configureStore';
+import { fetchNotesAsync, noteSelectors } from './noteSlice';
+import NoteSearch from './NoteSearch';
 
 export default function Notes() {
 
-  const [notes, setNotes] = useState<Note[]>([]);
+  const notes = useAppSelector(noteSelectors.selectAll);
+  const { notesLoaded, noteParams } = useAppSelector(state => state.note);
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((previousOpen) => !previousOpen);
+  };
+
+  const canBeOpen = open && Boolean(anchorEl);
+  const id = canBeOpen ? 'spring-popper' : undefined;
 
   useEffect(() => {
-    agent.Note.list().then(notes => setNotes(notes));
-  }, []);
+    if (!notesLoaded) dispatch(fetchNotesAsync());
+  }, [notesLoaded, dispatch]);
 
   return (
     <div className='contentNote'>
-      {/* <h1>Notes List</h1> */}
       <Box className="filters">
         <div className="search">
-          <TextField
-            sx={{ width: '300px' }}
-            id="search-bar"
-            className="textField"
-            // label="Search"
-            variant="outlined"
-            placeholder="Search Note..."
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <NoteSearch />
         </div>
         <div className="addPatientButton">
           <Button className="button" startIcon={<AddRoundedIcon />}>Add Patient</Button>

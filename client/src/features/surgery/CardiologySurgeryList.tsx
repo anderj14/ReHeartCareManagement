@@ -1,8 +1,6 @@
 
-import React from 'react'
 import { CardiologySurgery } from '../../app/Models/cardiologySurgery'
 import { useNavigate } from 'react-router-dom'
-import { log } from 'console';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import { format } from 'date-fns';
 

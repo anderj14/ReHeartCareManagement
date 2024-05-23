@@ -1,6 +1,5 @@
-import React from 'react'
 import { Note } from '../../app/Models/note'
-import { Card, CardContent, Typography, Box, CardActions, Button, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, Box, CardActions, IconButton } from '@mui/material';
 import { format } from 'date-fns';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';

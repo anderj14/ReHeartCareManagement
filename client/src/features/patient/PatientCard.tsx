@@ -1,5 +1,4 @@
-import { Card, CardHeader, Avatar, CardMedia, CardContent, Typography, CardActions, Button } from '@mui/material'
-import React from 'react'
+import { Card, CardHeader, CardContent, Typography } from '@mui/material'
 import { Patient } from '../../app/Models/patient'
 import { format } from 'date-fns';
 

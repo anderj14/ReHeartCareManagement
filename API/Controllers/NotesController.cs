@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using API.Errors;
 using API.Extensions;
 using API.Helper;
@@ -40,8 +41,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetUserNote()
+        public async Task<ActionResult<Pagination<NotesDto>>> GetNotes(
+           [FromQuery] NoteSpecParams notesParams
+        )
         {
             var userName = User.Identity.Name;
 
@@ -50,30 +52,19 @@ namespace API.Controllers
                 return Unauthorized(new ApiResponse(401, "User not authenticated"));
             }
 
-            // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
             var user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
                 return Unauthorized(new ApiResponse(400, "User not found"));
 
-            // var username = User.GetUsername();
-            // var appUser = await _userManager.FindByNameAsync(username);
+            Expression<Func<Notes, bool>> filter = patient => patient.AppUserId == user.Id;
 
-            var userNote = await _repository.GetUserNote(user);
-            return Ok(userNote);
-        }
-
-
-        [HttpGet("all")]
-        public async Task<ActionResult<Pagination<NotesDto>>> GetNotes(
-           [FromQuery] NoteSpecParams notesParams
-        )
-        {
             var spec = new NoteSpecification(notesParams);
             var countSpec = new NoteWithFiltersForCountSpecification(notesParams);
             var totalItems = await _unitOfWork.Repository<Notes>().CountAsync(countSpec);
 
-            var notes = await _unitOfWork.Repository<Notes>().ListAsync(spec);
+            var notes = await _unitOfWork.Repository<Notes>().ListAllByUserAsync(filter, spec);
+
             var data = _mapper.Map<IReadOnlyList<NotesDto>>(notes);
 
             return Ok(new Pagination<NotesDto>(

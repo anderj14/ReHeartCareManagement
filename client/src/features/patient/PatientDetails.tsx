@@ -3,7 +3,6 @@ import { Box, Card, CardContent, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ApiService from "../../services/ApiService";
-import { Patient } from "../../app/Models/patient";
 import { Appointment } from "../../app/Models/appointment";
 import AppointmentsPatient from "./components/AppointmentsPatient";
 import React from "react";
@@ -238,7 +237,6 @@ export default function PatientDetail() {
     const age = calculateAge(patient?.dob);
 
     if (patientStatus.includes('pending')) return <h3>Loading...</h3>;
-    // if (!patient) return <h3>Patient not found</h3>;
     if (!patient) return <NotFound />;
 
     return (

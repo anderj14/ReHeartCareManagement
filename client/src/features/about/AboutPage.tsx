@@ -4,14 +4,12 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 
 export default function AboutPage() {
-    const [validationErrors, setValidationErrors] = useState([]);
 
     const handleApiError = async (apiCall: () => Promise<void>) => {
         try {
             await apiCall();
         } catch (error: any) {
             console.error("Error:", error);
-            // Mostrar el mensaje de error recibido desde la API
             toast.error(error.response.data.message);
         }
     };

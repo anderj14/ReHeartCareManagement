@@ -74,7 +74,7 @@ const CardiologySurgery = {
 };
 
 const Note = {
-    list: () => requests.get('notes'),
+    list: (params: URLSearchParams) => requests.get('notes', params),
     details: (id: number) => requests.get(`notes/${id}`),
 };
 

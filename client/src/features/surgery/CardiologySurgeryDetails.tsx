@@ -1,33 +1,31 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { CardiologySurgery } from '../../app/Models/cardiologySurgery';
-import ApiService from '../../services/ApiService';
 import { Card, CardContent, Box, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import Breadcrumb from '../../app/components/Breadcrumb';
+import { useAppDispatch, useAppSelector } from '../../app/store/configureStore';
+import { fetchCardiologySurgeryAsync, surgerySelectors } from './surgerySlice';
+import NotFound from '../../app/errors/NotFound';
 
 export default function CardiologySurgeryDetails() {
     const { id } = useParams<{ id: any }>();
-    const [cardiologySurgery, setCardiologySurgery] = useState<CardiologySurgery | null>(null);
     const [loading, setLoading] = useState(true);
+    const cardiologySurgery = useAppSelector(state => surgerySelectors.selectById(state, id));
+    const { status: cardiologySurgeryStatus } = useAppSelector(state => state.cardiologySurgery);
+
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         const fetchCardiologySurgery = async () => {
-            try {
-                const cardiologySurgeryData = await ApiService.getCardiologySurgeryId(id);
-                setCardiologySurgery(cardiologySurgeryData);
-            } catch (error) {
-                console.error("Error fetching surgery:", error);
-            } finally {
-                setLoading(false)
-            }
+            if (!cardiologySurgery) dispatch(fetchCardiologySurgeryAsync(id));
         }
 
         fetchCardiologySurgery();
-    }, [id])
+    }, [id, dispatch, cardiologySurgery]);
 
-    if (loading) return <h3>Loading...</h3>;
-    if (!cardiologySurgery) return <h3>Patient not found</h3>;
+    if (cardiologySurgeryStatus.includes('pending')) return <h3>Loading...</h3>;
+
+    if (!cardiologySurgery) return <NotFound />;
 
     return (
         <div className="container">

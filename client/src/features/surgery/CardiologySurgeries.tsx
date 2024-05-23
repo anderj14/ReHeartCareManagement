@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
-import { Box, Typography, Card, CardContent, TextField, IconButton, Button } from "@mui/material";
+import { Box, Typography, Card, CardContent, Button } from "@mui/material";
 import Breadcrumb from "../../app/components/Breadcrumb";
-import SearchIcon from "@mui/icons-material/Search";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import CardiologySurgeryList from "./CardiologySurgeryList";
@@ -9,8 +8,7 @@ import '../../app/styles/surgery.scss'
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchCardiologySurgeriesAsync, setCardiologySurgeryParams, surgerySelectors } from "./surgerySlice";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
-import PatientSearch from "../patient/PatientSearch";
-import CardiologySurgerySearch from "../patient/components/CardiologySurgerySearch";
+import CardiologySurgerySearch from "./CardiologySurgerySearch";
 import Pager from "../../app/components/Pager";
 import PaginationItem from "../../app/components/PaginationItem";
 

@@ -40,6 +40,18 @@ export const fetchCardiologySurgeriesAsync = createAsyncThunk<CardiologySurgery[
     }
 )
 
+export const fetchCardiologySurgeryAsync = createAsyncThunk<CardiologySurgery, number>(
+    'cardiologysurgery/fetchCardiologySurgeryAsync',
+    async (patientId, thunkAPI) => {
+        try {
+            const surgery = await agent.CardiologySurgery.details(patientId);
+            return surgery;
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue({ error: error.data });
+        }
+    }
+)
+
 function initParams() {
     return {
         pageIndex: 1,
@@ -68,7 +80,7 @@ export const surgerySlice = createSlice({
         setMetaData: (state, action) => {
             state.metaData = action.payload;
         },
-        resetPatientParams: (state) => {
+        resetSurgeryParams: (state) => {
             state.cardiologySurgeryParams = initParams();
         }
     },
@@ -85,10 +97,19 @@ export const surgerySlice = createSlice({
             console.log(action.payload);
             state.status = 'idle';
         });
-        // builder.addCase()
+        builder.addCase(fetchCardiologySurgeryAsync.pending, (state) => {
+            state.status = 'pendingFetchCardiologySurgeryAsync';
+        });
+        builder.addCase(fetchCardiologySurgeryAsync.fulfilled, (state, action) => {
+            cardiologysurgeryAdapter.upsertOne(state, action.payload);
+            state.status = 'idle';
+        });
+        builder.addCase(fetchCardiologySurgeryAsync.rejected, (state, action) => {
+            console.log(action);
+            state.status = 'idle';
+        });
     }
-
 });
 
-export const { setCardiologySurgeryParams, setPageIndex, setMetaData, resetPatientParams } = surgerySlice.actions;
+export const { setCardiologySurgeryParams, setPageIndex, setMetaData, resetSurgeryParams } = surgerySlice.actions;
 export const surgerySelectors = cardiologysurgeryAdapter.getSelectors((state: RootState) => state.cardiologySurgery);
