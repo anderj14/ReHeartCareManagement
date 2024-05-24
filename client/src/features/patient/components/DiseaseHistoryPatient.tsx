@@ -12,9 +12,9 @@ export default function DiseaseHistoryPatient({ diseaseHistory }: Props) {
         <Card className="detailsContainer">
             <CardContent className='contentsContainer'>
                 <h2>
-                    Last Echocardiogram
+                    Last Disease History
                 </h2>
-                <div className="echocardiogramDetails">
+                <div className="diseaseHistoryDetails">
                     {latestDiseaseHistory && (
                         <div key={latestDiseaseHistory.id}>
                             <Box className="details">
