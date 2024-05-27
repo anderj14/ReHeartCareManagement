@@ -18,6 +18,8 @@ import Login from '../../features/account/Login';
 import Register from '../../features/account/Register';
 import { useAppDispatch } from '../store/configureStore';
 import { fetchCurrentUser } from '../../features/account/accountSlice';
+import BloodTests from '../../features/patient/bloodTest/BloodTests';
+import BloodTestDetails from '../../features/patient/bloodTest/BloodTestDetails';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);
@@ -31,7 +33,7 @@ function App() {
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch])
-  
+
   return (
     <Router>
       <div className="App">
@@ -46,6 +48,8 @@ function App() {
                 <Route path='/patients/:id' element={< PatientDetail />}></Route>
                 <Route path='/cardiologysurgeries' element={< CardiologySurgeries />}></Route>
                 <Route path='/cardiologysurgeries/:id' element={< CardiologySurgeryDetails />}></Route>
+                <Route path='/bloodtests/patient/:id/bloodtests' element={< BloodTests />}></Route>
+                <Route path="/bloodtests/patient/:id/bloodtests/:bloodTestId" element={<BloodTestDetails />} />
                 <Route path='/notes' element={< Notes />}></Route>
                 <Route path='/about' element={< AboutPage />}></Route>
                 <Route path='/contact' element={< ContactPage />}></Route>

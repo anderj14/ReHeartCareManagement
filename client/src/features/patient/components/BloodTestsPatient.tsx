@@ -11,7 +11,7 @@ export default function BloodTestPatient({ bloodTests }: Props) {
     const latestBloodTest = bloodTests?.slice(-1)[0];
 
     return (
-        <Card className="detailsContainer">
+        <Card className="detailsContainer" >
             <CardContent className='contentsContainer'>
                 <h2>
                     Last Blood Test

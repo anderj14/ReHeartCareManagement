@@ -31,7 +31,7 @@ export const fetchPatientsAsync = createAsyncThunk<Patient[], void, { state: Roo
         try {
             const response = await agent.Patient.list(params);
             thunkAPI.dispatch(setMetaData(response.metadata));
-            console.log(response);
+            // console.log(response);
             return response.items;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data });

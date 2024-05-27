@@ -70,7 +70,7 @@ namespace API.Controllers
         public async Task<ActionResult<BloodTest>> CreateBloodTest(BloodTestCreateDto bloodTestCreateDto)
         {
             var bloodTest = _mapper.Map<BloodTestCreateDto, BloodTest>(bloodTestCreateDto);
-            
+
             _unitOfWork.Repository<BloodTest>().Add(bloodTest);
 
             var result = await _unitOfWork.Complete();
@@ -121,6 +121,26 @@ namespace API.Controllers
 
             return Ok(bloodTestsDtos);
         }
+
+        //         [HttpGet("patient/{patientId}/bloodTests")]
+        //         [ProducesResponseType(StatusCodes.Status200OK)]
+        //         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        //         public async Task<ActionResult<Pagination<BloodTestDto>>> GetPatientBloodTest(
+        //     int patientId,
+        //     [FromQuery] BloodTestSpecParams bloodTestSpecParams
+        // )
+        //         {
+        //             var spec = new BloodTestSpecification(patientId, getByPatientId: true);
+        //             var countSpec = new BloodTestFilterForCountSpecification(bloodTestSpecParams);
+        //             var totalItems = await _unitOfWork.Repository<BloodTest>().CountAsync(countSpec);
+
+        //             var bloodTests = await _unitOfWork.Repository<BloodTest>().ListAsync(spec);
+
+        //             var data = _mapper.Map<IReadOnlyList<BloodTestDto>>(bloodTests);
+
+        //             return Ok(new Pagination<BloodTestDto>(bloodTestSpecParams.PageIndex,
+        //                     bloodTestSpecParams.PageSize, totalItems, data));
+        //         }
 
         [HttpGet("patient/{patientId}/bloodTests/{bloodTestId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

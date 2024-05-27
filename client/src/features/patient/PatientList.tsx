@@ -48,11 +48,7 @@ export default function PatientList({ patients }: Props) {
                         </TableRow>
                     ))}
                 </TableBody>
-
             </Table>
         </TableContainer>
-
-
-
     );
 }

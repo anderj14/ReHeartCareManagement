@@ -17,15 +17,6 @@ const ApiService = {
         const response = await axios.get(`${baseUrl}/appointment/patient/${patientId}/appointments`);
         return response.data;
     },
-    getBloodTestByPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/bloodTest/patient/${patientId}/bloodTests`);
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching blood test by patient Id:', error);
-            throw error;
-        }
-    },
     getElectrocardiogramByPatientId: async (patientId: number) => {
         try {
             const response = await axios.get(`${baseUrl}/electrocardiogram/patient/${patientId}/electrocardiograms`);

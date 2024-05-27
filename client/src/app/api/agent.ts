@@ -78,6 +78,14 @@ const Note = {
     details: (id: number) => requests.get(`notes/${id}`),
 };
 
+const BloodTest = {
+    list: (params: URLSearchParams) => requests.get('bloodtests', params),
+    details: (id: number) => requests.get(`bloodtests/${id}`),
+    listByPatientId: (patientId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests`),
+    detailsByPatientId: (patientId: number, bloodTestId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests/${bloodTestId}`),
+
+};
+
 const TestErrors = {
     get400Error: () => requests.get('buggy/badrequest'),
     get401Error: () => requests.get('buggy/unauthorized'),
@@ -97,6 +105,7 @@ const agent = {
     Note,
     TestErrors,
     Account,
+    BloodTest,
 };
 
 export default agent;

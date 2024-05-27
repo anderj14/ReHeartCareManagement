@@ -1,7 +1,7 @@
 
 import { Box, Card, CardContent, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ApiService from "../../services/ApiService";
 import { Appointment } from "../../app/Models/appointment";
 import AppointmentsPatient from "./components/AppointmentsPatient";
@@ -31,6 +31,7 @@ import TreatmentPatient from "./components/TreatmentPatient";
 import NotFound from "../../app/errors/NotFound";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchPatientAsync, patientSelectors } from "./patientSlice";
+import { bloodTestSelectors, fetchBloodTestsByPatientAsync } from "./bloodTest/bloodTestSlice";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -67,13 +68,11 @@ function a11yProps(index: number) {
 
 export default function PatientDetail() {
     const { id } = useParams<{ id: any }>();
-    // const [patient, setPatient] = useState<Patient | null>(null);
     const dispatch = useAppDispatch();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
     const { status: patientStatus } = useAppSelector(state => state.patient);
     const [loading, setLoading] = useState(true);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [bloodTests, setBloodTests] = useState<BloodTest[]>([]);
     const [electrocardiogram, setElectrocardiogram] = useState<Electrocardiogram[]>([]);
     const [echocardiogram, setEchocardiogram] = useState<Echocardiogram[]>([]);
     const [cardiacCathStudy, setCardiacCathStudy] = useState<CardiacCathStudy[]>([]);
@@ -84,6 +83,8 @@ export default function PatientDetail() {
     const [diagnostic, setDiagnostic] = useState<Diagnostic[]>([]);
     const [treatment, setTreatment] = useState<Treatment[]>([]);
     const [value, setValue] = useState(0);
+    const { bloodTestByPatientLoaded } = useAppSelector(state => state.bloodTest);
+    const bloodTestsByPatient = useAppSelector(bloodTestSelectors.selectAll);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -104,14 +105,8 @@ export default function PatientDetail() {
             }
         };
         const fetchBloodTest = async () => {
-            try {
-                const bloodTestsData = await ApiService.getBloodTestByPatientId(id);
-                setBloodTests(bloodTestsData);
-            } catch (error) {
-                console.error('Error fetching blood tests:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!bloodTestByPatientLoaded) dispatch(fetchBloodTestsByPatientAsync(id));
+
         };
         const fetchElectrocardiogram = async () => {
             try {
@@ -217,7 +212,7 @@ export default function PatientDetail() {
         fetchMedicalHistory();
         fetchDiagnostic();
         fetchTreatment()
-    }, [id, dispatch, patient]);
+    }, [id, dispatch, patient, bloodTestByPatientLoaded]);
 
     function calculateAge(dob: any) {
         if (dob) {
@@ -336,7 +331,6 @@ export default function PatientDetail() {
                             textColor="secondary"
                             indicatorColor="secondary"
                             onChange={handleChange}
-
                         >
                             <Tab label="appointments" sx={{ textTransform: 'capitalize' }} />
                             <Tab label="Tests / Studies" {...a11yProps(0)} sx={{ textTransform: 'capitalize' }} />
@@ -352,7 +346,9 @@ export default function PatientDetail() {
                     <CustomTabPanel value={value} index={1}>
                         <Box className="componentContainer">
                             <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '350px' }}>
-                                <BloodTestPatient bloodTests={bloodTests} />
+                                <Link to={`/bloodtests/patient/${patient.id}/bloodtests`} style={{ textDecoration: 'none' }}>
+                                    <BloodTestPatient bloodTests={bloodTestsByPatient} />
+                                </Link>
                                 <ElectrocardiogramPatient electrocardiogram={electrocardiogram} />
                                 <EchocardiogramPatient echocardiogram={echocardiogram} />
                             </section>
@@ -384,7 +380,7 @@ export default function PatientDetail() {
                         </Box>
                     </CustomTabPanel>
                 </Card>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
