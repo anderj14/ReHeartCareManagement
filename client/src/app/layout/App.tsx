@@ -20,6 +20,8 @@ import { useAppDispatch } from '../store/configureStore';
 import { fetchCurrentUser } from '../../features/account/accountSlice';
 import BloodTests from '../../features/patient/bloodTest/BloodTests';
 import BloodTestDetails from '../../features/patient/bloodTest/BloodTestDetails';
+import CardiacCathStudy from '../../features/patient/cardiacTestsPatient/CardiacCathStudy';
+import CardiacCathStudyDetails from '../../features/patient/cardiacTestsPatient/CardiacCathStudyDetails';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);
@@ -50,6 +52,8 @@ function App() {
                 <Route path='/cardiologysurgeries/:id' element={< CardiologySurgeryDetails />}></Route>
                 <Route path='/bloodtests/patient/:id/bloodtests' element={< BloodTests />}></Route>
                 <Route path="/bloodtests/patient/:id/bloodtests/:bloodTestId" element={<BloodTestDetails />} />
+                <Route path='/cardiaccatheterizationstudy/patient/:id/cardiaccathstudies' element={< CardiacCathStudy />}></Route>
+                <Route path="/cardiaccatheterizationstudy/patient/:id/cardiaccathstudies/:cardiacCathStudyId" element={<CardiacCathStudyDetails />} />
                 <Route path='/notes' element={< Notes />}></Route>
                 <Route path='/about' element={< AboutPage />}></Route>
                 <Route path='/contact' element={< ContactPage />}></Route>

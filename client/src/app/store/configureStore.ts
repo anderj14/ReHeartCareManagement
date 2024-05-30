@@ -5,6 +5,7 @@ import { patientSlice } from "../../features/patient/patientSlice";
 import { surgerySlice } from "../../features/surgery/surgerySlice";
 import { noteSlice } from "../../features/notes/noteSlice";
 import { bloodTestSlice } from "../../features/patient/bloodTest/bloodTestSlice";
+import { cardiaccathstudySlice } from "../../features/patient/cardiacTestsPatient/cardiacCathStudySlice";
 
 export const store = configureStore({
     reducer: {
@@ -12,7 +13,8 @@ export const store = configureStore({
         patient: patientSlice.reducer,
         cardiologySurgery: surgerySlice.reducer,
         note: noteSlice.reducer,
-        bloodTest: bloodTestSlice.reducer
+        bloodTest: bloodTestSlice.reducer,
+        cardiacCathStudy: cardiaccathstudySlice.reducer
     }
 });
 

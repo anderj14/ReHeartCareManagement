@@ -86,6 +86,14 @@ const BloodTest = {
 
 };
 
+const CardiacCathStudy = {
+    list: (params: URLSearchParams) => requests.get('cardiaccatheterizationstudy', params),
+    details: (id: number) => requests.get(`cardiaccatheterizationstudy/${id}`),
+    listByPatientId: (patientId: number) => requests.get(`cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`),
+    detailsByPatientId: (patientId: number, cardiacCathStudyId: number) => requests.get(`cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies/${cardiacCathStudyId}`),
+
+};
+
 const TestErrors = {
     get400Error: () => requests.get('buggy/badrequest'),
     get401Error: () => requests.get('buggy/unauthorized'),
@@ -106,6 +114,7 @@ const agent = {
     TestErrors,
     Account,
     BloodTest,
+    CardiacCathStudy,
 };
 
 export default agent;

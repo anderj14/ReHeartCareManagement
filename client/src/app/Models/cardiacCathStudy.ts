@@ -23,5 +23,5 @@ export interface CardiacCathStudy {
     functionsCardiacChambers: string
     descriptionComplication: string
     conclusion: string
-    patientId: number
+    patient: string
 }

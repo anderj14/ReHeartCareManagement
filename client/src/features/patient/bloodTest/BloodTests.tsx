@@ -18,32 +18,16 @@ export default function BloodTests() {
         if(!bloodTestByPatientLoaded) dispatch(fetchBloodTestsByPatientAsync(id));
     }, [bloodTestByPatientLoaded, dispatch]);
 
-    // useEffect(() => {
-    //     const fetchBloodTest = async () => {
-    //         try {
-    //             const bloodTestsData = await ApiService.getBloodTestByPatientId(id);
-    //             console.log(bloodTestsData);
-    //             setBloodTests(bloodTestsData);
-    //         } catch (error) {
-    //             console.error('Error fetching blood tests:', error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }
-
-    //     fetchBloodTest();
-    // }, [id]);
-
-    const latestBloodTest = bloodTestsByPatient?.slice(-1)[0];
+    const patientName = bloodTestsByPatient?.slice(-1)[0];
 
     return (
         <div className="contentPatient">
             <Breadcrumb page="Blood Tests" />
 
             <Box sx={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                {latestBloodTest && (
-                    <Typography variant="h5" key={latestBloodTest?.id}>
-                        list of blood tests for patient {latestBloodTest.patient}
+                {patientName && (
+                    <Typography variant="h5" key={patientName?.id}>
+                        list of blood tests for patient {patientName.patient}
                     </Typography>
 
                 )}

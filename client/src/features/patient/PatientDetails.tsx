@@ -32,6 +32,7 @@ import NotFound from "../../app/errors/NotFound";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchPatientAsync, patientSelectors } from "./patientSlice";
 import { bloodTestSelectors, fetchBloodTestsByPatientAsync } from "./bloodTest/bloodTestSlice";
+import { cardiacCathStudySelectors, fetchCardiacCathStudiesByPatientAsync } from "./cardiacTestsPatient/cardiacCathStudySlice";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -85,6 +86,8 @@ export default function PatientDetail() {
     const [value, setValue] = useState(0);
     const { bloodTestByPatientLoaded } = useAppSelector(state => state.bloodTest);
     const bloodTestsByPatient = useAppSelector(bloodTestSelectors.selectAll);
+    const { cardiacCathStudyByPatientLoaded } = useAppSelector(state => state.cardiacCathStudy);
+    const cardiacCathStudyByPatient = useAppSelector(cardiacCathStudySelectors.selectAll);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -130,14 +133,7 @@ export default function PatientDetail() {
             }
         };
         const fetchCardiacCathStudy = async () => {
-            try {
-                const cardiacCathStudyData = await ApiService.getCardiacCathStudyByPatientId(id);
-                setCardiacCathStudy(cardiacCathStudyData);
-            } catch (error) {
-                console.error('Error fetching cardiac catheterization study:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!cardiacCathStudyByPatientLoaded) dispatch(fetchCardiacCathStudiesByPatientAsync(id));
         };
         const fetchHolterStudy = async () => {
             try {
@@ -212,7 +208,10 @@ export default function PatientDetail() {
         fetchMedicalHistory();
         fetchDiagnostic();
         fetchTreatment()
-    }, [id, dispatch, patient, bloodTestByPatientLoaded]);
+    }, [id, dispatch, patient,
+        bloodTestByPatientLoaded,
+        cardiacCathStudyByPatientLoaded,
+    ]);
 
     function calculateAge(dob: any) {
         if (dob) {
@@ -353,7 +352,9 @@ export default function PatientDetail() {
                                 <EchocardiogramPatient echocardiogram={echocardiogram} />
                             </section>
                             <section style={{ display: "flex", flexDirection: "column", gap: 25 }}>
-                                <CardiacCathStudyPatient cardiacCathStudy={cardiacCathStudy} />
+                                <Link to={`/cardiaccatheterizationstudy/patient/${patient.id}/cardiaccathstudies`} style={{ textDecoration: 'none' }}>
+                                    <CardiacCathStudyPatient cardiacCathStudy={cardiacCathStudyByPatient} />
+                                </Link>
                                 <HolterStudyPatient holterStudy={holterStudy} />
                                 <PhysicalExaminationPatient physicalExamination={physicalexamination} />
                             </section>

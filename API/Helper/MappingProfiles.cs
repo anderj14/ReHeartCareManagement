@@ -31,7 +31,8 @@ namespace API.Helper
             CreateMap<BloodTest, BloodTestDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
 
-            CreateMap<CardiacCatheterizationStudy, CardiacCatheterizationStudyDto>();
+            CreateMap<CardiacCatheterizationStudy, CardiacCatheterizationStudyDto>()
+            .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<Diagnostic, DiagnosticDto>();
             CreateMap<DiseaseHistory, DiseaseHistoryDto>();
             CreateMap<Echocardiogram, EchocardiogramDto>();

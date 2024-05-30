@@ -9,10 +9,9 @@ import Breadcrumb from '../../../app/components/Breadcrumb';
 import { format } from 'date-fns';
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
 import { bloodTestSelectors, fetchBloodTestByPatientAsync } from './bloodTestSlice';
+import NotFound from '../../../app/errors/NotFound';
 
 export default function BloodTestDetails() {
-    // const [bloodTests, setBloodTest] = useState<BloodTest>();
-    // const { id: patientId, bloodTestId } = useParams<{ id: string, bloodTestId: string }>();
     const dispatch = useAppDispatch();
     const { id: patientId, bloodTestId } = useParams<{ id: string, bloodTestId: string }>();
     const patientIdNumber = patientId ? Number(patientId) : undefined;
@@ -33,8 +32,10 @@ export default function BloodTestDetails() {
         fetchBloodTestIdByPatientId();
     }, [dispatch, patientIdNumber, bloodTestIdNumber, bloodTestByPatient]);
 
-    return (
+    if (bloodTestsByPatientStatus.includes('pending')) return <h3>Loading...</h3>;
+    if (!bloodTestByPatient) return <NotFound />;
 
+    return (
         <Box sx={{ margin: '30px 0px 0px 30px' }}>
             <Breadcrumb page="Blood Tests" />
 

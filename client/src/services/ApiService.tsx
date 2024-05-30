@@ -5,14 +5,6 @@ const baseUrl = "https://localhost:5001/api/v1";
 
 const ApiService = {
 
-    getPatientById: async (id: number) => {
-        try {
-            const response = agent.Patient.details(id);
-            return response;
-        } catch (error) {
-            throw error;
-        }
-    },
     getAppointmentsByPatientId: async (patientId: number) => {
         const response = await axios.get(`${baseUrl}/appointment/patient/${patientId}/appointments`);
         return response.data;
@@ -32,15 +24,6 @@ const ApiService = {
             return response.data;
         } catch (error) {
             console.log('Error fetching echocardiogram by patient Id: ', error);
-            throw error;
-        }
-    },
-    getCardiacCathStudyByPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`);
-            return response.data;
-        } catch (error) {
-            console.log('Error fetching cardiac catheterization study by patient Id: ', error);
             throw error;
         }
     },
