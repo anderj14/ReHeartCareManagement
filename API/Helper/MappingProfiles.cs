@@ -27,41 +27,35 @@ namespace API.Helper
             CreateMap<Appointment, AppointmentDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName))
             .ForMember(d => d.AppointmentStatus, o => o.MapFrom(s => s.AppointmentStatus.AppointmentStatusName));
-
             CreateMap<BloodTest, BloodTestDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
-
             CreateMap<CardiacCatheterizationStudy, CardiacCatheterizationStudyDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<Diagnostic, DiagnosticDto>();
-            CreateMap<DiseaseHistory, DiseaseHistoryDto>();
+            CreateMap<DiseaseHistory, DiseaseHistoryDto>()
+            .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<Echocardiogram, EchocardiogramDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<Electrocardiogram, ElectrocardiogramDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<HolterStudy, HolterStudyDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
-            CreateMap<MedicalHistory, MedicalHistoryDto>();
+            CreateMap<MedicalHistory, MedicalHistoryDto>()
+            .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<PhysicalExamination, PhysicalExaminationDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
-            ;
             CreateMap<StressTest, StressTestDto>();
             CreateMap<Treatment, TreatmentDto>();
-
             CreateMap<CardiologySurgery, CardiologySurgeryDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
-
             CreateMap<SurgeryFollowUp, SurgeryFollowUpDto>()
             .ForMember(d => d.CardiologySurgery, o => o.MapFrom(s => s.CardiologySurgery.SurgeryName));
-
             CreateMap<Notes, NotesDto>();
             // .ForMember(d => d.NoteStatus, o => o.MapFrom(s => s.NoteStatus.NoteStatusName));
-
             // CreateMap<NoteStatus, NoteStatusDto>();
 
-            CreateMap<AppointmentStatus, AppointmentStatusDto>();
-
             // Create
+            CreateMap<AppointmentStatus, AppointmentStatusDto>();
             CreateMap<PatientCreateDto, Patient>();
             CreateMap<AppointmentCreateDto, Appointment>();
             CreateMap<BloodTestCreateDto, BloodTest>();

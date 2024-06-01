@@ -6,6 +6,6 @@ namespace Core.Dtos
         public DateTime StartDate { get; set; }
         public string Description { get; set; }
         public string Treatment { get; set; }
-        public int PatientId { get; set; }
+        public string Patient { get; set; }
     }
 }

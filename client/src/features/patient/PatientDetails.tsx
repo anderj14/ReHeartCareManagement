@@ -31,6 +31,8 @@ import { echocardiogramSelectors, fetchEchocardiogramsByPatientAsync } from "./e
 import { electrocardiogramSelectors, fetchElectrocardiogramsByPatientAsync } from "./electrocardiogram/electrocardiogramSlice";
 import { fetchHolterStudiesByPatientAsync, holterStudySelectors } from "./holterStudy/holterStudySlice";
 import { fetchPhysicalExaminationsByPatientAsync, physicalExaminationSelectors } from "./physicalExamination/physicalExaminationSlice";
+import { diseaseHistorySelectors, fetchDiseaseHistoriesByPatientAsync } from "./diseaseHistory/diseaseHistorySlice";
+import { fetchMedicalHistoriesByPatientAsync, medicalHistorySelectors } from "./medicalHistory/medicalHistorySlice";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -72,8 +74,6 @@ export default function PatientDetail() {
     const { status: patientStatus } = useAppSelector(state => state.patient);
     const [loading, setLoading] = useState(true);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [diseaseHistory, setDiseaseHistory] = useState<DiseaseHistory[]>([]);
-    const [medicalHistory, setMedicalHistory] = useState<MedicalHistory[]>([]);
     const [diagnostic, setDiagnostic] = useState<Diagnostic[]>([]);
     const [treatment, setTreatment] = useState<Treatment[]>([]);
     const [value, setValue] = useState(0);
@@ -89,6 +89,10 @@ export default function PatientDetail() {
     const holterStudyByPatient = useAppSelector(holterStudySelectors.selectAll);
     const { physicalExaminationByPatientLoaded } = useAppSelector(state => state.physicalExamination);
     const physicalExaminationByPatient = useAppSelector(physicalExaminationSelectors.selectAll);
+    const { diseaseHistoryByPatientLoaded } = useAppSelector(state => state.diseaseHistory);
+    const diseaseHistoryByPatient = useAppSelector(diseaseHistorySelectors.selectAll);
+    const { medicalHistoryByPatientLoaded } = useAppSelector(state => state.medicalHistory);
+    const medicalHistoryByPatient = useAppSelector(medicalHistorySelectors.selectAll);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -127,24 +131,10 @@ export default function PatientDetail() {
             if (!physicalExaminationByPatientLoaded) dispatch(fetchPhysicalExaminationsByPatientAsync(id));
         };
         const fetchDiseaseHistory = async () => {
-            try {
-                const diseaseHistoryData = await ApiService.getDiseaseHistoryByPatientId(id);
-                setDiseaseHistory(diseaseHistoryData);
-            } catch (error) {
-                console.error('Error fetching disease history:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!diseaseHistoryByPatientLoaded) dispatch(fetchDiseaseHistoriesByPatientAsync(id));
         };
         const fetchMedicalHistory = async () => {
-            try {
-                const medicalHistoryData = await ApiService.getMedicalHistoryByPatientId(id);
-                setMedicalHistory(medicalHistoryData);
-            } catch (error) {
-                console.error('Error fetching medical history:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!medicalHistoryByPatientLoaded) dispatch(fetchMedicalHistoriesByPatientAsync(id));
         };
         const fetchDiagnostic = async () => {
             try {
@@ -185,7 +175,8 @@ export default function PatientDetail() {
         electrocardiogramByPatientLoaded,
         echocardiogramByPatientLoaded,
         holterStudyByPatientLoaded,
-        physicalExaminationByPatientLoaded
+        physicalExaminationByPatientLoaded,
+        diseaseHistoryByPatientLoaded
     ]);
 
     function calculateAge(dob: any) {
@@ -346,10 +337,14 @@ export default function PatientDetail() {
                     <CustomTabPanel value={value} index={2}>
                         <Box className="componentContainer">
                             <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
-                                <DiseaseHistoryPatient diseaseHistory={diseaseHistory} />
+                                <Link to={`/diseasehistory/patient/${patient.id}/diseaseshistories`} style={{ textDecoration: 'none' }}>
+                                    <DiseaseHistoryPatient diseaseHistory={diseaseHistoryByPatient} />
+                                </Link>
                             </section>
                             <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
-                                <MedicalHistoryPatient medicalHistory={medicalHistory} />
+                                <Link to={`/medicalhistory/patient/${patient.id}/medicalhistories`} style={{ textDecoration: 'none' }}>
+                                    <MedicalHistoryPatient medicalHistory={medicalHistoryByPatient} />
+                                </Link>
                             </section>
                         </Box>
                     </CustomTabPanel>

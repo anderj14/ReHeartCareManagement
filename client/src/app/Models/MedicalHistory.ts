@@ -11,6 +11,6 @@ export interface MedicalHistory {
     systemicDiseases: string
     medications: string
     familyDiseases: string
-    patientId: number
+    patient: string
   }
   

@@ -14,6 +14,6 @@ namespace Core.Dtos
         public string SystemicDiseases { get; set; }
         public string Medications { get; set; }
         public string FamilyDiseases { get; set; }
-        public int PatientId { get; set; }
+        public string Patient { get; set; }
     }
 }

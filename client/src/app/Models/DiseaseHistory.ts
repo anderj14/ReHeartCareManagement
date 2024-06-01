@@ -3,5 +3,5 @@ export interface DiseaseHistory {
     startDate: string
     description: string
     treatment: string
-    patientId: number
+    patient: string
 }

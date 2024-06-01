@@ -30,6 +30,10 @@ import HolterStudies from '../../features/patient/holterStudy/HolterStudies';
 import HolterStudyDetails from '../../features/patient/holterStudy/HolterStudyDetails';
 import PhysicalExaminations from '../../features/patient/physicalExamination/PhysicalExaminations';
 import PhysicalExaminationDetails from '../../features/patient/physicalExamination/PhysicalExaminationDetails';
+import DiseaseHistories from '../../features/patient/diseaseHistory/DiseaseHistories';
+import DiseaseHistoryDetails from '../../features/patient/diseaseHistory/DiseaseHistoryDetails';
+import MedicalHistories from '../../features/patient/medicalHistory/MedicalHistories';
+import MedicalHistoryDetails from '../../features/patient/medicalHistory/MedicalHistoryDetails';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);
@@ -70,6 +74,10 @@ function App() {
                 <Route path='/holterstudy/patient/:id/holterstudies/:holterStudyId' element={< HolterStudyDetails />}></Route>
                 <Route path='/physicalexamination/patient/:id/physicalexaminations' element={< PhysicalExaminations />}></Route>
                 <Route path='/physicalexamination/patient/:id/physicalexaminations/:physicalExaminationId' element={< PhysicalExaminationDetails />}></Route>
+                <Route path='/diseasehistory/patient/:id/diseaseshistories' element={< DiseaseHistories />}></Route>
+                <Route path='/diseasehistory/patient/:id/diseaseshistories/:diseaseHistoryId' element={< DiseaseHistoryDetails />}></Route>
+                <Route path='/medicalhistory/patient/:id/medicalhistories' element={< MedicalHistories />}></Route>
+                <Route path='/medicalhistory/patient/:id/medicalhistories/:medicalHistoryId' element={< MedicalHistoryDetails />}></Route>
                 <Route path='/notes' element={< Notes />}></Route>
                 <Route path='/about' element={< AboutPage />}></Route>
                 <Route path='/contact' element={< ContactPage />}></Route>

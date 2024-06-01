@@ -10,6 +10,8 @@ import { electrocardiogramSlice } from "../../features/patient/electrocardiogram
 import { echocardiogramSlice } from "../../features/patient/echocardiogram/echocardiogramSlice";
 import { holterStudySlice } from "../../features/patient/holterStudy/holterStudySlice";
 import { physicalExaminationSlice } from "../../features/patient/physicalExamination/physicalExaminationSlice";
+import { diseaseHistorySlice } from "../../features/patient/diseaseHistory/diseaseHistorySlice";
+import { medicalHistorySlice } from "../../features/patient/medicalHistory/medicalHistorySlice";
 
 export const store = configureStore({
     reducer: {
@@ -23,6 +25,8 @@ export const store = configureStore({
         echocardiogram: echocardiogramSlice.reducer,
         holterStudy: holterStudySlice.reducer,
         physicalExamination: physicalExaminationSlice.reducer,
+        diseaseHistory: diseaseHistorySlice.reducer,
+        medicalHistory: medicalHistorySlice.reducer,
     }
 });
 

@@ -112,6 +112,16 @@ const PhysicalExamination = {
     detailsByPatientId: (patientId: number, physicalExaminationId: number) => requests.get(`physicalexamination/patient/${patientId}/physicalexaminations/${physicalExaminationId}`),
 };
 
+const DiseaseHistory = {
+    listByPatientId: (patientId: number) => requests.get(`diseasehistory/patient/${patientId}/diseaseshistories`),
+    detailsByPatientId: (patientId: number, diseaseHistoryId: number) => requests.get(`diseasehistory/patient/${patientId}/diseaseshistories/${diseaseHistoryId}`),
+};
+
+const MedicalHistory = {
+    listByPatientId: (patientId: number) => requests.get(`medicalhistory/patient/${patientId}/medicalhistories`),
+    detailsByPatientId: (patientId: number, medicalHistoryId: number) => requests.get(`medicalhistory/patient/${patientId}/medicalhistories/${medicalHistoryId}`),
+};
+
 const TestErrors = {
     get400Error: () => requests.get('buggy/badrequest'),
     get401Error: () => requests.get('buggy/unauthorized'),
@@ -137,6 +147,8 @@ const agent = {
     Echocardiogram,
     HolterStudy,
     PhysicalExamination,
+    DiseaseHistory,
+    MedicalHistory,
 };
 
 export default agent;

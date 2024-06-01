@@ -8,24 +8,6 @@ const ApiService = {
         const response = await axios.get(`${baseUrl}/appointment/patient/${patientId}/appointments`);
         return response.data;
     },
-    getDiseaseHistoryByPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/diseasehistory/patient/${patientId}/diseaseshistories`);
-            return response.data;
-        } catch (error) {
-            console.log('Error fetching disease history by patient Id: ', error);
-            throw error;
-        }
-    },
-    getMedicalHistoryByPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/medicalhistory/patient/${patientId}/medicalhistories`);
-            return response.data;
-        } catch (error) {
-            console.log('Error fetching medical history by patient Id: ', error);
-            throw error;
-        }
-    },
     getDiagnosticByPatientId: async (patientId: number) => {
         try {
             const response = await axios.get(`${baseUrl}/diagnostic/patient/${patientId}/diagnostics`);
