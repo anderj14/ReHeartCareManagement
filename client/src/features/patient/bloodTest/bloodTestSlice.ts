@@ -4,13 +4,12 @@ import agent from "../../../app/api/agent";
 import { RootState } from "../../../app/store/configureStore";
 
 
-interface bloodTestLoaded {
+interface BloodTestLoaded {
     bloodTestByPatientLoaded: boolean;
     status: string;
 }
 
 const bloodTestsAdapter = createEntityAdapter<BloodTest>();
-
 
 type ThunkArg = {
     patientId: number;
@@ -43,14 +42,14 @@ export const fetchBloodTestByPatientAsync = createAsyncThunk<BloodTest, ThunkArg
 
 export const bloodTestSlice = createSlice({
     name: 'patient',
-    initialState: bloodTestsAdapter.getInitialState({
+    initialState: bloodTestsAdapter.getInitialState<BloodTestLoaded>({
         bloodTestByPatientLoaded: false,
         status: 'idle'
     }),
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchBloodTestsByPatientAsync.pending, (state) => {
-            state.status = 'pendingFetchBloodTestsByPstient';
+            state.status = 'pendingFetchBloodTestsByPatient';
         });
         builder.addCase(fetchBloodTestsByPatientAsync.fulfilled, (state, action) => {
             bloodTestsAdapter.setAll(state, action.payload);
@@ -62,7 +61,7 @@ export const bloodTestSlice = createSlice({
             state.status = 'idle';
         });
         builder.addCase(fetchBloodTestByPatientAsync.pending, (state) => {
-            state.status = 'pendingFetchBloodTestsByPstient';
+            state.status = 'pendingFetchBloodTestsByPatient';
         });
         builder.addCase(fetchBloodTestByPatientAsync.fulfilled, (state, action) => {
             bloodTestsAdapter.upsertOne(state, action.payload);

@@ -7,18 +7,12 @@ import { Appointment } from "../../app/Models/appointment";
 import AppointmentsPatient from "./components/AppointmentsPatient";
 import React from "react";
 import BloodTestPatient from "./components/BloodTestsPatient";
-import { BloodTest } from "../../app/Models/bloodTest";
 import Breadcrumb from "../../app/components/Breadcrumb";
 import { format } from "date-fns";
 import ElectrocardiogramPatient from "./components/ElectrocardiogramPatient";
-import { Electrocardiogram } from "../../app/Models/electrocardiogram";
-import { Echocardiogram } from "../../app/Models/echocardiogram";
 import EchocardiogramPatient from "./components/EchocardiogramPatient";
 import CardiacCathStudyPatient from "./components/CardiacCathStudyPatient";
-import { CardiacCathStudy } from "../../app/Models/cardiacCathStudy";
 import HolterStudyPatient from "./components/HolterStudyPatient";
-import { HolterStudy } from "../../app/Models/holterStudy";
-import { PhysicalExamination } from "../../app/Models/physicalExamination";
 import PhysicalExaminationPatient from "./components/PhysicalExaminationPatient";
 import { DiseaseHistory } from "../../app/Models/DiseaseHistory";
 import DiseaseHistoryPatient from "./components/DiseaseHistoryPatient";
@@ -33,6 +27,10 @@ import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchPatientAsync, patientSelectors } from "./patientSlice";
 import { bloodTestSelectors, fetchBloodTestsByPatientAsync } from "./bloodTest/bloodTestSlice";
 import { cardiacCathStudySelectors, fetchCardiacCathStudiesByPatientAsync } from "./cardiacTestsPatient/cardiacCathStudySlice";
+import { echocardiogramSelectors, fetchEchocardiogramsByPatientAsync } from "./echocardiogram/echocardiogramSlice";
+import { electrocardiogramSelectors, fetchElectrocardiogramsByPatientAsync } from "./electrocardiogram/electrocardiogramSlice";
+import { fetchHolterStudiesByPatientAsync, holterStudySelectors } from "./holterStudy/holterStudySlice";
+import { fetchPhysicalExaminationsByPatientAsync, physicalExaminationSelectors } from "./physicalExamination/physicalExaminationSlice";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -74,11 +72,6 @@ export default function PatientDetail() {
     const { status: patientStatus } = useAppSelector(state => state.patient);
     const [loading, setLoading] = useState(true);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [electrocardiogram, setElectrocardiogram] = useState<Electrocardiogram[]>([]);
-    const [echocardiogram, setEchocardiogram] = useState<Echocardiogram[]>([]);
-    const [cardiacCathStudy, setCardiacCathStudy] = useState<CardiacCathStudy[]>([]);
-    const [holterStudy, setholterStudy] = useState<HolterStudy[]>([]);
-    const [physicalexamination, setPhysicalExamination] = useState<PhysicalExamination[]>([]);
     const [diseaseHistory, setDiseaseHistory] = useState<DiseaseHistory[]>([]);
     const [medicalHistory, setMedicalHistory] = useState<MedicalHistory[]>([]);
     const [diagnostic, setDiagnostic] = useState<Diagnostic[]>([]);
@@ -88,6 +81,14 @@ export default function PatientDetail() {
     const bloodTestsByPatient = useAppSelector(bloodTestSelectors.selectAll);
     const { cardiacCathStudyByPatientLoaded } = useAppSelector(state => state.cardiacCathStudy);
     const cardiacCathStudyByPatient = useAppSelector(cardiacCathStudySelectors.selectAll);
+    const { electrocardiogramByPatientLoaded } = useAppSelector(state => state.electrocardiogram);
+    const electrocardiogramByPatient = useAppSelector(electrocardiogramSelectors.selectAll);
+    const { echocardiogramByPatientLoaded } = useAppSelector(state => state.echocardiogram);
+    const echocardiogramByPatient = useAppSelector(echocardiogramSelectors.selectAll);
+    const { holterStudyByPatientLoaded } = useAppSelector(state => state.holterStudy);
+    const holterStudyByPatient = useAppSelector(holterStudySelectors.selectAll);
+    const { physicalExaminationByPatientLoaded } = useAppSelector(state => state.physicalExamination);
+    const physicalExaminationByPatient = useAppSelector(physicalExaminationSelectors.selectAll);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -109,51 +110,21 @@ export default function PatientDetail() {
         };
         const fetchBloodTest = async () => {
             if (!bloodTestByPatientLoaded) dispatch(fetchBloodTestsByPatientAsync(id));
-
         };
         const fetchElectrocardiogram = async () => {
-            try {
-                const electrocardiogramData = await ApiService.getElectrocardiogramByPatientId(id);
-                setElectrocardiogram(electrocardiogramData);
-            } catch (error) {
-                console.error('Error fetching electrocardiogram:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!electrocardiogramByPatientLoaded) dispatch(fetchElectrocardiogramsByPatientAsync(id));
         };
         const fetchEchocardiogram = async () => {
-            try {
-                const echocardiogramData = await ApiService.getEchocardiogramByPatientId(id);
-                setEchocardiogram(echocardiogramData);
-                console.log('Echocardiograms: ', echocardiogramData);
-            } catch (error) {
-                console.error('Error fetching echocardiogram:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!echocardiogramByPatientLoaded) dispatch(fetchEchocardiogramsByPatientAsync(id));
         };
         const fetchCardiacCathStudy = async () => {
             if (!cardiacCathStudyByPatientLoaded) dispatch(fetchCardiacCathStudiesByPatientAsync(id));
         };
         const fetchHolterStudy = async () => {
-            try {
-                const holterStudyData = await ApiService.getHolterStudyByPatientId(id);
-                setholterStudy(holterStudyData);
-            } catch (error) {
-                console.error('Error fetching holter study:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!holterStudyByPatientLoaded) dispatch(fetchHolterStudiesByPatientAsync(id));
         };
         const fetchPhysicalExamination = async () => {
-            try {
-                const physicalExaminationData = await ApiService.getPhysicalExaminationPatientId(id);
-                setPhysicalExamination(physicalExaminationData);
-            } catch (error) {
-                console.error('Error fetching physical examination:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!physicalExaminationByPatientLoaded) dispatch(fetchPhysicalExaminationsByPatientAsync(id));
         };
         const fetchDiseaseHistory = async () => {
             try {
@@ -211,6 +182,10 @@ export default function PatientDetail() {
     }, [id, dispatch, patient,
         bloodTestByPatientLoaded,
         cardiacCathStudyByPatientLoaded,
+        electrocardiogramByPatientLoaded,
+        echocardiogramByPatientLoaded,
+        holterStudyByPatientLoaded,
+        physicalExaminationByPatientLoaded
     ]);
 
     function calculateAge(dob: any) {
@@ -348,15 +323,23 @@ export default function PatientDetail() {
                                 <Link to={`/bloodtests/patient/${patient.id}/bloodtests`} style={{ textDecoration: 'none' }}>
                                     <BloodTestPatient bloodTests={bloodTestsByPatient} />
                                 </Link>
-                                <ElectrocardiogramPatient electrocardiogram={electrocardiogram} />
-                                <EchocardiogramPatient echocardiogram={echocardiogram} />
+                                <Link to={`/electrocardiogram/patient/${patient.id}/electrocardiograms`} style={{ textDecoration: 'none' }}>
+                                    <ElectrocardiogramPatient electrocardiogram={electrocardiogramByPatient} />
+                                </Link>
+                                <Link to={`/echocardiogram/patient/${patient.id}/echocardiograms`} style={{ textDecoration: 'none' }}>
+                                    <EchocardiogramPatient echocardiogram={echocardiogramByPatient} />
+                                </Link>
                             </section>
                             <section style={{ display: "flex", flexDirection: "column", gap: 25 }}>
                                 <Link to={`/cardiaccatheterizationstudy/patient/${patient.id}/cardiaccathstudies`} style={{ textDecoration: 'none' }}>
                                     <CardiacCathStudyPatient cardiacCathStudy={cardiacCathStudyByPatient} />
                                 </Link>
-                                <HolterStudyPatient holterStudy={holterStudy} />
-                                <PhysicalExaminationPatient physicalExamination={physicalexamination} />
+                                <Link to={`/holterstudy/patient/${patient.id}/holterstudies`} style={{ textDecoration: 'none' }}>
+                                    <HolterStudyPatient holterStudy={holterStudyByPatient} />
+                                </Link>
+                                <Link to={`/physicalexamination/patient/${patient.id}/physicalexaminations`} style={{ textDecoration: 'none' }}>
+                                    <PhysicalExaminationPatient physicalExamination={physicalExaminationByPatient} />
+                                </Link>
                             </section>
                         </Box>
                     </CustomTabPanel>

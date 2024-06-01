@@ -35,11 +35,16 @@ namespace API.Helper
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<Diagnostic, DiagnosticDto>();
             CreateMap<DiseaseHistory, DiseaseHistoryDto>();
-            CreateMap<Echocardiogram, EchocardiogramDto>();
-            CreateMap<Electrocardiogram, ElectrocardiogramDto>();
-            CreateMap<HolterStudy, HolterStudyDto>();
+            CreateMap<Echocardiogram, EchocardiogramDto>()
+            .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
+            CreateMap<Electrocardiogram, ElectrocardiogramDto>()
+            .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
+            CreateMap<HolterStudy, HolterStudyDto>()
+            .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<MedicalHistory, MedicalHistoryDto>();
-            CreateMap<PhysicalExamination, PhysicalExaminationDto>();
+            CreateMap<PhysicalExamination, PhysicalExaminationDto>()
+            .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
+            ;
             CreateMap<StressTest, StressTestDto>();
             CreateMap<Treatment, TreatmentDto>();
 

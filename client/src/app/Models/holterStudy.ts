@@ -10,6 +10,6 @@ export interface HolterStudy {
     physicalActivity: string
     patientSymptoms: string
     conclusion: string
-    patientId: number
+    patient: string
   }
   

@@ -4,7 +4,7 @@ import agent from "../../../app/api/agent";
 import { RootState } from "../../../app/store/configureStore";
 
 
-interface cardiacCathStudyLoaded {
+interface CardiacCathStudyLoaded {
     cardiacCathStudyByPatientLoaded: boolean;
     status: string;
 }
@@ -42,7 +42,7 @@ export const fetchCardiacCathStudyByPatientAsync = createAsyncThunk<CardiacCathS
 
 export const cardiaccathstudySlice = createSlice({
     name: 'patient',
-    initialState: cardiacCathStudiesAdapter.getInitialState({
+    initialState: cardiacCathStudiesAdapter.getInitialState<CardiacCathStudyLoaded>({
         cardiacCathStudyByPatientLoaded: false,
         status: 'idle',
     }),

@@ -1,5 +1,4 @@
 import axios from "axios";
-import agent from "../app/api/agent";
 
 const baseUrl = "https://localhost:5001/api/v1";
 
@@ -8,42 +7,6 @@ const ApiService = {
     getAppointmentsByPatientId: async (patientId: number) => {
         const response = await axios.get(`${baseUrl}/appointment/patient/${patientId}/appointments`);
         return response.data;
-    },
-    getElectrocardiogramByPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/electrocardiogram/patient/${patientId}/electrocardiograms`);
-            return response.data;
-        } catch (error) {
-            console.log('Error fetching electrocardiogram by patient Id: ', error);
-            throw error;
-        }
-    },
-    getEchocardiogramByPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/echocardiogram/patient/${patientId}/echocardiograms`);
-            return response.data;
-        } catch (error) {
-            console.log('Error fetching echocardiogram by patient Id: ', error);
-            throw error;
-        }
-    },
-    getHolterStudyByPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/holterstudy/patient/${patientId}/holterstudies`);
-            return response.data;
-        } catch (error) {
-            console.log('Error fetching holter study by patient Id: ', error);
-            throw error;
-        }
-    },
-    getPhysicalExaminationPatientId: async (patientId: number) => {
-        try {
-            const response = await axios.get(`${baseUrl}/physicalexamination/patient/${patientId}/physicalexaminations`);
-            return response.data;
-        } catch (error) {
-            console.log('Error fetching physical examination by patient Id: ', error);
-            throw error;
-        }
     },
     getDiseaseHistoryByPatientId: async (patientId: number) => {
         try {
@@ -88,7 +51,6 @@ const ApiService = {
         } catch (error) {
             console.log('Error fetching cardiology surgeries: ', error);
             throw error;
-
         }
     }
 };

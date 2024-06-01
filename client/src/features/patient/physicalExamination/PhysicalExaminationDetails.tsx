@@ -1,118 +1,126 @@
-import { Card, CardContent, Box, Typography, Button, CardActions } from '@mui/material';
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
+import { fetchPhysicalExaminationByPatientAsync, physicalExaminationSelectors } from './physicalExaminationSlice';
+import NotFound from '../../../app/errors/NotFound';
+import { Box, Card, CardContent, Typography, CardActions, Button } from '@mui/material';
+import { format } from 'date-fns';
+import Breadcrumb from '../../../app/components/Breadcrumb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import Breadcrumb from '../../../app/components/Breadcrumb';
-import { format } from 'date-fns';
-import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
-import { bloodTestSelectors, fetchBloodTestByPatientAsync } from './bloodTestSlice';
-import NotFound from '../../../app/errors/NotFound';
 
-export default function BloodTestDetails() {
+export default function PhysicalExaminationDetails() {
+
     const dispatch = useAppDispatch();
-    const { id: patientId, bloodTestId } = useParams<{ id: string, bloodTestId: string }>();
+    const { id: patientId, physicalExaminationId } = useParams<{ id: string, physicalExaminationId: string }>();
     const patientIdNumber = patientId ? Number(patientId) : undefined;
-    const bloodTestIdNumber = bloodTestId ? Number(bloodTestId) : undefined;
+    const physicalExaminationIdNumber = physicalExaminationId ? Number(physicalExaminationId) : undefined;
 
-    const { status: bloodTestsByPatientStatus } = useAppSelector(state => state.bloodTest);
-    const bloodTestByPatient = useAppSelector((state) =>
-        bloodTestIdNumber ? bloodTestSelectors.selectById(state, bloodTestIdNumber) : undefined
+    const { status: physicalExaminationsByPatientStatus } = useAppSelector(state => state.physicalExamination);
+    const physicalExaminationByPatient = useAppSelector((state) =>
+        physicalExaminationIdNumber ? physicalExaminationSelectors.selectById(state, physicalExaminationIdNumber) : undefined
     );
 
     useEffect(() => {
-        const fetchBloodTestIdByPatientId = async () => {
-            if (patientIdNumber !== undefined && bloodTestIdNumber !== undefined && !bloodTestByPatient) {
-                dispatch(fetchBloodTestByPatientAsync({ patientId: patientIdNumber, bloodTestId: bloodTestIdNumber }));
+        const fetchPhysicalExaminationIdByPatientId = async () => {
+            if (patientIdNumber !== undefined && physicalExaminationIdNumber !== undefined && !physicalExaminationByPatient) {
+                dispatch(fetchPhysicalExaminationByPatientAsync({ patientId: patientIdNumber, physicalExaminationId: physicalExaminationIdNumber }));
             }
         };
 
-        fetchBloodTestIdByPatientId();
-    }, [dispatch, patientIdNumber, bloodTestIdNumber, bloodTestByPatient]);
+        fetchPhysicalExaminationIdByPatientId();
+    }, [dispatch, patientIdNumber, physicalExaminationIdNumber, physicalExaminationByPatient]);
 
-    if (bloodTestsByPatientStatus.includes('pending')) return <h3>Loading...</h3>;
-    if (!bloodTestByPatient) return <NotFound />;
+    if (physicalExaminationsByPatientStatus.includes('pending')) return <h3>Loading...</h3>;
+    if (!physicalExaminationByPatient) return <NotFound />;
+
 
     return (
         <Box sx={{ margin: '30px 0px 0px 30px' }}>
-            <Breadcrumb page="Blood Tests" />
+            <Breadcrumb page="Physical Examinations" />
 
             <Card sx={{ maxWidth: 745, padding: '20px' }}>
                 <CardContent>
                     <Box>
                         <Typography gutterBottom variant="h5">
-                            {bloodTestByPatient?.patient}
+                            {physicalExaminationByPatient?.patient}
                         </Typography>
                         <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Blood Test | {bloodTestByPatient?.date ? format(new Date(bloodTestByPatient.date), 'dd/MM/yyyy') : ''}
+                            Physical Examination | {physicalExaminationByPatient?.date ? format(new Date(physicalExaminationByPatient.date), 'dd/MM/yyyy') : ''}
                         </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
-                                    Hemoglobin
+                                    Time
                                 </Typography>
                                 <Typography>
-                                    {bloodTestByPatient?.hemoglobin}
+                                    {physicalExaminationByPatient?.time}
                                 </Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
-                                    Hematocrit
+                                    Duration
                                 </Typography>
                                 <Typography>
-                                    {bloodTestByPatient?.hematocrit}
+                                    {physicalExaminationByPatient?.duration}
                                 </Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
-                                    White Blood Cell
+                                    Max Heart Rate
                                 </Typography>
                                 <Typography>
-                                    {bloodTestByPatient?.whiteBloodCell}
+                                    {physicalExaminationByPatient?.maxHeartRate}
                                 </Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
-                                    Platelets
+                                    Peak Pressure
                                 </Typography>
                                 <Typography>
-                                    {bloodTestByPatient?.platelets}
-                                </Typography>
-                            </Box>
-                        </Box>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Glucose
-                                </Typography>
-                                <Typography>
-                                    {bloodTestByPatient?.glucose}
+                                    {physicalExaminationByPatient?.peakPressure}
                                 </Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
-                                    Cholesterol HDL
+                                    Exercise Induced Symptoms
                                 </Typography>
                                 <Typography>
-                                    {bloodTestByPatient?.cholesterolHDL}
+                                    {physicalExaminationByPatient?.exerciseInducedSymptoms}
                                 </Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
-                                    Cholesterol LDL
+                                    Abnormal ECG Findings
                                 </Typography>
                                 <Typography>
-                                    {bloodTestByPatient?.cholesterolLDL}
+                                    {physicalExaminationByPatient?.abnormalEcgFindings}
                                 </Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
-                                    Triglycerides
+                                    Image Eco
                                 </Typography>
                                 <Typography>
-                                    {bloodTestByPatient?.triglycerides}
+                                    {physicalExaminationByPatient?.imageEco}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Image Stress
+                                </Typography>
+                                <Typography>
+                                    {physicalExaminationByPatient?.imageStress}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ gridColumn: 'span 2' }}>
+                                <Typography variant="body1" color="text.secondary">
+                                    Conclusion
+                                </Typography>
+                                <Typography>
+                                    {physicalExaminationByPatient?.conclusion}
                                 </Typography>
                             </Box>
                         </Box>
@@ -123,7 +131,6 @@ export default function BloodTestDetails() {
                     <Button startIcon size="small" color="error"><DeleteIcon sx={{ marginRight: '5px' }} />Delete</Button>
                 </CardActions>
             </Card>
-        </Box >
-
+        </Box>
     )
 }

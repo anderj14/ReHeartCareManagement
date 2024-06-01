@@ -7,5 +7,5 @@ export interface Electrocardiogram {
     heartRate: string
     abnormalities: string
     artifacts: string
-    patientId: number
+    patient: number
 }

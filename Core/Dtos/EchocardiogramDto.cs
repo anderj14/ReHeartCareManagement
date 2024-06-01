@@ -11,6 +11,6 @@ namespace Core.Dtos
         public string MovementCardiacWalls { get; set; }
         public string PulmonaryArterialPressure { get; set; }
         public string BloodFlow { get; set; }
-        public int PatientId { get; set; }
+        public string Patient { get; set; }
     }
 }

@@ -22,6 +22,14 @@ import BloodTests from '../../features/patient/bloodTest/BloodTests';
 import BloodTestDetails from '../../features/patient/bloodTest/BloodTestDetails';
 import CardiacCathStudy from '../../features/patient/cardiacTestsPatient/CardiacCathStudy';
 import CardiacCathStudyDetails from '../../features/patient/cardiacTestsPatient/CardiacCathStudyDetails';
+import Electrocardiograms from '../../features/patient/electrocardiogram/Electrocardiograms';
+import ElectrocardiogramDetails from '../../features/patient/electrocardiogram/ElectrocardiogramDetails';
+import Echocardiograms from '../../features/patient/echocardiogram/Echocardiograms';
+import EchocardiogramDetails from '../../features/patient/echocardiogram/EchocardiogramDetails';
+import HolterStudies from '../../features/patient/holterStudy/HolterStudies';
+import HolterStudyDetails from '../../features/patient/holterStudy/HolterStudyDetails';
+import PhysicalExaminations from '../../features/patient/physicalExamination/PhysicalExaminations';
+import PhysicalExaminationDetails from '../../features/patient/physicalExamination/PhysicalExaminationDetails';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);
@@ -54,6 +62,14 @@ function App() {
                 <Route path="/bloodtests/patient/:id/bloodtests/:bloodTestId" element={<BloodTestDetails />} />
                 <Route path='/cardiaccatheterizationstudy/patient/:id/cardiaccathstudies' element={< CardiacCathStudy />}></Route>
                 <Route path="/cardiaccatheterizationstudy/patient/:id/cardiaccathstudies/:cardiacCathStudyId" element={<CardiacCathStudyDetails />} />
+                <Route path='/electrocardiogram/patient/:id/electrocardiograms' element={< Electrocardiograms />}></Route>
+                <Route path='/electrocardiogram/patient/:id/electrocardiograms/:electrocardiogramId' element={< ElectrocardiogramDetails />}></Route>
+                <Route path='/echocardiogram/patient/:id/echocardiograms' element={< Echocardiograms />}></Route>
+                <Route path='/echocardiogram/patient/:id/echocardiograms/:echocardiogramId' element={< EchocardiogramDetails />}></Route>
+                <Route path='/holterstudy/patient/:id/holterstudies' element={< HolterStudies />}></Route>
+                <Route path='/holterstudy/patient/:id/holterstudies/:holterStudyId' element={< HolterStudyDetails />}></Route>
+                <Route path='/physicalexamination/patient/:id/physicalexaminations' element={< PhysicalExaminations />}></Route>
+                <Route path='/physicalexamination/patient/:id/physicalexaminations/:physicalExaminationId' element={< PhysicalExaminationDetails />}></Route>
                 <Route path='/notes' element={< Notes />}></Route>
                 <Route path='/about' element={< AboutPage />}></Route>
                 <Route path='/contact' element={< ContactPage />}></Route>

@@ -8,5 +8,5 @@ export interface Echocardiogram {
     movementCardiacWalls: string
     pulmonaryArterialPressure: string
     bloodFlow: string
-    patientId: number
+    patient: string
 }

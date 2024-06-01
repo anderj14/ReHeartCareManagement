@@ -83,7 +83,6 @@ const BloodTest = {
     details: (id: number) => requests.get(`bloodtests/${id}`),
     listByPatientId: (patientId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests`),
     detailsByPatientId: (patientId: number, bloodTestId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests/${bloodTestId}`),
-
 };
 
 const CardiacCathStudy = {
@@ -91,7 +90,26 @@ const CardiacCathStudy = {
     details: (id: number) => requests.get(`cardiaccatheterizationstudy/${id}`),
     listByPatientId: (patientId: number) => requests.get(`cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`),
     detailsByPatientId: (patientId: number, cardiacCathStudyId: number) => requests.get(`cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies/${cardiacCathStudyId}`),
+};
 
+const Electrocardiogram = {
+    listByPatientId: (patientId: number) => requests.get(`electrocardiogram/patient/${patientId}/electrocardiograms`),
+    detailsByPatientId: (patientId: number, electrocardiogramId: number) => requests.get(`electrocardiogram/patient/${patientId}/electrocardiograms/${electrocardiogramId}`),
+};
+
+const Echocardiogram = {
+    listByPatientId: (patientId: number) => requests.get(`echocardiogram/patient/${patientId}/echocardiograms`),
+    detailsByPatientId: (patientId: number, echocardiogramId: number) => requests.get(`echocardiogram/patient/${patientId}/echocardiograms/${echocardiogramId}`),
+};
+
+const HolterStudy = {
+    listByPatientId: (patientId: number) => requests.get(`holterstudy/patient/${patientId}/holterstudies`),
+    detailsByPatientId: (patientId: number, holterStudyId: number) => requests.get(`HolterStudy/patient/${patientId}/holterStudies/${holterStudyId}`),
+};
+
+const PhysicalExamination = {
+    listByPatientId: (patientId: number) => requests.get(`physicalexamination/patient/${patientId}/physicalexaminations`),
+    detailsByPatientId: (patientId: number, physicalExaminationId: number) => requests.get(`physicalexamination/patient/${patientId}/physicalexaminations/${physicalExaminationId}`),
 };
 
 const TestErrors = {
@@ -115,6 +133,10 @@ const agent = {
     Account,
     BloodTest,
     CardiacCathStudy,
+    Electrocardiogram,
+    Echocardiogram,
+    HolterStudy,
+    PhysicalExamination,
 };
 
 export default agent;

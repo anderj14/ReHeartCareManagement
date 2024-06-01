@@ -10,6 +10,6 @@ namespace Core.Dtos
         public string HeartRate { get; set; }
         public string Abnormalities { get; set; }
         public string Artifacts { get; set; }
-        public int PatientId { get; set; }
+        public string Patient { get; set; }
     }
 }

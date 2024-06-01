@@ -14,6 +14,6 @@ namespace Core.Dtos
         public string PhysicalActivity { get; set; }
         public string PatientSymptoms { get; set; }
         public string Conclusion { get; set; }
-        public int PatientId { get; set; }
+        public string Patient { get; set; }
     }
 }

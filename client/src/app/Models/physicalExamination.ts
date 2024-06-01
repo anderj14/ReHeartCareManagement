@@ -10,5 +10,5 @@ export interface PhysicalExamination {
     imageEco: string
     imageStress: string
     conclusion: string
-    patientId: number
+    patient: string
 }

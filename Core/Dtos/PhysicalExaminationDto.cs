@@ -13,6 +13,6 @@ namespace Core.Dtos
         public string ImageEco { get; set; }
         public string ImageStress { get; set; }
         public string Conclusion { get; set; }
-        public int PatientId { get; set; }
+        public string Patient { get; set; }
     }
 }
