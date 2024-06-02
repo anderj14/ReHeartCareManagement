@@ -10,6 +10,6 @@ namespace Core.Dtos
         public string Severity { get; set; }
         public string RiskAssessment { get; set; }
         public string Conclusions { get; set; }
-        public int PatientId { get; set; }
+        public string Patient { get; set; }
     }
 }

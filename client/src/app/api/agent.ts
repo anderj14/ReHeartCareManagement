@@ -19,7 +19,6 @@ axios.interceptors.response.use(
         const pagination = response.headers['pagination'];
         if (pagination) {
             response.data = new PaginatedResponse(response.data, JSON.parse(pagination));
-            // console.log(response);
             return response;
         }
         return response;
@@ -122,6 +121,16 @@ const MedicalHistory = {
     detailsByPatientId: (patientId: number, medicalHistoryId: number) => requests.get(`medicalhistory/patient/${patientId}/medicalhistories/${medicalHistoryId}`),
 };
 
+const Diagnostic = {
+    listByPatientId: (patientId: number) => requests.get(`diagnostic/patient/${patientId}/diagnostics`),
+    detailsByPatientId: (patientId: number, diagnosticId: number) => requests.get(`diagnostic/patient/${patientId}/diagnostics/${diagnosticId}`),
+};
+
+const Treatment = {
+    listByPatientId: (patientId: number) => requests.get(`treatment/patient/${patientId}/treatments`),
+    detailsByPatientId: (patientId: number, treatmentId: number) => requests.get(`treatment/patient/${patientId}/treatments/${treatmentId}`),
+};
+
 const TestErrors = {
     get400Error: () => requests.get('buggy/badrequest'),
     get401Error: () => requests.get('buggy/unauthorized'),
@@ -149,6 +158,8 @@ const agent = {
     PhysicalExamination,
     DiseaseHistory,
     MedicalHistory,
+    Diagnostic,
+    Treatment,
 };
 
 export default agent;

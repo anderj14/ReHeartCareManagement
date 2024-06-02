@@ -1,4 +1,4 @@
-export interface Diagnostic {
+export interface Diagnostics {
     id: number
     date: string
     conditionName: string
@@ -7,5 +7,5 @@ export interface Diagnostic {
     severity: string
     riskAssessment: string
     conclusions: string
-    patientId: number
+    patient: string
 }

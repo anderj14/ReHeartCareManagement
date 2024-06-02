@@ -15,7 +15,6 @@ export default function BloodTestList({ bloodTests }: Props) {
 
     return (
         <Box>
-
             <TableContainer component={Paper} className="table">
                 <Table aria-label="patient table">
                     <TableHead>

@@ -20,7 +20,6 @@ export default function BloodTests() {
         if(!bloodTestByPatientLoaded) dispatch(fetchBloodTestsByPatientAsync(id));
     }, [bloodTestByPatientLoaded, dispatch]);
 
-
     return (
         <div className="contentPatient">
             <Breadcrumb page="Blood Tests" />

@@ -1,0 +1,44 @@
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Box } from '@mui/material';
+import { format } from 'date-fns';
+import { Treatment } from '../../../app/Models/treatment';
+import { Link, useParams } from 'react-router-dom';
+import { useAppSelector } from '../../../app/store/configureStore';
+import { patientSelectors } from '../patientSlice';
+
+interface Props {
+    treatments: Treatment[];
+}
+
+export default function TreatmentList({ treatments }: Props) {
+    const { id } = useParams<{ id: any }>();
+    const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+
+    return (
+        <Box>
+            <TableContainer component={Paper} className="table">
+                <Table aria-label="treatment table">
+                    <TableHead>
+                        <TableRow className="row">
+                            <TableCell sx={{ fontSize: '18px', fontWeight: 400 }}>Date</TableCell>
+                            <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Medication</TableCell>
+                            <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Dosage</TableCell>
+                            <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Side Effects</TableCell>
+                            <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Treatment Monitoring</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody className="body">
+                        {treatments.map((treatment) => (
+                            <TableRow key={treatment.id} component={Link} to={`/treatment/patient/${patient?.id}/treatments/${treatment.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{treatment.date ? format(new Date(treatment.date), 'dd/MM/yyyy') : ''}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.medication}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.dosage}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.sideEffects}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.treatmentMonitoring}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
+    );
+}

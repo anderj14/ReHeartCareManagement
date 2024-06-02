@@ -14,13 +14,9 @@ import EchocardiogramPatient from "./components/EchocardiogramPatient";
 import CardiacCathStudyPatient from "./components/CardiacCathStudyPatient";
 import HolterStudyPatient from "./components/HolterStudyPatient";
 import PhysicalExaminationPatient from "./components/PhysicalExaminationPatient";
-import { DiseaseHistory } from "../../app/Models/DiseaseHistory";
 import DiseaseHistoryPatient from "./components/DiseaseHistoryPatient";
-import { MedicalHistory } from "../../app/Models/MedicalHistory";
 import MedicalHistoryPatient from "./components/MedicalHistoryPatient";
-import { Diagnostic } from "../../app/Models/diagnostic";
 import DiagnosticPatient from "./components/DiagnosticPatient";
-import { Treatment } from "../../app/Models/treatment";
 import TreatmentPatient from "./components/TreatmentPatient";
 import NotFound from "../../app/errors/NotFound";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
@@ -33,6 +29,8 @@ import { fetchHolterStudiesByPatientAsync, holterStudySelectors } from "./holter
 import { fetchPhysicalExaminationsByPatientAsync, physicalExaminationSelectors } from "./physicalExamination/physicalExaminationSlice";
 import { diseaseHistorySelectors, fetchDiseaseHistoriesByPatientAsync } from "./diseaseHistory/diseaseHistorySlice";
 import { fetchMedicalHistoriesByPatientAsync, medicalHistorySelectors } from "./medicalHistory/medicalHistorySlice";
+import { diagnosticSelectors, fetchDiagnosticsByPatientAsync } from "./diagnostic/diagnosticSlice";
+import { fetchTreatmentsByPatientAsync, treatmentSelectors } from "./treatment/treatmentSlice";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -74,8 +72,6 @@ export default function PatientDetail() {
     const { status: patientStatus } = useAppSelector(state => state.patient);
     const [loading, setLoading] = useState(true);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [diagnostic, setDiagnostic] = useState<Diagnostic[]>([]);
-    const [treatment, setTreatment] = useState<Treatment[]>([]);
     const [value, setValue] = useState(0);
     const { bloodTestByPatientLoaded } = useAppSelector(state => state.bloodTest);
     const bloodTestsByPatient = useAppSelector(bloodTestSelectors.selectAll);
@@ -93,6 +89,10 @@ export default function PatientDetail() {
     const diseaseHistoryByPatient = useAppSelector(diseaseHistorySelectors.selectAll);
     const { medicalHistoryByPatientLoaded } = useAppSelector(state => state.medicalHistory);
     const medicalHistoryByPatient = useAppSelector(medicalHistorySelectors.selectAll);
+    const { diagnosticByPatientLoaded } = useAppSelector(state => state.diagnostic);
+    const diagnosticByPatient = useAppSelector(diagnosticSelectors.selectAll);
+    const { treatmentsByPatientLoaded } = useAppSelector(state => state.treatment);
+    const treatmentByPatient = useAppSelector(treatmentSelectors.selectAll);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -137,24 +137,10 @@ export default function PatientDetail() {
             if (!medicalHistoryByPatientLoaded) dispatch(fetchMedicalHistoriesByPatientAsync(id));
         };
         const fetchDiagnostic = async () => {
-            try {
-                const diagnosticData = await ApiService.getDiagnosticByPatientId(id);
-                setDiagnostic(diagnosticData);
-            } catch (error) {
-                console.error('Error fetching diagnostic:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!diagnosticByPatientLoaded) dispatch(fetchDiagnosticsByPatientAsync(id));
         };
         const fetchTreatment = async () => {
-            try {
-                const treatmentData = await ApiService.getTreatmentByPatientId(id);
-                setTreatment(treatmentData);
-            } catch (error) {
-                console.error('Error fetching treatment:', error);
-            } finally {
-                setLoading(false);
-            }
+            if (!treatmentsByPatientLoaded) dispatch(fetchTreatmentsByPatientAsync(id));
         };
 
         fetchPatient();
@@ -176,7 +162,9 @@ export default function PatientDetail() {
         echocardiogramByPatientLoaded,
         holterStudyByPatientLoaded,
         physicalExaminationByPatientLoaded,
-        diseaseHistoryByPatientLoaded
+        diseaseHistoryByPatientLoaded,
+        diagnosticByPatientLoaded,
+        treatmentsByPatientLoaded,
     ]);
 
     function calculateAge(dob: any) {
@@ -236,7 +224,7 @@ export default function PatientDetail() {
                                     <p>Telephone:</p>
                                     <p>Fax:</p>
                                 </Box>
-                                <Box className="patientInfoData" sx={{ marginTop: '18px' }}>
+                                <Box className="patientInfoData" sx={{ marginTop: '18px'}}>
                                     <a href={`mailto:${patient.email}`} style={{ textTransform: 'lowercase', color: '#1f2dac', textDecoration: 'none' }}>{patient.email}</a>
                                     <p style={{ color: '#1f2dac' }}>{patient.phone}</p>
                                     <p style={{ color: '#1f2dac' }}>{patient.phone}</p>
@@ -351,10 +339,14 @@ export default function PatientDetail() {
                     <CustomTabPanel value={value} index={3}>
                         <Box className="componentContainer">
                             <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
-                                <DiagnosticPatient diagnostic={diagnostic} />
+                                <Link to={`/diagnostic/patient/${patient.id}/diagnostics`} style={{ textDecoration: 'none' }}>
+                                    <DiagnosticPatient diagnostic={diagnosticByPatient} />
+                                </Link>
                             </section>
                             <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
-                                <TreatmentPatient treatment={treatment} />
+                                <Link to={`/treatment/patient/${patient.id}/treatments`} style={{ textDecoration: 'none' }}>
+                                    <TreatmentPatient treatment={treatmentByPatient} />
+                                </Link>
                             </section>
                         </Box>
                     </CustomTabPanel>

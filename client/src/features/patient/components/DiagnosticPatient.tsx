@@ -1,9 +1,9 @@
 import { Card, CardContent, Box } from '@mui/material';
 import React from 'react'
-import { Diagnostic } from '../../../app/Models/diagnostic';
+import { Diagnostics } from '../../../app/Models/diagnostic';
 
 interface Props {
-    diagnostic: Diagnostic[];
+    diagnostic: Diagnostics[];
 }
 
 export default function DiagnosticPatient({ diagnostic }: Props) {
