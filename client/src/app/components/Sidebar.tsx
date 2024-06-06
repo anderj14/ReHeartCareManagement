@@ -2,6 +2,7 @@ import Icon from "../../Images/Icon.svg";
 import Profile from "../../Images/profile.png";
 import Dashboard from "../../Images/dashboard.svg";
 import Patients from "../../Images/patients.svg";
+import Appointments from "../../Images/appointments.svg";
 import Surgeries from "../../Images/surgeries.svg";
 import Notes from "../../Images/notes.svg";
 import { NavLink, useLocation } from 'react-router-dom';
@@ -15,7 +16,6 @@ export default function Sidebar({ closeMenu, handleCloseMenu }: any) {
         { title: 'login', path: '/login' },
         { title: 'register', path: '/register' },
     ]
-
 
     const { user } = useAppSelector(state => state.account);
 
@@ -49,6 +49,10 @@ export default function Sidebar({ closeMenu, handleCloseMenu }: any) {
                             <img src={Patients} alt="patients" />
                             <a href="/patients">Patients</a>
                         </li>
+                        <li className={location.pathname === "/appointments" ? "active" : ""}>
+                            <img src={Appointments} alt="appointments" />
+                            <a href="/appointments">Appointments</a>
+                        </li>
                         <li className={location.pathname === "/cardiologysurgeries" ? "active" : ""}>
                             <img src={Surgeries} alt="surgeries" />
                             <a href="/cardiologysurgeries">Surgeries</a>
@@ -57,14 +61,14 @@ export default function Sidebar({ closeMenu, handleCloseMenu }: any) {
                             <img src={Notes} alt="notes" />
                             <a href="/notes">Notes</a>
                         </li>
-                        <li className={location.pathname === "/about" ? "active" : ""}>
+                        {/* <li className={location.pathname === "/about" ? "active" : ""}>
                             <img src={Notes} alt="performance" />
                             <a href="/about">About</a>
-                        </li>
-                        <li className={location.pathname === "/contact" ? "active" : ""}>
+                        </li> */}
+                        {/* <li className={location.pathname === "/contact" ? "active" : ""}>
                             <img src={Notes} alt="News" />
                             <a href="/contact">Contact</a>
-                        </li>
+                        </li> */}
                     </ul>
 
                 </div>

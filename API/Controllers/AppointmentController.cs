@@ -39,7 +39,7 @@ namespace API.Controllers
         }
 
         [HttpGet("allappointments")]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<Pagination<AppointmentDto>>> GetAppointments(
             [FromQuery] AppointmentSpecParams appointmentParams
         )
