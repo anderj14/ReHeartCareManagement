@@ -14,6 +14,7 @@ import { diseaseHistorySlice } from "../../features/patient/diseaseHistory/disea
 import { medicalHistorySlice } from "../../features/patient/medicalHistory/medicalHistorySlice";
 import { diagnosticSlice } from "../../features/patient/diagnostic/diagnosticSlice";
 import { treatmentSlice } from "../../features/patient/treatment/treatmentSlice";
+import { appointmentSlice } from "../../features/appointment/appointmentSlice";
 
 export const store = configureStore({
     reducer: {
@@ -31,6 +32,7 @@ export const store = configureStore({
         medicalHistory: medicalHistorySlice.reducer,
         diagnostic: diagnosticSlice.reducer,
         treatment: treatmentSlice.reducer,
+        appointment: appointmentSlice.reducer,
     }
 });
 

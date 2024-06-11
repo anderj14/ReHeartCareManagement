@@ -8,16 +8,16 @@ namespace Core.Specification
             : base(x =>
             (string.IsNullOrEmpty(appointmentParams.Search) || x.Patient.PatientName.ToLower().Contains
             (appointmentParams.Search))
-            // && (appointmentParams.Date == null || x.Date.Date == appointmentParams.Date.Value.Date)
             && (!appointmentParams.Date.HasValue || x.Date.Date == appointmentParams.Date.Value.Date)
             && (!appointmentParams.AppointmentStatusId.HasValue || x.AppointmentStatusId == appointmentParams.AppointmentStatusId)
             )
         {
             AddInclude(a => a.Patient);
+            AddInclude(a => a.AppUser);
             AddInclude(a => a.AppointmentStatus);
 
-            ApplyPaging(appointmentParams.PageSize * (appointmentParams.PageIndex - 1),
-            appointmentParams.PageSize);
+            // ApplyPaging(appointmentParams.PageSize * (appointmentParams.PageIndex - 1),
+            // appointmentParams.PageSize);
 
             if (!string.IsNullOrEmpty(appointmentParams.Sort))
             {

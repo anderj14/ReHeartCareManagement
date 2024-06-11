@@ -14,6 +14,7 @@ namespace Core.Interfaces
         Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
 
         Task<IReadOnlyList<T>> ListAllByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec);
+        // Task<IReadOnlyList<Appointment>> ListAllAppointmentByUserAsync(Expression<Func<Appointment, bool>> filter);
         Task<T> GetEntityByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec);
 
         Task<int> CountAsync(ISpecification<T> spec);

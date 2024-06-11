@@ -58,6 +58,15 @@ namespace Infraestructure.Data.Repository
             return await query.ToListAsync();
         }
 
+        // public async Task<IReadOnlyList<Appointment>> ListAllAppointmentByUserAsync(Expression<Func<Appointment, bool>> filter)
+        // {
+        //     return await _context.Set<Appointment>()
+        //         .Include(a => a.Patient)
+        //         .Include(a => a.AppointmentStatus)
+        //         .Where(filter)
+        //         .ToListAsync();
+        // }
+
         public async Task<T> GetEntityByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec)
         {
             var query = ApplySpecification(spec);

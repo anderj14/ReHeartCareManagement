@@ -55,6 +55,42 @@ namespace API.Controllers
             return Ok(new Pagination<AppointmentDto>(appointmentParams.PageIndex, appointmentParams.PageSize, totalItems, data));
         }
 
+        [HttpGet("calendar")]
+        [Authorize]
+        public async Task<ActionResult<IReadOnlyList<AppointmentDto>>> GetAppointmentCalendarByUser(
+            [FromQuery] AppointmentSpecParams appointmentParams
+        )
+        {
+            try
+            {
+                var userName = User.Identity.Name;
+
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
+                }
+
+                var user = await _userManager.FindByNameAsync(userName);
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
+                var spec = new AppointmentSpecification(appointmentParams);
+
+                Expression<Func<Appointment, bool>> filter = (appointment) => appointment.AppUserId == user.Id;
+
+                var userAppointments = await _unitOfWork.Repository<Appointment>().ListAllByUserAsync(filter, spec);
+
+                var data = _mapper.Map<IReadOnlyList<AppointmentDto>>(userAppointments);
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<Pagination<AppointmentDto>>> GetAppointmentByUser(
@@ -70,7 +106,6 @@ namespace API.Controllers
                     return Unauthorized(new ApiResponse(401, "User not authenticated"));
                 }
 
-                // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
                 var user = await _userManager.FindByNameAsync(userName);
 
                 if (user == null)
@@ -81,15 +116,27 @@ namespace API.Controllers
 
                 var spec = new AppointmentSpecification(appointmentParams);
                 var countSpec = new AppointmentFilterForCountSpecification(appointmentParams);
-                var totalItems = await _unitOfWork.Repository<Appointment>().CountAsync(countSpec);
+                var totalItems = await _unitOfWork.Repository<Appointment>().CountByUserAsync(filter, countSpec);
 
-                var userAppointment = await _unitOfWork.Repository<Appointment>().ListAllByUserAsync(filter, spec);
+                if (totalItems == 0)
+                {
+                    return Ok(new PagedList<AppointmentDto>(new List<AppointmentDto>(), 0, appointmentParams.PageIndex, appointmentParams.PageSize));
+                }
 
-                var data = _mapper.Map<IReadOnlyList<AppointmentDto>>(userAppointment);
+                var userAppointments = await _unitOfWork.Repository<Appointment>().ListAllByUserAsync(filter, spec, appointmentParams.PageIndex, appointmentParams.PageSize);
 
-                return Ok(new Pagination<AppointmentDto>(
-                    appointmentParams.PageIndex, appointmentParams.PageSize, totalItems, data
-                ));
+                var data = _mapper.Map<IReadOnlyList<AppointmentDto>>(userAppointments);
+
+                var paginatedAppointments = new PagedList<AppointmentDto>(
+                    data.ToList(),
+                    totalItems,
+                    appointmentParams.PageIndex,
+                    appointmentParams.PageSize
+                    );
+
+                Response.AddPaginationHeader(paginatedAppointments.MetaData);
+
+                return Ok(paginatedAppointments);
             }
             catch (Exception ex)
             {

@@ -1,180 +1,106 @@
+
 import React, { useEffect, useState } from 'react'
-import { Calendar, dayjsLocalizer } from 'react-big-calendar'
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import dayjs from 'dayjs';
-import '../../app/styles/appointment.scss'
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { Appointment } from '../../app/Models/appointment';
+import { useAppDispatch, useAppSelector } from '../../app/store/configureStore';
+import { appointmentSelectors, fetchAppointmentsAsync, setAppointmentParams } from './appointmentSlice';
+import RadioButtonGroup from '../../app/components/RadioButtonGroup';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import SortRoundedIcon from '@mui/icons-material/SortRounded';
+import { Typography, Card, CardContent, Button, Box } from '@mui/material';
+import Pager from '../../app/components/Pager';
+import CardiologySurgerySearch from '../surgery/CardiologySurgerySearch';
+import { setCardiologySurgeryParams } from '../surgery/surgerySlice';
+import PaginationItem from "../../app/components/PaginationItem";
+import Breadcrumb from '../../app/components/Breadcrumb';
 
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import utc from 'dayjs/plugin/utc';
-import { Box } from '@mui/material';
-dayjs.extend(customParseFormat);
-dayjs.extend(utc);
-
-
-interface CustomDateHeaderProps {
-  label: string;
-}
-
-const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ label }) => {
-  const [date, day] = label.split(' ');
-
-  return (
-    <div className="rbc-header">
-      <button type="button" className="rbc-button-link">
-        <span className="rbc-date">{date}</span>
-        <span className="rbc-day">{day}</span>
-      </button>
-    </div>
-  );
-};
-const CustomToolbar = (toolbar: any) => {
-  const goToBack = () => {
-    toolbar.onNavigate('PREV');
-  };
-
-  const goToNext = () => {
-    toolbar.onNavigate('NEXT');
-  };
-
-  const goToToday = () => {
-    toolbar.onNavigate('TODAY');
-  };
-
-  const view = toolbar.view;
-  const label = toolbar.label;
-
-
-  return (
-    <div className="rbc-toolbar">
-      <div className="rbc-btn-group time">
-        <button onClick={goToBack}>
-          <ArrowBackIosIcon />
-        </button>
-        <button onClick={goToToday}>
-          Today
-        </button>
-        <button onClick={goToNext}>
-          <ArrowForwardIosIcon />
-        </button>
-      </div>
-      <span className="rbc-toolbar-label">{label}</span>
-      <div className="rbc-btn-group">
-        <button onClick={() => toolbar.onView('month')} className={view === 'month' ? 'rbc-active' : ''}>
-          Month
-        </button>
-        <button onClick={() => toolbar.onView('week')} className={view === 'week' ? 'rbc-active' : ''}>
-          Week
-        </button>
-        <button onClick={() => toolbar.onView('day')} className={view === 'day' ? 'rbc-active' : ''}>
-          Day
-        </button>
-      </div>
-    </div>
-  );
-};
-
-interface CalendarEvent {
-  id: number;
-  start: Date;
-  end: Date;
-  title: string;
-  data: {
-    patient: string;
-    description: string;
-    appointmentStatus: string;
-  };
-}
+const sortOptions = [
+  { value: 'patientName', label: 'Alphabetical' },
+  { value: 'dateAsc', label: 'Date - Asc to Desc' },
+  { value: 'dateDesc', label: 'Date - Desc to Asc' },
+]
 
 export default function Appointments() {
 
-  const localizer = dayjsLocalizer(dayjs);
-  const [appointments, setAppointments] = useState<CalendarEvent[]>([]);
+  const appointments = useAppSelector(appointmentSelectors.selectAll);
+  const { appointmentsLoaded, appointmentParams, metaData, status } = useAppSelector(state => state.appointment);
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
-    fetch('https://localhost:5001/api/v1/appointment/allappointments')
-      .then(res => res.json())
-      .then(data => {
+    if (!appointmentsLoaded) dispatch(fetchAppointmentsAsync());
+  }, [appointmentsLoaded, dispatch]);
 
-        const transformedData = data.data.map((appointment: Appointment) => {
-          const date = dayjs(appointment.date, 'YYYY-MM-DD');
-          const time = dayjs(appointment.time, 'HH:mm:ss');
-          const start = date.hour(time.hour()).minute(time.minute()).second(time.second()).toDate();
-          const end = dayjs(start).add(1, 'hour').toDate();
-          const title = `${appointment.patient}`;
-          const eventData = {
-            patient: appointment.patient,
-            description: appointment.description,
-            appointmentStatus: appointment.appointmentStatus,
-          };
-          return {
-            id: appointment.id,
-            start,
-            end,
-            title,
-            data: eventData,
-          };
-        });
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((previousOpen) => !previousOpen);
+  }
 
-        console.log(transformedData);
-
-        setAppointments(transformedData);
-      });
-  }, []);
-
-
-
-
-  const components = {
-    event: (props: any) => {
-      const { data } = props.event;
-
-      const backgroundColor = () => {
-        switch (data.appointmentStatus) {
-          case 'Scheduled':
-            return '#F0A07C'; // Orange
-          case 'Completed':
-            return '#AED581'; // Green
-          case 'Cancelled':
-            return '#B0BEC5'; // Gray
-          case 'Rescheduled':
-            return '#90CAF9'; // Blue
-          case 'No Show':
-            return '#F48FB1'; // Pink
-          default:
-            return '#E0E0E0'; // Default gray
-        }
-      };
-      console.log(data);
-      return <Box style={{ backgroundColor: backgroundColor() }}>
-        <p style={{ fontWeight: '500', fontSize: '15px' }}>{data.patient}</p>
-        <p style={{ fontWeight: '300' }}>{data.description}</p>
-        <p style={{ fontWeight: '400' }}>{data.appointmentStatus}</p>
-      </Box>;
-    },
-    day: {
-      header: CustomDateHeader
-    }
-  };
-
-  const STEP = 5;
-  const TIME_SLOTS = 30 / STEP;
+  const canBeOpen = open && Boolean(anchorEl);
+  const id = canBeOpen ? 'spring-popper' : undefined;
 
   return (
-    <div className="appointments-container" style={{ marginLeft: '30px', height: '95vh', width: '60vw' }}>
-      <Calendar
-        localizer={localizer}
-        events={appointments}
-        views={["month", "week", "day"]}
-        components={{
-          toolbar: CustomToolbar,
-          ...components,
-        }}
-        step={STEP}
-        timeslots={TIME_SLOTS}
-      />
+    <div className="contentAppointment">
+      {/* <Breadcrumb page="appointments" /> */}
+      <Box>
+        <Typography variant="h4">Surgeries</Typography>
+      </Box>
+      <Card>
+        <CardContent>
+          <div className="filtersContainer">
+            <Box>
+              <Typography variant="h6">Surgery List</Typography>
+              <div className="pager">
+                {metaData && (
+                  <Pager metaData={metaData} />
+                )}
+              </div>
+            </Box>
+            <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '-35px' }}>
+              <div className="search">
+                <CardiologySurgerySearch />
+              </div>
+              <div className="addPatientButton">
+                <Button className="button" startIcon={<AddRoundedIcon />}>Add Surgery</Button>
+              </div>
+              <div className="addFilterButton">
+                <Button className="button" startIcon={<SortRoundedIcon />} onClick={handleClick}>Filter</Button>
+                <RadioButtonGroup
+                  selectedValue={appointmentParams.sort}
+                  options={sortOptions}
+                  onChange={(e) => dispatch(setAppointmentParams({ sort: e.target.value }))}
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                />
+              </div>
+            </Box>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Box sx={{ marginTop: '20px' }}>
+        {status === 'pendingFetchAppointmentsAsync' && (
+          <Typography variant="h6">Loading Surgeries...</Typography>
+        )}
+        {appointmentsLoaded && appointments.length === 0 && (
+          <Typography variant="h6">No Surgeries Found</Typography>
+        )}
+        {appointmentsLoaded && appointments.length > 0 && (
+          <div className="surgeryList">
+            {/* <CardiologySurgeryList cardiologySurgeries={appointments} /> */}
+          </div>
+        )}
+      </Box>
+      {appointmentsLoaded && (
+        <Box marginTop={'30px'}>
+          {metaData && (
+            <PaginationItem
+              metaData={metaData}
+              onPageChange={(page: number) => dispatch(setCardiologySurgeryParams({ pageIndex: page }))}
+            />
+          )}
+        </Box>
+      )}
     </div>
   )
 }

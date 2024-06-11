@@ -1,22 +1,44 @@
 @import './_variables';
 
 .appointments-container {
-    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .header {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        // background-color: red;
+
+        .add {
+            padding: 4px 15px;
+            text-transform: capitalize;
+            font-size: 16px;
+            font-weight: 400;
+
+            background-color: $green;
+            color: $white;
+        }
+    }
+}
+
+.calendar {
+    width: 1400px !important;
+    height: 820px;
 }
 
 .rbc-calendar {
     font-family: $fontFamily;
 }
 
-.rbc-calendar {
-    width: 1000px;
-}
-
 .rbc-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-top: 10px;
 
     .rbc-btn-group {
         display: flex;
@@ -25,9 +47,9 @@
         button {
             background: none;
             cursor: pointer;
-            font-size: 1.2em;
-            padding: 5px 15px;
-            margin: 0 5px;
+            font-size: $fontSizeButton;
+            padding: $paddingButton;
+            margin: $marginButton;
             color: $green;
 
             &:hover {
@@ -35,7 +57,7 @@
             }
 
             &.rbc-active {
-                font-weight: bold;
+                font-weight: $fontWeightBold;
                 border-bottom: 2px solid $darkGreen;
 
                 &:focus {
@@ -47,22 +69,19 @@
 
     .rbc-btn-group.time {
         button {
-            padding: 3px 10px;
-            border: none;
+            padding: $paddingButtonTime;
+            border: $borderNone;
         }
     }
 
+
     .rbc-toolbar-label {
-        font-size: 20px;
-        font-weight: bold;
+        font-size: $fontSizeLabel;
+        font-weight: $fontWeightBold;
         color: $blackGrey;
     }
 }
 
-.rbc-calendar {
-    margin-bottom: 20px;
-    width: 115 0px;
-}
 
 .rbc-header {
     color: white;
@@ -79,7 +98,7 @@
 }
 
 .rbc-time-header-cell .rbc-today {
-    background-color: #04aa6d !important;
+    background-color: $green !important;
 }
 
 .rbc-time-slot {
@@ -87,15 +106,11 @@
     z-index: 1;
 }
 
-.rbc-time-slot:not(.rbc-today .rbc-time-slot) {
-    background-color: #eff4f7;
-}
-
 .rbc-event,
 .rbc-background-event {
     z-index: 2;
     padding: 0px !important;
-    border: none !important;
+    border: $borderNone !important;
 }
 
 .rbc-event-label {
@@ -113,7 +128,7 @@
 .rbc-day-slot .rbc-time-slot:after {
     content: "";
     width: 100%;
-    border-top: 1px solid #fbb3ec;
+    border-top: 1px solid #7a79ca2a;
     display: block;
 }
 
@@ -122,6 +137,14 @@
 }
 
 .rbc-event-content {
+    background-color: $white;
+    border-radius: $borderRadius;
+    box-shadow: $boxShadow;
+    text-transform: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
     div {
         padding: 10px;
         text-transform: none;
@@ -130,10 +153,32 @@
             margin-block-start: 0;
             margin-block-end: 10px;
             font-size: 14px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: $black;
+        }
+    }
+
+
+
+    .MuiBox-root {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border-radius: $borderRadius;
+        border-top: 5px solid $green;
+
+        p {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 }
-
 
 .rbc-time-header-cell,
 .rbc-header {
@@ -143,34 +188,15 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        color: white;
-        font-size: 14px;
+        color: $textColor;
+        font-size: $fontSizeHeader;
         height: 36px !important;
 
         .rbc-button-link {
             span {
                 font-size: 18px;
-                font-weight: 400;
+                font-weight: $fontWeightRegular;
                 font-family: $fontFamily;
-            }
-        }
-    }
-}
-
-.rbc-event {
-    .rbc-event-content {
-        .MuiBox-root {
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-
-            p {
-                max-width: 100%;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-
             }
         }
     }
@@ -178,15 +204,112 @@
 
 .rbc-event,
 .rbc-day-slot .rbc-background-event {
-    border: none;
+    border: $borderNone;
     box-sizing: border-box;
     box-shadow: none;
     margin: 0;
     padding: 2px 5px;
-    background-color: #31ad3d;
-    border-radius: 5px;
-    color: #fff;
+    border-radius: $borderRadius;
+    color: $white;
     cursor: pointer;
     width: 100%;
     text-align: left;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+
+    .circle-color {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+}
+
+.modal-container {
+    position: fixed;
+    width: 650px;
+    top: 40px;
+    right: 340px;
+    transform: translateX(50%);
+
+    .modal-content {
+        padding: 16px;
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .actions {
+
+                .modal-close-button {
+                    color: #74a4c3;
+                }
+
+                .modal-edit-button {
+                    color: #cd6d6d;
+                    border: 1px solid #cd6d6d;
+                    border-radius: 4px;
+                    padding: 3px;
+                    margin-right: 15px;
+
+                    &:active {
+                        border-radius: 4px;
+
+                    }
+
+                    &:hover {
+                        border-radius: 4px;
+
+                    }
+                }
+            }
+
+        }
+
+        .modal-body {
+            margin-top: 25px;
+            border: 2px solid rgba(0, 0, 0, 0.098);
+            border-radius: 4px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+
+            .title {
+                margin-left: 20px;
+            }
+        }
+
+        .appointment-info {
+            margin-top: 25px;
+            margin-bottom: 25px;
+            display: flex;
+
+            .info {
+                margin-left: 15px;
+            }
+        }
+
+        .general-info {
+            margin-top: 25px;
+
+            .patient-info {
+                margin-top: 15px;
+
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                justify-content: space-between;
+            }
+
+            .info {
+                margin-top: 10px;
+            }
+        }
+    }
+
+
 }

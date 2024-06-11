@@ -26,6 +26,10 @@ namespace API.Helper
 
             CreateMap<Appointment, AppointmentDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName))
+            .ForMember(d => d.PatientEmail, o => o.MapFrom(s => s.Patient.Email))
+            .ForMember(d => d.PatientPhone, o => o.MapFrom(s => s.Patient.Phone))
+            .ForMember(d => d.PatientAddress, o => o.MapFrom(s => s.Patient.Address))
+            .ForMember(d => d.UserDoctor, o => o.MapFrom(s => s.AppUser.UserName))
             .ForMember(d => d.AppointmentStatus, o => o.MapFrom(s => s.AppointmentStatus.AppointmentStatusName));
             CreateMap<BloodTest, BloodTestDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));

@@ -38,7 +38,8 @@ import Diagnostics from '../../features/patient/diagnostic/Diagnostics';
 import DiagnosticDetails from '../../features/patient/diagnostic/DiagnosticDetails';
 import Treatments from '../../features/patient/treatment/Treatments';
 import TreatmentDetails from '../../features/patient/treatment/TreatmentDetails';
-import Appointments from '../../features/appointment/Appointments';
+import Appointments from '../../features/appointment/AppointmentCalendar';
+import AppointmentCalendar from '../../features/appointment/AppointmentCalendar';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);
@@ -67,7 +68,7 @@ function App() {
                 <Route path='/patients/:id' element={< PatientDetail />}></Route>
                 <Route path='/cardiologysurgeries' element={< CardiologySurgeries />}></Route>
                 <Route path='/cardiologysurgeries/:id' element={< CardiologySurgeryDetails />}></Route>
-                <Route path='/appointments' element={< Appointments />}></Route>
+                <Route path='/appointments' element={< AppointmentCalendar />}></Route>
                 <Route path='/bloodtests/patient/:id/bloodtests' element={< BloodTests />}></Route>
                 <Route path="/bloodtests/patient/:id/bloodtests/:bloodTestId" element={<BloodTestDetails />} />
                 <Route path='/cardiaccatheterizationstudy/patient/:id/cardiaccathstudies' element={< CardiacCathStudy />}></Route>

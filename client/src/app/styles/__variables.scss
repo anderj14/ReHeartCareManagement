@@ -18,3 +18,20 @@ $heavyFont: 800;
 
 // fonts
 $logoFont: calc(1.25 * 31.42px);
+
+// common styles
+$boxShadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$fontSizeHeader: 14px;
+$fontSizeLabel: 20px;
+$fontSizeButton: 1.2em;
+$fontWeightBold: bold;
+$fontWeightRegular: 400;
+$fontWeightLight: 300;
+$marginButton: 0 5px;
+$paddingButton: 5px 15px;
+$paddingButtonTime: 3px 10px;
+$paddingEventContent: 10px;
+$borderRadius: 5px;
+$borderNone: none;
+$backgroundHeader: $darkGreen;
+$textColor: $white;

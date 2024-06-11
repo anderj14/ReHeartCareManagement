@@ -131,6 +131,12 @@ const Treatment = {
     detailsByPatientId: (patientId: number, treatmentId: number) => requests.get(`treatment/patient/${patientId}/treatments/${treatmentId}`),
 };
 
+const Appointment = {
+    list: (params: URLSearchParams) => requests.get('appointment', params),
+    listCalendar: () => requests.get('appointment/calendar'),
+    details: (id: number) => requests.get(`appointment/${id}`),
+};
+
 const TestErrors = {
     get400Error: () => requests.get('buggy/badrequest'),
     get401Error: () => requests.get('buggy/unauthorized'),
@@ -160,6 +166,7 @@ const agent = {
     MedicalHistory,
     Diagnostic,
     Treatment,
+    Appointment,
 };
 
 export default agent;
