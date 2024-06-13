@@ -40,6 +40,7 @@ import Treatments from '../../features/patient/treatment/Treatments';
 import TreatmentDetails from '../../features/patient/treatment/TreatmentDetails';
 import Appointments from '../../features/appointment/AppointmentCalendar';
 import AppointmentCalendar from '../../features/appointment/AppointmentCalendar';
+import PatientForm from '../../features/patient/admin-patient/PatientForm';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);

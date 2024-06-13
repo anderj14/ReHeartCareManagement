@@ -1,5 +1,5 @@
 
-import { Box, Card, CardContent, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ApiService from "../../services/ApiService";
@@ -31,6 +31,9 @@ import { diseaseHistorySelectors, fetchDiseaseHistoriesByPatientAsync } from "./
 import { fetchMedicalHistoriesByPatientAsync, medicalHistorySelectors } from "./medicalHistory/medicalHistorySlice";
 import { diagnosticSelectors, fetchDiagnosticsByPatientAsync } from "./diagnostic/diagnosticSlice";
 import { fetchTreatmentsByPatientAsync, treatmentSelectors } from "./treatment/treatmentSlice";
+import { Edit } from "@mui/icons-material";
+import { Patient } from "../../app/Models/patient";
+import PatientForm from "./admin-patient/PatientForm";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -93,6 +96,15 @@ export default function PatientDetail() {
     const diagnosticByPatient = useAppSelector(diagnosticSelectors.selectAll);
     const { treatmentsByPatientLoaded } = useAppSelector(state => state.treatment);
     const treatmentByPatient = useAppSelector(treatmentSelectors.selectAll);
+
+    const [editMode, setEditMode] = useState(false); // Estado para controlar el modo de edición
+    const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined); // Estado para el paciente seleccionado
+    const handleEditClick = () => {
+        if (patient) {
+            setSelectedPatient(patient); // Establecer el paciente seleccionado para la edición
+            setEditMode(true); // Activar el modo de edición
+        }
+    };
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -187,6 +199,11 @@ export default function PatientDetail() {
     if (patientStatus.includes('pending')) return <h3>Loading...</h3>;
     if (!patient) return <NotFound />;
 
+    const handleClose = () => {
+        setEditMode(false);
+        setSelectedPatient(undefined);
+    };
+
     return (
         <div className="container">
             <Breadcrumb page='patients / patient name' />
@@ -224,7 +241,7 @@ export default function PatientDetail() {
                                     <p>Telephone:</p>
                                     <p>Fax:</p>
                                 </Box>
-                                <Box className="patientInfoData" sx={{ marginTop: '18px'}}>
+                                <Box className="patientInfoData" sx={{ marginTop: '18px' }}>
                                     <a href={`mailto:${patient.email}`} style={{ textTransform: 'lowercase', color: '#1f2dac', textDecoration: 'none' }}>{patient.email}</a>
                                     <p style={{ color: '#1f2dac' }}>{patient.phone}</p>
                                     <p style={{ color: '#1f2dac' }}>{patient.phone}</p>
@@ -274,8 +291,20 @@ export default function PatientDetail() {
                                 </Box>
                             </div>
                         </Box>
+
+                        {/* <Button onClick={() => handleSelectPatient(patient)} startIcon={<Edit />} /> */}
+                        <Button onClick={handleEditClick} startIcon={<Edit />}>
+                            Edit
+                        </Button>
                     </CardContent>
                 </Card>
+
+                {/* Modal para el formulario de edición */}
+                <Dialog open={editMode} onClose={handleClose} fullWidth maxWidth="sm">
+                    <DialogContent>
+                        {selectedPatient && <PatientForm patient={selectedPatient} cancelEdit={handleClose} />}
+                    </DialogContent>
+                </Dialog>
 
                 <Card sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
