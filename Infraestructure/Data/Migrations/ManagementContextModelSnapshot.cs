@@ -29,14 +29,23 @@ namespace Infraestructure.Data.Migrations
                     b.Property<int>("AppointmentStatusId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("AppointmentTypeId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("TEXT");
@@ -46,6 +55,8 @@ namespace Infraestructure.Data.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("AppointmentStatusId");
+
+                    b.HasIndex("AppointmentTypeId");
 
                     b.HasIndex("PatientId");
 
@@ -66,11 +77,65 @@ namespace Infraestructure.Data.Migrations
                     b.ToTable("AppointmentStatuses");
                 });
 
+            modelBuilder.Entity("Core.Entities.AppointmentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppointmentTypes");
+                });
+
+            modelBuilder.Entity("Core.Entities.Attachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DiseaseHistoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiseaseHistoryId");
+
+                    b.ToTable("Attachments");
+                });
+
             modelBuilder.Entity("Core.Entities.BloodTest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Basophils")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Bicarbonate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BloodUreaNitrogen")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Calcium")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Chloride")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CholesterolHDL")
                         .HasColumnType("TEXT");
@@ -78,7 +143,13 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("CholesterolLDL")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Creatinine")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Eosinophils")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Glucose")
@@ -90,10 +161,43 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("Hemoglobin")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Lymphocytes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Magnesium")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MeanCorpuscularHemoglobin")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MeanCorpuscularHemoglobinConcentration")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MeanCorpuscularVolume")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Monocytes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Neutrophils")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Platelets")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Potassium")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RedBloodCell")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RedCellDistributionWidth")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Sodium")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Triglycerides")
@@ -127,6 +231,9 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("BloodPressurePulmonaryArteries")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CardiacChamberFunctions")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ChambersLeftAtrium")
                         .HasColumnType("TEXT");
 
@@ -145,19 +252,16 @@ namespace Infraestructure.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DescriptionAbnormality")
+                    b.Property<string>("DescriptionAbnormalities")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DescriptionComplication")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FunctionsCardiacChambers")
+                    b.Property<string>("DescriptionComplications")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LeftVentricularEjectionFraction")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("NumLocationMainCoronary")
+                    b.Property<string>("LocationMainCoronaryArteries")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PatientId")
@@ -200,29 +304,38 @@ namespace Infraestructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AnesthesiaType")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CardiacCondition")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Complications")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Duration")
+                    b.Property<double>("Duration")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("IntraoperativeFindings")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsElective")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("IsElective")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("IsEmergency")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("IsEmergency")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("IsMinimallyInvasive")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("IsMinimallyInvasive")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("IsSuccessful")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("IsSuccessful")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
@@ -236,6 +349,12 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("PostOpDiagnosis")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PostOperativeInstructions")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PostOperativeStatus")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("PreOpDiagnosis")
                         .HasColumnType("TEXT");
 
@@ -243,6 +362,9 @@ namespace Infraestructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SurgeryName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SurgicalTeam")
                         .HasColumnType("TEXT");
 
                     b.Property<TimeSpan>("Time")
@@ -278,8 +400,14 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FollowUpPlan")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Recommendations")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RiskAssessment")
                         .HasColumnType("TEXT");
@@ -303,8 +431,23 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Diagnosis")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DoctorName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsChronic")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Severity")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
@@ -331,10 +474,19 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("CardiacDimensions")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ClinicalImpression")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EjectionFraction")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Findings")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Indications")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MovementCardiacWalls")
@@ -344,6 +496,9 @@ namespace Infraestructure.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PulmonaryArterialPressure")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TechnicalDetails")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ValveFunction")
@@ -371,10 +526,22 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("Artifacts")
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("BloodPressureDiastolic")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("BloodPressureSystolic")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("CharacteristicWaves")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ClinicalNotes")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DetailedFindings")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("HeartRate")
@@ -383,11 +550,17 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("HeartRhythm")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Interpretation")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("IntervalsSegments")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -396,17 +569,92 @@ namespace Infraestructure.Data.Migrations
                     b.ToTable("Electrocardiograms");
                 });
 
-            modelBuilder.Entity("Core.Entities.HolterStudy", b =>
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.AdditionalTestResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ArrhythmiaEpisodes")
+                    b.Property<int>("HolterStudyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Results")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("AverageHeartRate")
+                    b.Property<DateTime>("TestDateTime")
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("TestName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HolterStudyId");
+
+                    b.ToTable("AdditionalTestResults");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.ArrhythmiaEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Duration")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HeartRateDuringEvent")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("HolterStudyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HolterStudyId");
+
+                    b.ToTable("ArrhythmiaEvents");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.ClinicalEvaluation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("EvaluationDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Findings")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HolterStudyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Recommendations")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HolterStudyId");
+
+                    b.ToTable("ClinicalEvaluations");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.HolterStudy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AverageHeartRate")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Conclusion")
                         .HasColumnType("TEXT");
@@ -414,14 +662,11 @@ namespace Infraestructure.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MaximumHeartRate")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("MaximumHeartRate")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("PatientSymptoms")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("PhysicalActivity")
                         .HasColumnType("TEXT");
@@ -440,6 +685,56 @@ namespace Infraestructure.Data.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("HolterStudies");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.MedicationAdministration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AdministrationDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dosage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HolterStudyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MedicationName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HolterStudyId");
+
+                    b.ToTable("MedicationAdministrations");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.PatientSymptom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HolterStudyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("SymptomDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SymptomName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HolterStudyId");
+
+                    b.ToTable("PatientSymptoms");
                 });
 
             modelBuilder.Entity("Core.Entities.Identity.AppUser", b =>
@@ -512,38 +807,41 @@ namespace Infraestructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("CardiacProceduresSurgeries")
+                    b.Property<string>("CardiacProcedures")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Diabetes")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("Diabetes")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("FamilyDiseases")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("HighBloodPressure")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("HighBloodPressure")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Hyperlipidemia")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("Hyperlipidemia")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Medications")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Obesity")
+                    b.Property<bool>("Obesity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OtherDetails")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("PreviousHeartDisease")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("PreviousHeartDisease")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Smoking")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("Smoking")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SystemicDiseases")
                         .HasColumnType("TEXT");
@@ -553,6 +851,51 @@ namespace Infraestructure.Data.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("MedicalHistories");
+                });
+
+            modelBuilder.Entity("Core.Entities.Medication", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Dosage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Frequency")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Route")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SurgeryFollowUpId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurgeryFollowUpId");
+
+                    b.ToTable("Medications");
+                });
+
+            modelBuilder.Entity("Core.Entities.NoteStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("NoteStatusName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NoteStatus");
                 });
 
             modelBuilder.Entity("Core.Entities.Notes", b =>
@@ -570,12 +913,17 @@ namespace Infraestructure.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("NoteStatusId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
+
+                    b.HasIndex("NoteStatusId");
 
                     b.ToTable("Notes");
                 });
@@ -592,6 +940,10 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("AssignedDoctor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CarnetIdentification")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -602,7 +954,35 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("EmergencyContactName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EmergencyContactNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EmergencyContactRelation")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FamilyDoctor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Fax")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MaritalStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Occupation")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -611,18 +991,111 @@ namespace Infraestructure.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("PatientStatusId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<long>("Phone")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("PolicyNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReferringDoctor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SocialSecurity")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StatusId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
+                    b.HasIndex("PatientStatusId");
+
                     b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("Core.Entities.PatientStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PatientStatusName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PatientStatuses");
+                });
+
+            modelBuilder.Entity("Core.Entities.Photo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("BloodTestId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CardiacCatheterizationStudyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CardiologySurgeryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("EchocardiogramId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EcocardiogramId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ElectrocardiogramId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PhysicalExaminationStressId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("StressTestId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
+
+                    b.HasIndex("BloodTestId");
+
+                    b.HasIndex("CardiacCatheterizationStudyId");
+
+                    b.HasIndex("CardiologySurgeryId");
+
+                    b.HasIndex("EchocardiogramId");
+
+                    b.HasIndex("ElectrocardiogramId");
+
+                    b.HasIndex("PhysicalExaminationStressId");
+
+                    b.HasIndex("StressTestId");
+
+                    b.ToTable("Photo");
                 });
 
             modelBuilder.Entity("Core.Entities.PhysicalExamination", b =>
@@ -646,14 +1119,8 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("ExerciseInducedSymptoms")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImageEco")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ImageStress")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MaxHeartRate")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("MaxHeartRate")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
@@ -669,6 +1136,40 @@ namespace Infraestructure.Data.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("PhysicalExaminations");
+                });
+
+            modelBuilder.Entity("Core.Entities.Prescription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Dosage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Frequency")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MedicationName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Route")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Prescriptions");
                 });
 
             modelBuilder.Entity("Core.Entities.StressTest", b =>
@@ -692,11 +1193,17 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("ExerciseInducedSymptoms")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImageEco")
+                    b.Property<string>("ExerciseProtocol")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImageStress")
+                    b.Property<string>("Indications")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("MaxBloodPressureDiastolic")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("MaxBloodPressureSystolic")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("MaxHeartRate")
                         .HasColumnType("TEXT");
@@ -706,6 +1213,9 @@ namespace Infraestructure.Data.Migrations
 
                     b.Property<string>("PeakPressure")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("RestingHeartRate")
+                        .HasColumnType("INTEGER");
 
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("TEXT");
@@ -729,13 +1239,19 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("Complications")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FollowUpComplete")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("FollowUpDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FollowUpNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FunctionalAssessment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsFollowUpComplete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Recommendations")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -772,7 +1288,13 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("SideEffects")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("TreatmentDuration")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("TreatmentMonitoring")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TreatmentOutcome")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -810,13 +1332,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ae483a66-1cac-4417-805c-9c91dc92f01d",
+                            Id = "fc48b746-e5f3-4aa3-b178-62cbe44e9629",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d906bdf3-8ca3-43aa-9135-fdbf2c1ba03c",
+                            Id = "8114830a-7612-4ea0-a32a-9b6dfd3683c8",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -937,6 +1459,12 @@ namespace Infraestructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Core.Entities.AppointmentType", "AppointmentType")
+                        .WithMany()
+                        .HasForeignKey("AppointmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Core.Entities.Patient", "Patient")
                         .WithMany("Appointments")
                         .HasForeignKey("PatientId")
@@ -947,7 +1475,20 @@ namespace Infraestructure.Data.Migrations
 
                     b.Navigation("AppointmentStatus");
 
+                    b.Navigation("AppointmentType");
+
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("Core.Entities.Attachment", b =>
+                {
+                    b.HasOne("Core.Entities.DiseaseHistory", "DiseaseHistory")
+                        .WithMany("Attachments")
+                        .HasForeignKey("DiseaseHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiseaseHistory");
                 });
 
             modelBuilder.Entity("Core.Entities.BloodTest", b =>
@@ -1034,7 +1575,40 @@ namespace Infraestructure.Data.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("Core.Entities.HolterStudy", b =>
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.AdditionalTestResult", b =>
+                {
+                    b.HasOne("Core.Entities.HolterStudyInfo.HolterStudy", "HolterStudy")
+                        .WithMany("AdditionalTestResults")
+                        .HasForeignKey("HolterStudyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HolterStudy");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.ArrhythmiaEvent", b =>
+                {
+                    b.HasOne("Core.Entities.HolterStudyInfo.HolterStudy", "HolterStudy")
+                        .WithMany("ArrhythmiaEvents")
+                        .HasForeignKey("HolterStudyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HolterStudy");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.ClinicalEvaluation", b =>
+                {
+                    b.HasOne("Core.Entities.HolterStudyInfo.HolterStudy", "HolterStudy")
+                        .WithMany("ClinicalEvaluations")
+                        .HasForeignKey("HolterStudyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HolterStudy");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.HolterStudy", b =>
                 {
                     b.HasOne("Core.Entities.Patient", "Patient")
                         .WithMany("HolterStudies")
@@ -1043,6 +1617,28 @@ namespace Infraestructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.MedicationAdministration", b =>
+                {
+                    b.HasOne("Core.Entities.HolterStudyInfo.HolterStudy", "HolterStudy")
+                        .WithMany("MedicationAdministrations")
+                        .HasForeignKey("HolterStudyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HolterStudy");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.PatientSymptom", b =>
+                {
+                    b.HasOne("Core.Entities.HolterStudyInfo.HolterStudy", "HolterStudy")
+                        .WithMany("PatientSymptoms")
+                        .HasForeignKey("HolterStudyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HolterStudy");
                 });
 
             modelBuilder.Entity("Core.Entities.MedicalHistory", b =>
@@ -1056,13 +1652,32 @@ namespace Infraestructure.Data.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("Core.Entities.Medication", b =>
+                {
+                    b.HasOne("Core.Entities.SurgeryFollowUp", "SurgeryFollowUp")
+                        .WithMany("MedicationsPrescribed")
+                        .HasForeignKey("SurgeryFollowUpId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SurgeryFollowUp");
+                });
+
             modelBuilder.Entity("Core.Entities.Notes", b =>
                 {
                     b.HasOne("Core.Entities.Identity.AppUser", "AppUser")
                         .WithMany("Notes")
                         .HasForeignKey("AppUserId");
 
+                    b.HasOne("Core.Entities.NoteStatus", "NoteStatus")
+                        .WithMany()
+                        .HasForeignKey("NoteStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("AppUser");
+
+                    b.Navigation("NoteStatus");
                 });
 
             modelBuilder.Entity("Core.Entities.Patient", b =>
@@ -1072,13 +1687,92 @@ namespace Infraestructure.Data.Migrations
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Core.Entities.PatientStatus", "PatientStatus")
+                        .WithMany()
+                        .HasForeignKey("PatientStatusId");
+
                     b.Navigation("AppUser");
+
+                    b.Navigation("PatientStatus");
+                });
+
+            modelBuilder.Entity("Core.Entities.Photo", b =>
+                {
+                    b.HasOne("Core.Entities.Identity.AppUser", "AppUser")
+                        .WithOne("Photo")
+                        .HasForeignKey("Core.Entities.Photo", "AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Core.Entities.BloodTest", "BloodTest")
+                        .WithMany("BloodTestPhotos")
+                        .HasForeignKey("BloodTestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.CardiacCatheterizationStudy", "CardiacCatheterizationStudy")
+                        .WithMany("CardiacCathStudyImages")
+                        .HasForeignKey("CardiacCatheterizationStudyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.CardiologySurgery", "CardiologySurgery")
+                        .WithMany("SurgeryPhotos")
+                        .HasForeignKey("CardiologySurgeryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Echocardiogram", "Echocardiogram")
+                        .WithMany("PhotosImageEco")
+                        .HasForeignKey("EchocardiogramId");
+
+                    b.HasOne("Core.Entities.Electrocardiogram", "Electrocardiogram")
+                        .WithMany("Images")
+                        .HasForeignKey("ElectrocardiogramId");
+
+                    b.HasOne("Core.Entities.PhysicalExamination", "PhysicalExaminationStress")
+                        .WithMany()
+                        .HasForeignKey("PhysicalExaminationStressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.StressTest", "StressTest")
+                        .WithMany("Photos")
+                        .HasForeignKey("StressTestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("BloodTest");
+
+                    b.Navigation("CardiacCatheterizationStudy");
+
+                    b.Navigation("CardiologySurgery");
+
+                    b.Navigation("Echocardiogram");
+
+                    b.Navigation("Electrocardiogram");
+
+                    b.Navigation("PhysicalExaminationStress");
+
+                    b.Navigation("StressTest");
                 });
 
             modelBuilder.Entity("Core.Entities.PhysicalExamination", b =>
                 {
                     b.HasOne("Core.Entities.Patient", "Patient")
                         .WithMany("PhysicalExaminations")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("Core.Entities.Prescription", b =>
+                {
+                    b.HasOne("Core.Entities.Patient", "Patient")
+                        .WithMany("Prescription")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1170,6 +1864,49 @@ namespace Infraestructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Core.Entities.BloodTest", b =>
+                {
+                    b.Navigation("BloodTestPhotos");
+                });
+
+            modelBuilder.Entity("Core.Entities.CardiacCatheterizationStudy", b =>
+                {
+                    b.Navigation("CardiacCathStudyImages");
+                });
+
+            modelBuilder.Entity("Core.Entities.CardiologySurgery", b =>
+                {
+                    b.Navigation("SurgeryPhotos");
+                });
+
+            modelBuilder.Entity("Core.Entities.DiseaseHistory", b =>
+                {
+                    b.Navigation("Attachments");
+                });
+
+            modelBuilder.Entity("Core.Entities.Echocardiogram", b =>
+                {
+                    b.Navigation("PhotosImageEco");
+                });
+
+            modelBuilder.Entity("Core.Entities.Electrocardiogram", b =>
+                {
+                    b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("Core.Entities.HolterStudyInfo.HolterStudy", b =>
+                {
+                    b.Navigation("AdditionalTestResults");
+
+                    b.Navigation("ArrhythmiaEvents");
+
+                    b.Navigation("ClinicalEvaluations");
+
+                    b.Navigation("MedicationAdministrations");
+
+                    b.Navigation("PatientSymptoms");
+                });
+
             modelBuilder.Entity("Core.Entities.Identity.AppUser", b =>
                 {
                     b.Navigation("Appointments");
@@ -1179,6 +1916,8 @@ namespace Infraestructure.Data.Migrations
                     b.Navigation("Notes");
 
                     b.Navigation("Patients");
+
+                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("Core.Entities.Patient", b =>
@@ -1205,9 +1944,21 @@ namespace Infraestructure.Data.Migrations
 
                     b.Navigation("PhysicalExaminations");
 
+                    b.Navigation("Prescription");
+
                     b.Navigation("StressTests");
 
                     b.Navigation("Treatments");
+                });
+
+            modelBuilder.Entity("Core.Entities.StressTest", b =>
+                {
+                    b.Navigation("Photos");
+                });
+
+            modelBuilder.Entity("Core.Entities.SurgeryFollowUp", b =>
+                {
+                    b.Navigation("MedicationsPrescribed");
                 });
 #pragma warning restore 612, 618
         }

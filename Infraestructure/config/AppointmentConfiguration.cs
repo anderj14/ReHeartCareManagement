@@ -10,7 +10,10 @@ namespace Infraestructure.config
         {
             builder.HasOne(a => a.AppointmentStatus).WithMany()
                 .HasForeignKey(i => i.AppointmentStatusId);
-            
+                
+            builder.HasOne(a => a.AppointmentType).WithMany()
+                .HasForeignKey(i => i.AppointmentTypeId);
+
             builder
             .HasOne(u => u.AppUser)
             .WithMany(u => u.Appointments)

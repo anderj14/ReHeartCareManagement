@@ -9,7 +9,9 @@ namespace Core.Entities
         public string Severity { get; set; }
         public string RiskAssessment { get; set; }
         public string Conclusions { get; set; }
-
+        public string Recommendations { get; set; }
+        public string FollowUpPlan { get; set; }
+        
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
     }

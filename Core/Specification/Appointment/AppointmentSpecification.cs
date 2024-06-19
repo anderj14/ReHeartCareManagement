@@ -8,7 +8,7 @@ namespace Core.Specification
             : base(x =>
             (string.IsNullOrEmpty(appointmentParams.Search) || x.Patient.PatientName.ToLower().Contains
             (appointmentParams.Search))
-            && (!appointmentParams.Date.HasValue || x.Date.Date == appointmentParams.Date.Value.Date)
+            // && (!appointmentParams.Date.HasValue || x.Date.Date == appointmentParams.Date.Value.Date)
             && (!appointmentParams.AppointmentStatusId.HasValue || x.AppointmentStatusId == appointmentParams.AppointmentStatusId)
             )
         {
@@ -24,10 +24,10 @@ namespace Core.Specification
                 switch (appointmentParams.Sort)
                 {
                     case "dateAsc":
-                        AddOrderBy(a => a.Date);
+                        // AddOrderBy(a => a.Date);
                         break;
                     case "dateDesc":
-                        AddOrderByDescending(a => a.Date);
+                        // AddOrderByDescending(a => a.Date);
                         break;
                     case "timeAsc":
                         AddOrderBy(a => a.Time);
@@ -62,12 +62,12 @@ namespace Core.Specification
             AddInclude(a => a.AppointmentStatus);
         }
 
-        public AppointmentSpecification(DateTime date)
-            : base(a => a.Date.Date == date.Date)
-        {
-            AddInclude(a => a.Patient);
-            AddInclude(a => a.AppointmentStatus);
-            AddOrderBy(a => a.Date);
-        }
+        // public AppointmentSpecification(DateTime date)
+        //     : base(a => a.Date.Date == date.Date)
+        // {
+        //     AddInclude(a => a.Patient);
+        //     AddInclude(a => a.AppointmentStatus);
+        //     AddOrderBy(a => a.Date);
+        // }
     }
 }

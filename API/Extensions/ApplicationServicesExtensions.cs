@@ -1,9 +1,11 @@
 using API.Errors;
+using API.Helper;
 using Core.Entities.Identity;
 using Core.Interfaces;
 using Infraestructure.Data;
 using Infraestructure.Data.Repository;
 using Infraestructure.Services;
+using Infraestructure.settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 
@@ -22,6 +24,9 @@ namespace API.Extensions
             this IServiceCollection services, IConfiguration config
         )
         {
+            // Images Settings
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             // Conection string
             services.AddDbContext<ManagementContext>(opt =>
@@ -68,6 +73,7 @@ namespace API.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPhotoService, PhotoService>();
 
             ////
             // services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

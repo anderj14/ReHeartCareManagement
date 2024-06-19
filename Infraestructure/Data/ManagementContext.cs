@@ -1,5 +1,6 @@
 using System.Reflection;
 using Core.Entities;
+using Core.Entities.HolterStudyInfo;
 using Core.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace Infraestructure.Data
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentStatus> AppointmentStatuses { get; set; }
+        public DbSet<AppointmentType> AppointmentTypes { get; set; }
         public DbSet<BloodTest> BloodTests { get; set; }
         public DbSet<CardiacCatheterizationStudy> CardiacCatheterizationStudies { get; set; }
         public DbSet<Diagnostic> Diagnostics { get; set; }
@@ -30,6 +32,16 @@ namespace Infraestructure.Data
         public DbSet<CardiologySurgery> CardiologySurgeries { get; set; }
         public DbSet<SurgeryFollowUp> SurgeryFollowUps { get; set; }
         public DbSet<Notes> Notes { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<Medication> Medications { get; set; }
+        public DbSet<PatientStatus> PatientStatuses { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
+        public DbSet<AdditionalTestResult> AdditionalTestResults { get; set; }
+        public DbSet<ArrhythmiaEvent> ArrhythmiaEvents { get; set; }
+        public DbSet<ClinicalEvaluation> ClinicalEvaluations { get; set; }
+        public DbSet<MedicationAdministration> MedicationAdministrations { get; set; }
+        public DbSet<PatientSymptom> PatientSymptoms { get; set; }
+
         public DbSet<AppUser> AppUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,6 +60,17 @@ namespace Infraestructure.Data
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             });
+
+            modelBuilder.Entity<Photo>(entity =>
+            {
+                entity
+                .HasOne(p => p.AppUser)
+                .WithOne(au => au.Photo)
+                .HasForeignKey<Photo>(p => p.AppUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
 
             List<IdentityRole> roles = new List<IdentityRole>
             {

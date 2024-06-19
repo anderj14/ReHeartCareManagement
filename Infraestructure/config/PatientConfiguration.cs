@@ -17,7 +17,16 @@ namespace Infraestructure.config
             builder.Property(p => p.Phone).IsRequired();
             builder.Property(p => p.Email);
             builder.Property(p => p.SocialSecurity).IsRequired();
-
+            builder.Property(p => p.PolicyNumber);
+            builder.Property(p => p.Fax).IsRequired();
+            builder.Property(p => p.ReferringDoctor).IsRequired();
+            builder.Property(p => p.AssignedDoctor).IsRequired();
+            builder.Property(p => p.FamilyDoctor).IsRequired();
+            builder.Property(p => p.EmergencyContactName).IsRequired();
+            builder.Property(p => p.EmergencyContactNumber).IsRequired();
+            builder.Property(p => p.EmergencyContactRelation).IsRequired();
+            builder.Property(p => p.MaritalStatus).IsRequired();
+            builder.Property(p => p.Occupation).IsRequired();
 
             builder
             .HasOne(u => u.AppUser)
@@ -63,6 +72,9 @@ namespace Infraestructure.config
             .HasForeignKey(t => t.PatientId);
             // Relationship cardiology surgery
             builder.HasMany(p => p.CardiologySurgery).WithOne(t => t.Patient)
+            .HasForeignKey(cs => cs.PatientId);
+            // Relationship prescription
+            builder.HasMany(p => p.Prescription).WithOne(t => t.Patient)
             .HasForeignKey(cs => cs.PatientId);
         }
     }

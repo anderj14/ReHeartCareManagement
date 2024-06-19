@@ -2,6 +2,7 @@ using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.CreateDto;
 using Core.Entities;
+using Core.Entities.HolterStudyInfo;
 
 namespace API.Helper
 {
@@ -50,6 +51,8 @@ namespace API.Helper
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
             CreateMap<PhysicalExamination, PhysicalExaminationDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
+            // .ForMember(d => d.ImageEcoUrl, o => o.MapFrom<PhysicalExaminationEcoImageUrlResolver>())
+            // .ForMember(d => d.ImageStresUrl, o => o.MapFrom<PhysicalExaminationStressImageUrlResolver>());
             CreateMap<StressTest, StressTestDto>();
             CreateMap<Treatment, TreatmentDto>()
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
@@ -60,6 +63,9 @@ namespace API.Helper
             CreateMap<Notes, NotesDto>();
             // .ForMember(d => d.NoteStatus, o => o.MapFrom(s => s.NoteStatus.NoteStatusName));
             // CreateMap<NoteStatus, NoteStatusDto>();
+
+            CreateMap<Photo, PhotoDto>();
+            // .ForMember(d => d.PictureUrl, o => o.MapFrom<PhotoUrlResolver>());
 
             // Create
             CreateMap<AppointmentStatus, AppointmentStatusDto>();

@@ -8,8 +8,11 @@ namespace Infraestructure.config
     {
         public void Configure(EntityTypeBuilder<SurgeryFollowUp> builder)
         {
-            builder.HasOne(s => s.CardiologySurgery).WithMany()
-                .HasForeignKey(s => s.CardiologySurgeryId);
+            builder.HasOne(sf => sf.CardiologySurgery).WithMany()
+                .HasForeignKey(sf => sf.CardiologySurgeryId);
+
+            builder.HasMany(sf => sf.MedicationsPrescribed).WithOne(mp => mp.SurgeryFollowUp)
+            .HasForeignKey(mp => mp.SurgeryFollowUpId);
         }
     }
 }

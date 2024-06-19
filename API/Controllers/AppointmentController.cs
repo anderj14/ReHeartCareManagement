@@ -177,7 +177,7 @@ namespace API.Controllers
             var newAppointment = new Appointment
             {
                 AppUserId = user.Id,
-                Date = appointmentCreateDto.Date,
+                // Date = appointmentCreateDto.Date,
                 Time = TimeSpan.Parse(appointmentCreateDto.Time),
                 Description = appointmentCreateDto.Description,
                 AppointmentStatusId = appointmentCreateDto.AppointmentStatusId,
@@ -190,7 +190,7 @@ namespace API.Controllers
             var appointment = new AppointmentDto
             {
                 Id = newAppointment.Id,
-                Date = newAppointment.Date,
+                // Date = newAppointment.Date,
                 Time = newAppointment.Time,
                 Description = newAppointment.Description,
                 // AppointmentStatus = newAppointment.AppointmentStatusId.ToString(),
