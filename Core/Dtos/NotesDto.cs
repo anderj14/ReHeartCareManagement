@@ -11,5 +11,6 @@ namespace Core.Dtos
         [Required]
         public string Content { get; set; }
         public DateTime Date { get; set; }
+        public string NoteStatus { get; set; }
     }
 }

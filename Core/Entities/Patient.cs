@@ -27,7 +27,7 @@ namespace Core.Entities
 
         public AppUser AppUser { get; set; }
 
-        public string StatusId { get; set; }
+        public int StatusId { get; set; }
         public PatientStatus PatientStatus { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; }

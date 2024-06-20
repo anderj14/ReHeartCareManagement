@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Data.Migrations
 {
     [DbContext(typeof(ManagementContext))]
-    [Migration("20240619013142_EntityModelV2")]
-    partial class EntityModelV2
+    [Migration("20240619204738_EntityV2")]
+    partial class EntityV2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -898,7 +898,7 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NoteStatus");
+                    b.ToTable("NoteStatuses");
                 });
 
             modelBuilder.Entity("Core.Entities.Notes", b =>
@@ -1011,8 +1011,8 @@ namespace Infraestructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("StatusId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("StatusId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -1043,10 +1043,7 @@ namespace Infraestructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AppUserId1")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("BloodTestId")
@@ -1084,7 +1081,8 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
 
                     b.HasIndex("BloodTestId");
 
@@ -1100,7 +1098,7 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasIndex("StressTestId");
 
-                    b.ToTable("Photo");
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("Core.Entities.PhysicalExamination", b =>
@@ -1337,13 +1335,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5e70b249-d653-4da9-8de4-e77ca4eec3d5",
+                            Id = "3fc73c31-4d43-4602-9606-64b0793e0ea8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b89ee7a3-0605-4693-a586-a47fd0c616ff",
+                            Id = "6fd9bf97-d8f3-4635-813c-0ac1150f1cbf",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -1704,8 +1702,9 @@ namespace Infraestructure.Data.Migrations
             modelBuilder.Entity("Core.Entities.Photo", b =>
                 {
                     b.HasOne("Core.Entities.Identity.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId1");
+                        .WithOne("Photo")
+                        .HasForeignKey("Core.Entities.Photo", "AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Core.Entities.BloodTest", "BloodTest")
                         .WithMany("BloodTestPhotos")
@@ -1920,6 +1919,8 @@ namespace Infraestructure.Data.Migrations
                     b.Navigation("Notes");
 
                     b.Navigation("Patients");
+
+                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("Core.Entities.Patient", b =>

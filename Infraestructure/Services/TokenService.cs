@@ -31,9 +31,13 @@ namespace Infraestructure.Services
             };
 
             var roles = await _userManager.GetRolesAsync(user);
-            foreach (var role in roles)
+            var uniqueRoles = roles.Distinct();
+
+            foreach (var role in uniqueRoles)
             {
                 // claims.Add(new Claim(ClaimTypes.Role, role));
+
+                // In this case have diplicate roles
                 claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
             }
 

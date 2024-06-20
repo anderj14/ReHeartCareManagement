@@ -895,7 +895,7 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NoteStatus");
+                    b.ToTable("NoteStatuses");
                 });
 
             modelBuilder.Entity("Core.Entities.Notes", b =>
@@ -1008,8 +1008,8 @@ namespace Infraestructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("StatusId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("StatusId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -1095,7 +1095,7 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasIndex("StressTestId");
 
-                    b.ToTable("Photo");
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("Core.Entities.PhysicalExamination", b =>
@@ -1332,13 +1332,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fc48b746-e5f3-4aa3-b178-62cbe44e9629",
+                            Id = "3fc73c31-4d43-4602-9606-64b0793e0ea8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8114830a-7612-4ea0-a32a-9b6dfd3683c8",
+                            Id = "6fd9bf97-d8f3-4635-813c-0ac1150f1cbf",
                             Name = "User",
                             NormalizedName = "USER"
                         });

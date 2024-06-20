@@ -1,14 +1,10 @@
 using API.Extensions;
 using API.Middleware;
-using Core.Entities.Identity;
 using Infraestructure.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 
 
 // using Infraestructure.Repository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,9 +43,6 @@ app.MapControllers();
 
 
 using var scope = app.Services.CreateScope();
-
-
-
 var services = scope.ServiceProvider;
 var context = services.GetRequiredService<ManagementContext>();
 var logger = services.GetRequiredService<ILogger<Program>>();
@@ -57,10 +50,13 @@ var logger = services.GetRequiredService<ILogger<Program>>();
 try
 {
     await context.Database.MigrateAsync();
+    logger.LogInformation("Database migrated successfully.");
+
 }
 catch (Exception ex)
 {
     logger.LogError(ex, "An error ocurring during migration");
+    throw;
 }
 
 app.Run();
