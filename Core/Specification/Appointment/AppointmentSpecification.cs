@@ -6,15 +6,15 @@ namespace Core.Specification
     {
         public AppointmentSpecification(AppointmentSpecParams appointmentParams)
             : base(x =>
-            (string.IsNullOrEmpty(appointmentParams.Search) || x.Patient.PatientName.ToLower().Contains
-            (appointmentParams.Search))
-            // && (!appointmentParams.Date.HasValue || x.Date.Date == appointmentParams.Date.Value.Date)
+            (string.IsNullOrEmpty(appointmentParams.Search) || x.Patient.PatientName.ToLower().Contains(appointmentParams.Search))
             && (!appointmentParams.AppointmentStatusId.HasValue || x.AppointmentStatusId == appointmentParams.AppointmentStatusId)
+            && (!appointmentParams.AppointmentTypeId.HasValue || x.AppointmentTypeId == appointmentParams.AppointmentTypeId)
             )
         {
             AddInclude(a => a.Patient);
             AddInclude(a => a.AppUser);
             AddInclude(a => a.AppointmentStatus);
+            AddInclude(a => a.AppointmentType);
 
             // ApplyPaging(appointmentParams.PageSize * (appointmentParams.PageIndex - 1),
             // appointmentParams.PageSize);
@@ -23,11 +23,11 @@ namespace Core.Specification
             {
                 switch (appointmentParams.Sort)
                 {
-                    case "dateAsc":
-                        // AddOrderBy(a => a.Date);
+                    case "dateStart":
+                        AddOrderBy(a => a.StartDate);
                         break;
-                    case "dateDesc":
-                        // AddOrderByDescending(a => a.Date);
+                    case "dateEnd":
+                        AddOrderByDescending(a => a.EndDate);
                         break;
                     case "timeAsc":
                         AddOrderBy(a => a.Time);
@@ -48,18 +48,21 @@ namespace Core.Specification
         {
             AddInclude(a => a.Patient);
             AddInclude(a => a.AppointmentStatus);
+            AddInclude(a => a.AppointmentType);
         }
         public AppointmentSpecification(int id)
             : base(a => a.Id == id)
         {
             AddInclude(a => a.Patient);
             AddInclude(a => a.AppointmentStatus);
+            AddInclude(a => a.AppointmentType);
         }
         public AppointmentSpecification(int id, bool getByPatientId = false)
         : base(a => getByPatientId ? a.PatientId == id : a.Id == id)
         {
             AddInclude(a => a.Patient);
             AddInclude(a => a.AppointmentStatus);
+            AddInclude(a => a.AppointmentType);
         }
 
         // public AppointmentSpecification(DateTime date)

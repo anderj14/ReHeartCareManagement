@@ -11,8 +11,8 @@ namespace Core.Specification
 
         public PatientWithAllSpecification(PatientSpecParams patientParams)
             : base(x =>
-            string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower()
-            .Contains(patientParams.Search)
+            string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower().Contains(patientParams.Search)
+            && (!patientParams.PatientStatusId.HasValue || x.StatusId == patientParams.PatientStatusId)
             )
         {
             AddInclude(p => p.Appointments);
@@ -28,12 +28,12 @@ namespace Core.Specification
             AddInclude(p => p.StressTests);
             AddInclude(p => p.Treatments);
             AddInclude(p => p.CardiologySurgery);
-
+            AddInclude(p => p.Prescription);
+            AddInclude(p => p.PatientStatus);
             AddOrderBy(p => p.PatientName);
 
             // It was implemented in Generic Repository
             // ApplyPaging(patientParams.PageSize * (patientParams.PageIndex - 1), patientParams.PageSize);
-
 
             if (!string.IsNullOrEmpty(patientParams.Sort))
             {
@@ -69,6 +69,8 @@ namespace Core.Specification
             AddInclude(p => p.StressTests);
             AddInclude(p => p.Treatments);
             AddInclude(p => p.CardiologySurgery);
+            AddInclude(p => p.Prescription);
+            AddInclude(p => p.PatientStatus);
         }
     }
 }

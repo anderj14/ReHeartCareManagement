@@ -1,3 +1,5 @@
+using Core.Entities;
+
 namespace Core.Dtos
 {
     public class PatientDto
@@ -25,5 +27,6 @@ namespace Core.Dtos
         public IReadOnlyList<DiagnosticDto> Diagnostics { get; set; }
         public IReadOnlyList<TreatmentDto> Treatments { get; set; }
         public IReadOnlyList<CardiologySurgeryDto> CardiologySurgeries { get; set; }
+        public IReadOnlyList<Prescription> Prescriptions { get; set; }
     }
 }

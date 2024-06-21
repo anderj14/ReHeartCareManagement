@@ -1,4 +1,6 @@
 
+using Core.Entities.HolterStudyInfo;
+
 namespace Core.Dtos
 {
     public class HolterStudyDto
@@ -12,8 +14,12 @@ namespace Core.Dtos
         public string TypeHeartRhythm { get; set; }
         public string ArrhythmiaEpisodes { get; set; }
         public string PhysicalActivity { get; set; }
-        public string PatientSymptoms { get; set; }
         public string Conclusion { get; set; }
         public string Patient { get; set; }
+        public IReadOnlyList<ArrhythmiaEvent> ArrhythmiaEvents { get; set; }
+        public IReadOnlyList<MedicationAdministration> MedicationAdministrations { get; set; }
+        public IReadOnlyList<PatientSymptom> PatientSymptoms { get; set; }
+        public IReadOnlyList<ClinicalEvaluation> ClinicalEvaluations { get; set; }
+        public IReadOnlyList<AdditionalTestResult> AdditionalTestResults { get; set; }
     }
 }

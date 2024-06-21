@@ -1,3 +1,5 @@
+using Core.Entities;
+
 namespace Core.Dtos
 {
     public class DiseaseHistoryDto
@@ -7,5 +9,8 @@ namespace Core.Dtos
         public string Description { get; set; }
         public string Treatment { get; set; }
         public string Patient { get; set; }
+
+        public ICollection<Attachment> Attachments { get; set; }
+
     }
 }

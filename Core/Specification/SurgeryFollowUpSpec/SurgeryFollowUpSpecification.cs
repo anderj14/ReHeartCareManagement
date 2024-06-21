@@ -12,6 +12,7 @@ namespace Core.Specification.SurgeryFollowUpSpec
             )
         {
             AddInclude(sfu => sfu.CardiologySurgery);
+            AddInclude(sfu => sfu.MedicationsPrescribed);
 
             ApplyPaging(surgeryFollowUpParams.PageSize * (surgeryFollowUpParams.PageIndex - 1),
             surgeryFollowUpParams.PageSize);
@@ -38,12 +39,14 @@ namespace Core.Specification.SurgeryFollowUpSpec
         : base(sfu => sfu.CardiologySurgeryId == cardiologySurgeryId && sfu.Id == surgeryFollowUpId)
         {
             AddInclude(sfu => sfu.CardiologySurgery);
+            AddInclude(sfu => sfu.MedicationsPrescribed);
         }
 
         public SurgeryFollowUpSpecification(int cardiologySurgeryId)
         : base(sfu => sfu.CardiologySurgeryId == cardiologySurgeryId)
         {
             AddInclude(sfu => sfu.CardiologySurgery);
+            AddInclude(sfu => sfu.MedicationsPrescribed);
         }
     }
 
