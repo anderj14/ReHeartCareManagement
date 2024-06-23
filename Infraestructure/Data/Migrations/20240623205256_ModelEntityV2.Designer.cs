@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Data.Migrations
 {
     [DbContext(typeof(ManagementContext))]
-    [Migration("20240619204738_EntityV2")]
-    partial class EntityV2
+    [Migration("20240623205256_ModelEntityV2")]
+    partial class ModelEntityV2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -994,9 +994,6 @@ namespace Infraestructure.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("PatientStatusId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<long>("Phone")
                         .HasColumnType("INTEGER");
 
@@ -1018,7 +1015,7 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("PatientStatusId");
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Patients");
                 });
@@ -1046,19 +1043,19 @@ namespace Infraestructure.Data.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("BloodTestId")
+                    b.Property<int?>("BloodTestId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CardiacCatheterizationStudyId")
+                    b.Property<int?>("CardiacCatheterizationStudyId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CardiologySurgeryId")
+                    b.Property<int?>("CardiologySurgeryId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("EchocardiogramId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("EcocardiogramId")
+                    b.Property<int?>("EcocardiogramId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("ElectrocardiogramId")
@@ -1067,13 +1064,10 @@ namespace Infraestructure.Data.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PhysicalExaminationStressId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("PublicId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("StressTestId")
+                    b.Property<int?>("StressTestId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Url")
@@ -1093,8 +1087,6 @@ namespace Infraestructure.Data.Migrations
                     b.HasIndex("EchocardiogramId");
 
                     b.HasIndex("ElectrocardiogramId");
-
-                    b.HasIndex("PhysicalExaminationStressId");
 
                     b.HasIndex("StressTestId");
 
@@ -1335,13 +1327,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3fc73c31-4d43-4602-9606-64b0793e0ea8",
+                            Id = "542d4cf5-83a5-4720-a546-fe2b6956d9c7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "6fd9bf97-d8f3-4635-813c-0ac1150f1cbf",
+                            Id = "c1963c70-7b5e-45c0-92f8-eab1a0715fdd",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -1692,7 +1684,9 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasOne("Core.Entities.PatientStatus", "PatientStatus")
                         .WithMany()
-                        .HasForeignKey("PatientStatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
 
@@ -1708,21 +1702,15 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasOne("Core.Entities.BloodTest", "BloodTest")
                         .WithMany("BloodTestPhotos")
-                        .HasForeignKey("BloodTestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BloodTestId");
 
                     b.HasOne("Core.Entities.CardiacCatheterizationStudy", "CardiacCatheterizationStudy")
                         .WithMany("CardiacCathStudyImages")
-                        .HasForeignKey("CardiacCatheterizationStudyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CardiacCatheterizationStudyId");
 
                     b.HasOne("Core.Entities.CardiologySurgery", "CardiologySurgery")
                         .WithMany("SurgeryPhotos")
-                        .HasForeignKey("CardiologySurgeryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CardiologySurgeryId");
 
                     b.HasOne("Core.Entities.Echocardiogram", "Echocardiogram")
                         .WithMany("PhotosImageEco")
@@ -1732,17 +1720,9 @@ namespace Infraestructure.Data.Migrations
                         .WithMany("Images")
                         .HasForeignKey("ElectrocardiogramId");
 
-                    b.HasOne("Core.Entities.PhysicalExamination", "PhysicalExaminationStress")
-                        .WithMany()
-                        .HasForeignKey("PhysicalExaminationStressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Core.Entities.StressTest", "StressTest")
                         .WithMany("Photos")
-                        .HasForeignKey("StressTestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StressTestId");
 
                     b.Navigation("AppUser");
 
@@ -1755,8 +1735,6 @@ namespace Infraestructure.Data.Migrations
                     b.Navigation("Echocardiogram");
 
                     b.Navigation("Electrocardiogram");
-
-                    b.Navigation("PhysicalExaminationStress");
 
                     b.Navigation("StressTest");
                 });
@@ -1797,7 +1775,7 @@ namespace Infraestructure.Data.Migrations
             modelBuilder.Entity("Core.Entities.SurgeryFollowUp", b =>
                 {
                     b.HasOne("Core.Entities.CardiologySurgery", "CardiologySurgery")
-                        .WithMany()
+                        .WithMany("SurgeryFollowUps")
                         .HasForeignKey("CardiologySurgeryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1879,6 +1857,8 @@ namespace Infraestructure.Data.Migrations
 
             modelBuilder.Entity("Core.Entities.CardiologySurgery", b =>
                 {
+                    b.Navigation("SurgeryFollowUps");
+
                     b.Navigation("SurgeryPhotos");
                 });
 

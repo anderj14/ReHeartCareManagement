@@ -32,6 +32,7 @@ namespace Core.Entities
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
 
+        public ICollection<SurgeryFollowUp> SurgeryFollowUps { get; set; } = new List<SurgeryFollowUp>();
         public ICollection<Photo> SurgeryPhotos { get; set; } = new List<Photo>();
     }
 

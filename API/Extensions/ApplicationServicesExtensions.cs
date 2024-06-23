@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using API.Errors;
 using API.Helper;
 using Core.Entities.Identity;
@@ -28,6 +29,7 @@ namespace API.Extensions
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             // Conection string
             services.AddDbContext<ManagementContext>(opt =>
             {

@@ -5,9 +5,9 @@ namespace Core.Dtos
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public string Time { get; set; }
-        public string NumLocationMainCoronary { get; set; }
+        public string LocationMainCoronaryArteries { get; set; }
         public string BlockageEachCoronaryArtery { get; set; }
-        public string DescriptionAbnormality { get; set; }
+        public string DescriptionAbnormalities { get; set; }
         public string BloodPressureAorta { get; set; }
         public string ChambersLeftAtrium { get; set; }
         public string ChambersLeftVentricle { get; set; }
@@ -23,9 +23,10 @@ namespace Core.Dtos
         public string ValvularInsufficiencyTricuspid { get; set; }
         public string PressureGradientValves { get; set; }
         public string StructuralAbnormalities { get; set; }
-        public string FunctionsCardiacChambers { get; set; }
-        public string DescriptionComplication { get; set; }
+        public string CardiacChamberFunctions { get; set; }
+        public string DescriptionComplications { get; set; }
         public string Conclusion { get; set; }
+
         public string Patient { get; set; }
     }
 }

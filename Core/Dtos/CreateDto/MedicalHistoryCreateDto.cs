@@ -28,6 +28,9 @@ namespace Core.Dtos.CreateDto
         [Required]
         public string FamilyDiseases { get; set; }
         [Required]
+        public string OtherDetails { get; set; }
+
+        [Required]
         public int PatientId { get; set; }
     }
 }

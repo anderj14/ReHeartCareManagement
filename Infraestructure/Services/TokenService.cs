@@ -35,10 +35,10 @@ namespace Infraestructure.Services
 
             foreach (var role in uniqueRoles)
             {
-                // claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim(ClaimTypes.Role, role));
 
                 // In this case have diplicate roles
-                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                // claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
             }
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

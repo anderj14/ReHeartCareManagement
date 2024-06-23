@@ -11,6 +11,10 @@ namespace Core.Dtos
         public string MovementCardiacWalls { get; set; }
         public string PulmonaryArterialPressure { get; set; }
         public string BloodFlow { get; set; }
+        public string Indications { get; set; }
+        public string Findings { get; set; }
+        public string ClinicalImpression { get; set; }
+        public string TechnicalDetails { get; set; }
         public string Patient { get; set; }
     }
 }

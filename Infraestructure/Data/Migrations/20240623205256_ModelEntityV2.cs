@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infraestructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class EntityV2 : Migration
+    public partial class ModelEntityV2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -264,8 +264,7 @@ namespace Infraestructure.Data.Migrations
                     EmergencyContactRelation = table.Column<string>(type: "TEXT", nullable: false),
                     MaritalStatus = table.Column<string>(type: "TEXT", nullable: false),
                     Occupation = table.Column<string>(type: "TEXT", nullable: false),
-                    StatusId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PatientStatusId = table.Column<int>(type: "INTEGER", nullable: true)
+                    StatusId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -277,10 +276,11 @@ namespace Infraestructure.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Patients_PatientStatuses_PatientStatusId",
-                        column: x => x.PatientStatusId,
+                        name: "FK_Patients_PatientStatuses_StatusId",
+                        column: x => x.StatusId,
                         principalTable: "PatientStatuses",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -917,14 +917,13 @@ namespace Infraestructure.Data.Migrations
                     IsMain = table.Column<bool>(type: "INTEGER", nullable: false),
                     PublicId = table.Column<string>(type: "TEXT", nullable: true),
                     AppUserId = table.Column<string>(type: "TEXT", nullable: true),
-                    PhysicalExaminationStressId = table.Column<int>(type: "INTEGER", nullable: false),
                     ElectrocardiogramId = table.Column<int>(type: "INTEGER", nullable: true),
-                    StressTestId = table.Column<int>(type: "INTEGER", nullable: false),
-                    EcocardiogramId = table.Column<int>(type: "INTEGER", nullable: false),
+                    StressTestId = table.Column<int>(type: "INTEGER", nullable: true),
+                    EcocardiogramId = table.Column<int>(type: "INTEGER", nullable: true),
                     EchocardiogramId = table.Column<int>(type: "INTEGER", nullable: true),
-                    CardiacCatheterizationStudyId = table.Column<int>(type: "INTEGER", nullable: false),
-                    BloodTestId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CardiologySurgeryId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CardiacCatheterizationStudyId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BloodTestId = table.Column<int>(type: "INTEGER", nullable: true),
+                    CardiologySurgeryId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -939,20 +938,17 @@ namespace Infraestructure.Data.Migrations
                         name: "FK_Photos_BloodTests_BloodTestId",
                         column: x => x.BloodTestId,
                         principalTable: "BloodTests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Photos_CardiacCatheterizationStudies_CardiacCatheterizationStudyId",
                         column: x => x.CardiacCatheterizationStudyId,
                         principalTable: "CardiacCatheterizationStudies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Photos_CardiologySurgeries_CardiologySurgeryId",
                         column: x => x.CardiologySurgeryId,
                         principalTable: "CardiologySurgeries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Photos_Echocardiograms_EchocardiogramId",
                         column: x => x.EchocardiogramId,
@@ -964,17 +960,10 @@ namespace Infraestructure.Data.Migrations
                         principalTable: "Electrocardiograms",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Photos_PhysicalExaminations_PhysicalExaminationStressId",
-                        column: x => x.PhysicalExaminationStressId,
-                        principalTable: "PhysicalExaminations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Photos_StressTests_StressTestId",
                         column: x => x.StressTestId,
                         principalTable: "StressTests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1006,8 +995,8 @@ namespace Infraestructure.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3fc73c31-4d43-4602-9606-64b0793e0ea8", null, "Admin", "ADMIN" },
-                    { "6fd9bf97-d8f3-4635-813c-0ac1150f1cbf", null, "User", "USER" }
+                    { "542d4cf5-83a5-4720-a546-fe2b6956d9c7", null, "Admin", "ADMIN" },
+                    { "c1963c70-7b5e-45c0-92f8-eab1a0715fdd", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1163,9 +1152,9 @@ namespace Infraestructure.Data.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Patients_PatientStatusId",
+                name: "IX_Patients_StatusId",
                 table: "Patients",
-                column: "PatientStatusId");
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PatientSymptoms_HolterStudyId",
@@ -1202,11 +1191,6 @@ namespace Infraestructure.Data.Migrations
                 name: "IX_Photos_ElectrocardiogramId",
                 table: "Photos",
                 column: "ElectrocardiogramId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Photos_PhysicalExaminationStressId",
-                table: "Photos",
-                column: "PhysicalExaminationStressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Photos_StressTestId",
@@ -1294,6 +1278,9 @@ namespace Infraestructure.Data.Migrations
                 name: "Photos");
 
             migrationBuilder.DropTable(
+                name: "PhysicalExaminations");
+
+            migrationBuilder.DropTable(
                 name: "Prescriptions");
 
             migrationBuilder.DropTable(
@@ -1331,9 +1318,6 @@ namespace Infraestructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Electrocardiograms");
-
-            migrationBuilder.DropTable(
-                name: "PhysicalExaminations");
 
             migrationBuilder.DropTable(
                 name: "StressTests");

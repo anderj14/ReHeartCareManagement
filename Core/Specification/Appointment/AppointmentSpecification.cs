@@ -49,6 +49,7 @@ namespace Core.Specification
             AddInclude(a => a.Patient);
             AddInclude(a => a.AppointmentStatus);
             AddInclude(a => a.AppointmentType);
+            AddInclude(a => a.AppUser);
         }
         public AppointmentSpecification(int id)
             : base(a => a.Id == id)
@@ -56,6 +57,7 @@ namespace Core.Specification
             AddInclude(a => a.Patient);
             AddInclude(a => a.AppointmentStatus);
             AddInclude(a => a.AppointmentType);
+            AddInclude(a => a.AppUser);
         }
         public AppointmentSpecification(int id, bool getByPatientId = false)
         : base(a => getByPatientId ? a.PatientId == id : a.Id == id)
@@ -63,14 +65,7 @@ namespace Core.Specification
             AddInclude(a => a.Patient);
             AddInclude(a => a.AppointmentStatus);
             AddInclude(a => a.AppointmentType);
+            AddInclude(a => a.AppUser);
         }
-
-        // public AppointmentSpecification(DateTime date)
-        //     : base(a => a.Date.Date == date.Date)
-        // {
-        //     AddInclude(a => a.Patient);
-        //     AddInclude(a => a.AppointmentStatus);
-        //     AddOrderBy(a => a.Date);
-        // }
     }
 }

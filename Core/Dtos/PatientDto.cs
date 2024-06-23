@@ -1,4 +1,3 @@
-using Core.Entities;
 
 namespace Core.Dtos
 {
@@ -13,20 +12,16 @@ namespace Core.Dtos
         public long Phone { get; set; }
         public string Email { get; set; }
         public string SocialSecurity { get; set; }
-
-        public IReadOnlyList<AppointmentDto> Appointments { get; set; }
-        public IReadOnlyList<DiseaseHistoryDto> DiseaseHistories { get; set; }
-        public IReadOnlyList<MedicalHistoryDto> MedicalHistories { get; set; }
-        public IReadOnlyList<PhysicalExaminationDto> PhysicalExaminations { get; set; } 
-        public IReadOnlyList<ElectrocardiogramDto> Electrocardiograms { get; set; }
-        public IReadOnlyList<EchocardiogramDto> Echocardiograms { get; set; }
-        public IReadOnlyList<StressTestDto> StressTests { get; set; } 
-        public IReadOnlyList<HolterStudyDto> HolterStudies { get; set; }
-        public IReadOnlyList<CardiacCatheterizationStudyDto> CardiacCatheterizationStudies { get; set; }
-        public IReadOnlyList<BloodTestDto> BloodTests { get; set; }         
-        public IReadOnlyList<DiagnosticDto> Diagnostics { get; set; }
-        public IReadOnlyList<TreatmentDto> Treatments { get; set; }
-        public IReadOnlyList<CardiologySurgeryDto> CardiologySurgeries { get; set; }
-        public IReadOnlyList<Prescription> Prescriptions { get; set; }
+        public string PolicyNumber { get; set; }
+        public string Fax { get; set; }
+        public string ReferringDoctor { get; set; }
+        public string AssignedDoctor { get; set; }
+        public string FamilyDoctor { get; set; }
+        public string EmergencyContactName { get; set; }
+        public string EmergencyContactNumber { get; set; }
+        public string EmergencyContactRelation { get; set; }
+        public string MaritalStatus { get; set; }
+        public string Occupation { get; set; }
+        public string Status { get; set; }
     }
 }

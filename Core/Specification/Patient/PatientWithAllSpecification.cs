@@ -1,18 +1,13 @@
-
 using Core.Entities;
 
 namespace Core.Specification
 {
     public class PatientWithAllSpecification : BaseSpecification<Patient>
     {
-        public PatientWithAllSpecification()
-        {
-        }
-
         public PatientWithAllSpecification(PatientSpecParams patientParams)
             : base(x =>
-            string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower().Contains(patientParams.Search)
-            && (!patientParams.PatientStatusId.HasValue || x.StatusId == patientParams.PatientStatusId)
+                (string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower().Contains(patientParams.Search)) &&
+                (!patientParams.StatusId.HasValue || x.StatusId == patientParams.StatusId)
             )
         {
             AddInclude(p => p.Appointments);
@@ -32,9 +27,6 @@ namespace Core.Specification
             AddInclude(p => p.PatientStatus);
             AddOrderBy(p => p.PatientName);
 
-            // It was implemented in Generic Repository
-            // ApplyPaging(patientParams.PageSize * (patientParams.PageIndex - 1), patientParams.PageSize);
-
             if (!string.IsNullOrEmpty(patientParams.Sort))
             {
                 switch (patientParams.Sort)
@@ -42,7 +34,6 @@ namespace Core.Specification
                     case "dobAsc":
                         AddOrderBy(p => p.DOB);
                         break;
-
                     case "dobDesc":
                         AddOrderByDescending(p => p.DOB);
                         break;

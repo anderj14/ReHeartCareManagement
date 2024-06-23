@@ -4,10 +4,12 @@ using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.CreateDto;
 using Core.Entities;
+using Core.Entities.Identity;
 using Core.Interfaces;
 using Core.Specification;
 using Core.Specification.BloodTestSpec;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -17,52 +19,57 @@ namespace API.Controllers
 
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<AppUser> _userManager;
 
         public BloodTestController(
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            UserManager<AppUser> userManager
+
+            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<Pagination<BloodTestDto>>> GetBloodTests(
-            [FromQuery] BloodTestSpecParams bloodTestParams
-        )
-        {
-            var spec = new BloodTestSpecification(bloodTestParams);
-            var countSpec = new BloodTestFilterForCountSpecification(bloodTestParams);
-            var totalItems = await _unitOfWork.Repository<BloodTest>().CountAsync(countSpec);
-
-            var bloodTests = await _unitOfWork.Repository<BloodTest>().ListAsync(spec);
-
-            var dataDto = _mapper.Map<IReadOnlyList<BloodTestDto>>(bloodTests);
-
-            // return Ok(bloodTestsDtos);
-            return Ok(
-                new Pagination<BloodTestDto>(
-                    bloodTestParams.PageIndex,
-                    bloodTestParams.PageSize,
-                    totalItems,
-                    dataDto
-                )
-            );
+            _userManager = userManager;
 
         }
 
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BloodTestDto>> GetBloodTest(int id)
-        {
-            var spec = new BloodTestSpecification(id);
-            var bloodTest = await _unitOfWork.Repository<BloodTest>().GetEntityWithSpec(spec);
+        // [HttpGet]
+        // public async Task<ActionResult<Pagination<BloodTestDto>>> GetBloodTests(
+        //     [FromQuery] BloodTestSpecParams bloodTestParams
+        // )
+        // {
+        //     var spec = new BloodTestSpecification(bloodTestParams);
+        //     var countSpec = new BloodTestFilterForCountSpecification(bloodTestParams);
+        //     var totalItems = await _unitOfWork.Repository<BloodTest>().CountAsync(countSpec);
 
-            if (bloodTest == null) return NotFound(new ApiResponse(404));
+        //     var bloodTests = await _unitOfWork.Repository<BloodTest>().ListAsync(spec);
 
-            return Ok(_mapper.Map<BloodTestDto>(bloodTest));
-        }
+        //     var dataDto = _mapper.Map<IReadOnlyList<BloodTestDto>>(bloodTests);
+
+        //     // return Ok(bloodTestsDtos);
+        //     return Ok(
+        //         new Pagination<BloodTestDto>(
+        //             bloodTestParams.PageIndex,
+        //             bloodTestParams.PageSize,
+        //             totalItems,
+        //             dataDto
+        //         )
+        //     );
+        // }
+
+        // [HttpGet("{id}")]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        // public async Task<ActionResult<BloodTestDto>> GetBloodTest(int id)
+        // {
+        //     var spec = new BloodTestSpecification(id);
+        //     var bloodTest = await _unitOfWork.Repository<BloodTest>().GetEntityWithSpec(spec);
+
+        //     if (bloodTest == null) return NotFound(new ApiResponse(404));
+
+        //     return Ok(_mapper.Map<BloodTestDto>(bloodTest));
+        // }
 
         // Create
         [HttpPost]
@@ -108,13 +115,32 @@ namespace API.Controllers
             return Ok();
         }
 
-
-
         [HttpGet("patient/{patientId}/bloodTests")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IReadOnlyList<BloodTestDto>>> GetPatientBloodTest(int patientId)
         {
+            var userName = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+
+            // Check if the patient belongs to the authenticated user
+            var patientSpec = new PatientWithAllSpecification(patientId);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
+
+            if (patient == null || patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+            }
+
             var spec = new BloodTestSpecification(patientId, getByPatientId: true);
             var bloodTests = await _unitOfWork.Repository<BloodTest>().ListAsync(spec);
             var bloodTestsDtos = _mapper.Map<IReadOnlyList<BloodTestDto>>(bloodTests);
@@ -122,31 +148,31 @@ namespace API.Controllers
             return Ok(bloodTestsDtos);
         }
 
-        //         [HttpGet("patient/{patientId}/bloodTests")]
-        //         [ProducesResponseType(StatusCodes.Status200OK)]
-        //         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        //         public async Task<ActionResult<Pagination<BloodTestDto>>> GetPatientBloodTest(
-        //     int patientId,
-        //     [FromQuery] BloodTestSpecParams bloodTestSpecParams
-        // )
-        //         {
-        //             var spec = new BloodTestSpecification(patientId, getByPatientId: true);
-        //             var countSpec = new BloodTestFilterForCountSpecification(bloodTestSpecParams);
-        //             var totalItems = await _unitOfWork.Repository<BloodTest>().CountAsync(countSpec);
-
-        //             var bloodTests = await _unitOfWork.Repository<BloodTest>().ListAsync(spec);
-
-        //             var data = _mapper.Map<IReadOnlyList<BloodTestDto>>(bloodTests);
-
-        //             return Ok(new Pagination<BloodTestDto>(bloodTestSpecParams.PageIndex,
-        //                     bloodTestSpecParams.PageSize, totalItems, data));
-        //         }
-
         [HttpGet("patient/{patientId}/bloodTests/{bloodTestId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<BloodTestDto>> GetPatientBloodTest(int patientId, int bloodTestId)
         {
+            var userName = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+            
+            // Check if the patient belongs to the authenticated user
+            var patientSpec = new PatientWithAllSpecification(patientId);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
+
+            if (patient == null || patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+            }
 
             var spec = new BloodTestSpecification(patientId, bloodTestId);
             var bloodTest = await _unitOfWork.Repository<BloodTest>().GetEntityWithSpec(spec);

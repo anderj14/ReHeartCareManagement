@@ -6,8 +6,8 @@ namespace Core.Specification.CardiologySurgerySpec
     {
         public CardiologySurgerySpecification(CardiologySurgerySpecParams cardiologySurgeryParams)
             : base(x =>
-(            string.IsNullOrEmpty(cardiologySurgeryParams.Search) || x.Patient.PatientName.ToLower().Contains
-            (cardiologySurgeryParams.Search))
+            string.IsNullOrEmpty(cardiologySurgeryParams.Search) || x.Patient.PatientName.ToLower()
+            .Contains(cardiologySurgeryParams.Search)
             )
         {
             AddInclude(cs => cs.Patient);
@@ -33,10 +33,10 @@ namespace Core.Specification.CardiologySurgerySpec
             }
         }
 
-        public CardiologySurgerySpecification(int id)
-            : base(cs => cs.Id == id)
+        public CardiologySurgerySpecification(int id, bool getByPatientId = false)
+        : base(a => getByPatientId ? a.PatientId == id : a.Id == id)
         {
-            AddInclude(cs => cs.Patient);
+            AddInclude(a => a.Patient);
         }
 
         public CardiologySurgerySpecification(int patientId, int cardiologySurgeryId)

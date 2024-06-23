@@ -14,12 +14,12 @@ namespace Core.Specification
             set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
 
-        public int? PatientStatusId { get; set; }
+        public int? StatusId { get; set; }
 
         public string Sort { get; set; }
 
         private string _search;
-        public string Search
+        public string? Search
         {
             get => _search;
             set => _search = value.ToLower();

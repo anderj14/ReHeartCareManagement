@@ -10,11 +10,11 @@ namespace Core.Dtos.CreateDto
         [Required]
         public string Time { get; set; }
         [Required]
-        public string NumLocationMainCoronary { get; set; }
+        public string LocationMainCoronaryArteries { get; set; }
         [Required]
         public string BlockageEachCoronaryArtery { get; set; }
         [Required]
-        public string DescriptionAbnormality { get; set; }
+        public string DescriptionAbnormalities { get; set; }
         [Required]
         public string BloodPressureAorta { get; set; }
         [Required]
@@ -46,9 +46,9 @@ namespace Core.Dtos.CreateDto
         [Required]
         public string StructuralAbnormalities { get; set; }
         [Required]
-        public string FunctionsCardiacChambers { get; set; }
+        public string CardiacChamberFunctions { get; set; }
         [Required]
-        public string DescriptionComplication { get; set; }
+        public string DescriptionComplications { get; set; }
         [Required]
         public string Conclusion { get; set; }
         [Required]

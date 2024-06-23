@@ -41,35 +41,9 @@ namespace API.Controllers
             _context = context;
         }
 
-        [HttpGet("notpag")]
-        public async Task<ActionResult<IReadOnlyList<PatientDto>>> GetPatientsNotPage(
-            [FromQuery] int pageSize = 100)
-        {
-            var patientParams = new PatientSpecParams { PageSize = pageSize };
-            var spec = new PatientWithAllSpecification(patientParams);
-            var products = await _patientRepo.ListAsync(spec);
-
-            return Ok(_mapper.Map<IReadOnlyList<Patient>, IReadOnlyList<PatientDto>>(products));
-        }
-
-        [HttpGet("notpag/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PatientDto>> GetPatientNotPage(int id)
-        {
-
-            var spec = new PatientWithAllSpecification(id);
-
-            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(spec);
-
-            if (patient == null) return NotFound(new ApiResponse(404));
-
-            return _mapper.Map<Patient, PatientDto>(patient);
-        }
-
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<PagedList<PatientDto>>> GetPatientsByUser([FromQuery] PatientSpecParams noteSpecParams)
+        public async Task<ActionResult<PagedList<PatientDto>>> GetPatientsByUser([FromQuery] PatientSpecParams patientSpecParams)
         {
             try
             {
@@ -87,20 +61,25 @@ namespace API.Controllers
 
                 Expression<Func<Patient, bool>> filter = patient => patient.AppUserId == user.Id;
 
-                var spec = new PatientWithAllSpecification(noteSpecParams);
-                var countSpec = new PatientWithFiltersForCountSpecification(noteSpecParams);
+                var spec = new PatientWithAllSpecification(patientSpecParams);
+                var countSpec = new PatientWithFiltersForCountSpecification(patientSpecParams);
 
                 var totalItems = await _unitOfWork.Repository<Patient>().CountByUserAsync(filter, countSpec);
 
-                var userPatients = await _unitOfWork.Repository<Patient>().ListAllByUserAsync(filter, spec, noteSpecParams.PageIndex, noteSpecParams.PageSize);
+                if (totalItems == 0)
+                {
+                    return Ok(new PagedList<PatientDto>(new List<PatientDto>(), 0, patientSpecParams.PageIndex, patientSpecParams.PageSize));
+                }
+
+                var userPatients = await _unitOfWork.Repository<Patient>().ListAllByUserAsync(filter, spec, patientSpecParams.PageIndex, patientSpecParams.PageSize);
 
                 var data = _mapper.Map<IReadOnlyList<PatientDto>>(userPatients);
 
                 var paginatedPatients = new PagedList<PatientDto>(
                     data.ToList(),
                     totalItems,
-                    noteSpecParams.PageIndex,
-                    noteSpecParams.PageSize
+                    patientSpecParams.PageIndex,
+                    patientSpecParams.PageSize
                 );
 
                 Response.AddPaginationHeader(paginatedPatients.MetaData);

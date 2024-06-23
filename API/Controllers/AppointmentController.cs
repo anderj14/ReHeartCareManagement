@@ -93,9 +93,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<Pagination<AppointmentDto>>> GetAppointmentByUser(
-            [FromQuery] AppointmentSpecParams appointmentParams
-        )
+        public async Task<ActionResult<Pagination<AppointmentDto>>> GetAppointmentByUser([FromQuery] AppointmentSpecParams appointmentParams)
         {
             try
             {
@@ -177,10 +175,13 @@ namespace API.Controllers
             var newAppointment = new Appointment
             {
                 AppUserId = user.Id,
-                // Date = appointmentCreateDto.Date,
+                StartDate = appointmentCreateDto.StartDate,
+                EndDate = appointmentCreateDto.EndDate,
                 Time = TimeSpan.Parse(appointmentCreateDto.Time),
                 Description = appointmentCreateDto.Description,
+                Location = appointmentCreateDto.Location,
                 AppointmentStatusId = appointmentCreateDto.AppointmentStatusId,
+                AppointmentTypeId = appointmentCreateDto.AppointmentTypeId,
                 PatientId = appointmentCreateDto.PatientId
             };
 
@@ -190,15 +191,17 @@ namespace API.Controllers
             var appointment = new AppointmentDto
             {
                 Id = newAppointment.Id,
-                // Date = newAppointment.Date,
+                StartDate = newAppointment.StartDate,
+                EndDate = newAppointment.EndDate,
                 Time = newAppointment.Time,
                 Description = newAppointment.Description,
-                // AppointmentStatus = newAppointment.AppointmentStatusId.ToString(),
-                // Patient = newAppointment.PatientId.ToString()
+                Location = newAppointment.Location,
+                AppointmentStatus = newAppointment.AppointmentStatusId.ToString(),
+                AppointmentType = newAppointment.AppointmentTypeId.ToString(),
+                Patient = newAppointment.PatientId.ToString()
             };
 
             return CreatedAtAction(nameof(GetAppointment), new { id = newAppointment.Id }, appointment);
-
         }
 
         [HttpPut("{id}")]
@@ -215,7 +218,6 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        // [Authorize(Roles = "Admin, Member")]
         [Authorize]
         public async Task<ActionResult> DeleteAppointment(int id)
         {
@@ -233,10 +235,32 @@ namespace API.Controllers
         [HttpGet("patient/{patientId}/appointments")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<IReadOnlyList<AppointmentDto>>> GetPatientAppointments(int patientId)
         {
-            var spec = new AppointmentSpecification(patientId, getByPatientId: true);
-            var appointments = await _unitOfWork.Repository<Appointment>().ListAsync(spec);
+            var userName = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+                
+            // Check if the patient belongs to the authenticated user
+            var patientSpec = new PatientWithAllSpecification(patientId);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
+
+            if (patient == null || patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+            }
+            // Filter and get patient appointments
+            var appointmentSpec = new AppointmentSpecification(patientId, getByPatientId: true);
+            var appointments = await _unitOfWork.Repository<Appointment>().ListAsync(appointmentSpec);
             var appointmentDtos = _mapper.Map<IReadOnlyList<AppointmentDto>>(appointments);
 
             return Ok(appointmentDtos);
@@ -245,12 +269,33 @@ namespace API.Controllers
         [HttpGet("patient/{patientId}/appointments/{appointmentId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<AppointmentDto>> GetPatientAppointment(int patientId, int appointmentId)
         {
+            var userName = User.Identity.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+
+            // Check if the patient belongs to the authenticated user
+            var patientSpec = new PatientWithAllSpecification(patientId);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
+
+            if (patient == null || patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+            }
+
             var appointmentSpec = new AppointmentSpecification(patientId, appointmentId);
             var appointment = await _unitOfWork.Repository<Appointment>().GetEntityWithSpec(appointmentSpec);
-
             var appointmentDto = _mapper.Map<AppointmentDto>(appointment);
+
             return Ok(appointmentDto);
         }
     }

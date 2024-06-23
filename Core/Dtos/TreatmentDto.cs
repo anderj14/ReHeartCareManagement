@@ -10,6 +10,8 @@ namespace Core.Dtos
         public string OtherTreatments { get; set; }
         public string SideEffects { get; set; }
         public string TreatmentMonitoring { get; set; }
+        public string TreatmentDuration { get; set; }
+        public string TreatmentOutcome { get; set; }
         public string Patient { get; set; }
     }
 }

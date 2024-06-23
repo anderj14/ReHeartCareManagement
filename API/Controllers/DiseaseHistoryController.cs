@@ -3,9 +3,11 @@ using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.CreateDto;
 using Core.Entities;
+using Core.Entities.Identity;
 using Core.Interfaces;
 using Core.Specification;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -14,38 +16,68 @@ namespace API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<AppUser> _userManager;
 
-        public DiseaseHistoryController(IUnitOfWork unitOfWork, IMapper mapper)
+        public DiseaseHistoryController(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            UserManager<AppUser> userManager
+
+            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<DiseaseHistoryDto>>> GetDiseaseHistories()
-        {
-            var diseaseHistories = await _unitOfWork.Repository<DiseaseHistory>().ListAllAsync();
-            var diseaseHistoriesDtos = _mapper.Map<IReadOnlyList<DiseaseHistoryDto>>(diseaseHistories);
+        // [HttpGet]
+        // public async Task<ActionResult<IReadOnlyList<DiseaseHistoryDto>>> GetDiseaseHistories()
+        // {
+        //     var spec = new DiseaseHistorySpecification();
 
-            return Ok(diseaseHistoriesDtos);
-        }
+        //     var diseaseHistories = await _unitOfWork.Repository<DiseaseHistory>().ListAsync(spec);
+        //     var diseaseHistoriesDtos = _mapper.Map<IReadOnlyList<DiseaseHistoryDto>>(diseaseHistories);
 
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<DiseaseHistoryDto>> GetDiseaseHistory(int id)
-        {
-            var diseaseHistory = await _unitOfWork.Repository<DiseaseHistory>().GetByIdAsync(id);
-            var diseaseHistoryDto = _mapper.Map<DiseaseHistoryDto>(diseaseHistory);
+        //     return Ok(diseaseHistoriesDtos);
+        // }
 
-            return Ok(diseaseHistoryDto);
-        }
+        // [HttpGet("{id}")]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        // public async Task<ActionResult<DiseaseHistoryDto>> GetDiseaseHistory(int id)
+        // {
+        //     var diseaseHistory = await _unitOfWork.Repository<DiseaseHistory>().GetByIdAsync(id);
+        //     var diseaseHistoryDto = _mapper.Map<DiseaseHistoryDto>(diseaseHistory);
+
+        //     return Ok(diseaseHistoryDto);
+        // }
 
         [HttpGet("patient/{patientId}/diseasesHistories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<IReadOnlyList<DiseaseHistoryDto>>> GetTreatmentsByPatientId(int patientId)
         {
+            var userName = User.Identity.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+
+            // Check if the patient belongs to the authenticated user
+            var patientSpec = new PatientWithAllSpecification(patientId);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
+
+            if (patient == null || patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+            }
+
             var spec = new DiseaseHistorySpecification(patientId);
             var diseasesHistories = await _unitOfWork.Repository<DiseaseHistory>().ListAsync(spec);
             var diseasesHistoriesDtos = _mapper.Map<IReadOnlyList<DiseaseHistoryDto>>(diseasesHistories);
@@ -56,8 +88,29 @@ namespace API.Controllers
         [HttpGet("patient/{patientId}/diseasesHistories/{diseaseHistoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<ActionResult<DiseaseHistoryDto>> GetTreatmentByPatientId(int patientId, int diseaseHistoryId)
         {
+            var userName = User.Identity.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+
+            // Check if the patient belongs to the authenticated user
+            var patientSpec = new PatientWithAllSpecification(patientId);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
+
+            if (patient == null || patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+            }
+
             var spec = new DiseaseHistorySpecification(patientId, diseaseHistoryId);
             var diseaseHistory = await _unitOfWork.Repository<DiseaseHistory>().GetEntityWithSpec(spec);
             var diseaseHistoryDto = _mapper.Map<DiseaseHistoryDto>(diseaseHistory);
@@ -79,7 +132,6 @@ namespace API.Controllers
 
             return Ok(diseaseHistory);
         }
-
     }
 }
 

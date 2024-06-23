@@ -21,7 +21,6 @@ namespace Core.Interfaces
         Task<int> CountByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec);
         Task<IReadOnlyList<T>> ListAllByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec, int pageIndex, int pageSize);
 
-
         void Add(T entity);
         void Update(T entity);
         void Delete(T entity);

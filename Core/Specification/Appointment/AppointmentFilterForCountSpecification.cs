@@ -11,7 +11,6 @@ namespace Core.Specification
                 // && (!appointmentParams.Date.HasValue || x.Date.Date == appointmentParams.Date.Value.Date)
                 && (!appointmentParams.AppointmentStatusId.HasValue || x.AppointmentStatusId == appointmentParams.AppointmentStatusId)
                 )
-                
         {
         }
     }

@@ -8,11 +8,14 @@ namespace Infraestructure.config
     {
         public void Configure(EntityTypeBuilder<CardiologySurgery> builder)
         {
-
             builder
             .HasOne(u => u.AppUser)
             .WithMany(u => u.CardiologySurgeries)
             .HasForeignKey(cs => cs.AppUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(u => u.SurgeryFollowUps).WithOne(u => u.CardiologySurgery)
+            .HasForeignKey(s => s.CardiologySurgeryId)
             .OnDelete(DeleteBehavior.Cascade);
         }
     }

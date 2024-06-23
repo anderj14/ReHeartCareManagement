@@ -9,9 +9,9 @@ namespace Core.Specification
             : base(x =>
                 string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower()
                 .Contains(patientParams.Search)
+                && (!patientParams.StatusId.HasValue || x.StatusId == patientParams.StatusId)
             )
         {
-
         }
     }
 }

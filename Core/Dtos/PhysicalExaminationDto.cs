@@ -10,12 +10,7 @@ namespace Core.Dtos
         public string PeakPressure { get; set; }
         public string ExerciseInducedSymptoms { get; set; }
         public string AbnormalEcgFindings { get; set; }
-        public string ImageEcoUrl { get; set; }
-        public string ImageStresUrl { get; set; }
         public string Conclusion { get; set; }
         public string Patient { get; set; }
-
-        public IEnumerable<PhotoDto> PhotosImageEco { get; set; } = new List<PhotoDto>();
-        public IEnumerable<PhotoDto> PhotosImageStress { get; set; } = new List<PhotoDto>();
     }
 }

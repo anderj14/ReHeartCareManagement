@@ -10,6 +10,8 @@ namespace Core.Dtos
         public string Severity { get; set; }
         public string RiskAssessment { get; set; }
         public string Conclusions { get; set; }
+        public string Recommendations { get; set; }
+        public string FollowUpPlan { get; set; }
         public string Patient { get; set; }
     }
 }

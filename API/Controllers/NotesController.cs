@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using API.Errors;
-using API.Extensions;
 using API.Helper;
 using AutoMapper;
 using Core.Dtos;
@@ -20,13 +19,11 @@ namespace API.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
 
-        private readonly INoteRepository _repository;
         private readonly ManagementContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         public NotesController(
             UserManager<AppUser> userManager,
-            INoteRepository repository,
             ManagementContext context,
             IMapper mapper,
             IUnitOfWork unitOfWork
@@ -35,12 +32,12 @@ namespace API.Controllers
         {
             _userManager = userManager;
             _context = context;
-            _repository = repository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<Pagination<NotesDto>>> GetNotes(
            [FromQuery] NoteSpecParams notesParams
         )
@@ -71,7 +68,6 @@ namespace API.Controllers
                 notesParams.PageSize, notesParams.PageSize, totalItems, data
             ));
         }
-
 
         [HttpPost]
         [Authorize]
@@ -104,8 +100,6 @@ namespace API.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok("You have successfully created a new note");
-
-
             }
             catch (Exception ex)
             {

@@ -14,7 +14,6 @@ using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -35,23 +34,6 @@ namespace API.Controllers
             _mapper = mapper;
             _context = context;
             _userManager = userManager;
-        }
-
-        [HttpGet("allSurgeries")]
-        // [Authorize]
-        public async Task<ActionResult<Pagination<CardiologySurgeryDto>>> GetCardiologySurgeries(
-            [FromQuery] CardiologySurgerySpecParams cardiologySurgeryParams
-        )
-        {
-            var spec = new CardiologySurgerySpecification(cardiologySurgeryParams);
-            var countSpec = new CardiologySurgeryFilterForCountSpecification(cardiologySurgeryParams);
-            var totalItems = await _unitOfWork.Repository<CardiologySurgery>().CountAsync(countSpec);
-
-            var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAsync(spec);
-            var data = _mapper.Map<IReadOnlyList<CardiologySurgeryDto>>(cardiologySurgeries);
-
-            return Ok(new Pagination<CardiologySurgeryDto>(cardiologySurgeryParams.PageIndex,
-                cardiologySurgeryParams.PageSize, totalItems, data));
         }
 
         [HttpGet]
@@ -81,14 +63,14 @@ namespace API.Controllers
                 var countSpec = new CardiologySurgeryFilterForCountSpecification(cardiologySurgeryParams);
 
                 var totalItems = await _unitOfWork.Repository<CardiologySurgery>().CountByUserAsync(filter, countSpec);
-                
+
                 if (totalItems == 0)
                 {
                     return Ok(new PagedList<PatientDto>(new List<PatientDto>(), 0, cardiologySurgeryParams.PageIndex, cardiologySurgeryParams.PageSize));
                 }
 
                 var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAllByUserAsync(filter, spec, cardiologySurgeryParams.PageIndex, cardiologySurgeryParams.PageSize);
-                
+
                 var data = _mapper.Map<IReadOnlyList<CardiologySurgeryDto>>(cardiologySurgeries);
 
                 var paginatedSurgeries = new PagedList<CardiologySurgeryDto>(
@@ -108,14 +90,13 @@ namespace API.Controllers
             }
         }
 
-
-
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         [Authorize]
         public async Task<ActionResult<CardiologySurgeryDto>> GetCardiologySurgery(int id)
         {
+
             var spec = new CardiologySurgerySpecification(id);
 
             var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(spec);
@@ -153,29 +134,6 @@ namespace API.Controllers
                     Time = TimeSpan.Parse(surgeryCreateDto.Time),
                     ProcedureDescription = surgeryCreateDto.ProcedureDescription,
                     Notes = surgeryCreateDto.Notes,
-                    // IsEmergency = surgeryCreateDto.IsEmergency,
-                    // IsElective = surgeryCreateDto.IsElective,
-                    OperationRoom = surgeryCreateDto.OperationRoom,
-                    PreOpDiagnosis = surgeryCreateDto.PreOpDiagnosis,
-                    PostOpDiagnosis = surgeryCreateDto.PostOpDiagnosis,
-                    // IsSuccessful = surgeryCreateDto.IsSuccessful,
-                    Duration = surgeryCreateDto.Duration,
-                    CardiacCondition = surgeryCreateDto.CardiacCondition,
-                    // IsMinimallyInvasive = surgeryCreateDto.IsMinimallyInvasive,
-                    PatientId = surgeryCreateDto.PatientId,
-                };
-
-                _context.CardiologySurgeries.Add(newSurgery);
-                await _context.SaveChangesAsync();
-
-                var cardiologySurgery = new CardiologySurgeryDto
-                {
-                    Id = newSurgery.Id,
-                    SurgeryName = surgeryCreateDto.SurgeryName,
-                    Date = surgeryCreateDto.Date,
-                    Time = surgeryCreateDto.Time,
-                    ProcedureDescription = surgeryCreateDto.ProcedureDescription,
-                    Notes = surgeryCreateDto.Notes,
                     IsEmergency = surgeryCreateDto.IsEmergency,
                     IsElective = surgeryCreateDto.IsElective,
                     OperationRoom = surgeryCreateDto.OperationRoom,
@@ -185,7 +143,44 @@ namespace API.Controllers
                     Duration = surgeryCreateDto.Duration,
                     CardiacCondition = surgeryCreateDto.CardiacCondition,
                     IsMinimallyInvasive = surgeryCreateDto.IsMinimallyInvasive,
+                    Complications = surgeryCreateDto.Complications,
+                    PostOperativeStatus = surgeryCreateDto.PostOperativeStatus,
+                    AnesthesiaType = surgeryCreateDto.AnesthesiaType,
+                    SurgicalTeam = surgeryCreateDto.SurgicalTeam,
+                    IntraoperativeFindings = surgeryCreateDto.IntraoperativeFindings,
+                    PostOperativeInstructions = surgeryCreateDto.PostOperativeInstructions,
+                    PatientId = surgeryCreateDto.PatientId,
                 };
+
+                _context.CardiologySurgeries.Add(newSurgery);
+                await _context.SaveChangesAsync();
+
+                var cardiologySurgery = new CardiologySurgeryDto
+                {
+                    Id = newSurgery.Id,
+                    SurgeryName = newSurgery.SurgeryName,
+                    Date = newSurgery.Date,
+                    Time = newSurgery.Time,
+                    ProcedureDescription = newSurgery.ProcedureDescription,
+                    Notes = newSurgery.Notes,
+                    IsEmergency = Convert.ToBoolean(newSurgery.IsEmergency),
+                    IsElective = Convert.ToBoolean(newSurgery.IsElective),
+                    OperationRoom = newSurgery.OperationRoom,
+                    PreOpDiagnosis = newSurgery.PreOpDiagnosis,
+                    PostOpDiagnosis = newSurgery.PostOpDiagnosis,
+                    IsSuccessful = Convert.ToBoolean(newSurgery.IsSuccessful),
+                    Duration = newSurgery.Duration,
+                    CardiacCondition = newSurgery.CardiacCondition,
+                    IsMinimallyInvasive = Convert.ToBoolean(newSurgery.IsMinimallyInvasive),
+                    Complications = newSurgery.Complications,
+                    PostOperativeStatus = newSurgery.PostOperativeStatus,
+                    AnesthesiaType = newSurgery.AnesthesiaType,
+                    SurgicalTeam = newSurgery.SurgicalTeam,
+                    IntraoperativeFindings = newSurgery.IntraoperativeFindings,
+                    PostOperativeInstructions = newSurgery.PostOperativeInstructions,
+                    Patient = newSurgery.PatientId.ToString()
+                };
+
 
                 return CreatedAtAction(nameof(GetCardiologySurgery), new { id = newSurgery.Id }, cardiologySurgery);
             }
@@ -195,32 +190,70 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("patient/{patientId}/cardiologySurgeries")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IReadOnlyList<CardiologySurgeryDto>>> GetPatientCardiologySurgeries(int patientId)
+        {
+            var userName = User.Identity.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
 
+            var user = await _userManager.FindByNameAsync(userName);
 
-        // [HttpGet("patient/{patientId}/cardiologySurgeries")]
-        // [ProducesResponseType(StatusCodes.Status200OK)]
-        // [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        // public async Task<ActionResult<IReadOnlyList<CardiologySurgeryDto>>> GetPatientCardiologySurgeries(int patientId)
-        // {
-        //     var spec = new CardiologySurgerySpecification(patientId);
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
 
-        //     var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAsync(spec);
-        //     var cardiologySurgeryDtos = _mapper.Map<IReadOnlyList<CardiologySurgeryDto>>(cardiologySurgeries);
+            // Check if the patient belongs to the authenticated user
+            var patientSpec = new PatientWithAllSpecification(patientId);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
 
-        //     return Ok(cardiologySurgeryDtos);
-        // }
+            if (patient == null || patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+            }
 
-        // [HttpGet("patient/{patientId}/cardiologySurgeries/{cardiologySurgeryId}")]
-        // [ProducesResponseType(StatusCodes.Status200OK)]
-        // [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        // public async Task<ActionResult<CardiologySurgeryDto>> GetPatientCardiologySurgery(int patientId, int cardiologySurgeryId)
-        // {
-        //     var spec = new CardiologySurgerySpecification(patientId, cardiologySurgeryId);
+            var spec = new CardiologySurgerySpecification(patientId, getByPatientId: true);
 
-        //     var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(spec);
-        //     var cardiologySurgeryDto = _mapper.Map<CardiologySurgeryDto>(cardiologySurgery);
+            var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAsync(spec);
+            var cardiologySurgeryDtos = _mapper.Map<IReadOnlyList<CardiologySurgeryDto>>(cardiologySurgeries);
 
-        //     return Ok(cardiologySurgeryDto);
-        // }
+            return Ok(cardiologySurgeryDtos);
+        }
+
+        [HttpGet("patient/{patientId}/cardiologySurgeries/{cardiologySurgeryId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<CardiologySurgeryDto>> GetPatientCardiologySurgery(int patientId, int cardiologySurgeryId)
+        {
+            var userName = User.Identity.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+
+            // Check if the patient belongs to the authenticated user
+            var patientSpec = new PatientWithAllSpecification(patientId);
+            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
+
+            if (patient == null || patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+            }
+
+            var spec = new CardiologySurgerySpecification(patientId, cardiologySurgeryId);
+
+            var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(spec);
+            var cardiologySurgeryDto = _mapper.Map<CardiologySurgeryDto>(cardiologySurgery);
+
+            return Ok(cardiologySurgeryDto);
+        }
     }
 }
