@@ -1,4 +1,3 @@
-using Core.Entities;
 
 namespace Core.Dtos
 {
@@ -10,7 +9,7 @@ namespace Core.Dtos
         public string Complications { get; set; }
         public string FunctionalAssessment { get; set; }
         public bool IsFollowUpComplete { get; set; }
-        public string CardiologySurgery { get; set; }
-        public ICollection<Medication> MedicationsPrescribed { get; set; }
+        public int CardiologySurgeryId { get; set; }
+        public ICollection<MedicationDto> MedicationsPrescribed { get; set; } = new List<MedicationDto>();
     }
 }

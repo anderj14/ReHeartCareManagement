@@ -6,6 +6,7 @@ using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Entities.Identity;
 using Core.Interfaces;
+using Core.Specification.CardiologySurgerySpec;
 using Core.Specification.SurgeryFollowUpSpec;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -68,7 +69,24 @@ namespace API.Controllers
         [Authorize]
         public async Task<ActionResult<IReadOnlyList<SurgeryFollowUpDto>>> GetCardiologySurgerySurgeryFollowUps(int cardiologySurgeryId)
         {
-            
+            // Check the user
+            var userName = User.Identity.Name;
+            if (string.IsNullOrEmpty(userName)) return Unauthorized(new ApiResponse(401, "User not authenticated"));
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+
+            // Check if the cardiology surgery belongs to a patient associated with the authenticated user
+            var cardiologySurgerySpec = new CardiologySurgerySpecification(cardiologySurgeryId);
+            var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(cardiologySurgerySpec);
+
+            if (cardiologySurgery == null || cardiologySurgery.Patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Cardiology surgery not found or not authorized"));
+            }
+
             var spec = new SurgeryFollowUpSpecification(cardiologySurgeryId);
             var surgeryFollowUps = await _unitOfWork.Repository<SurgeryFollowUp>().ListAsync(spec);
             var surgeryFollowUpDtos = _mapper.Map<IReadOnlyList<SurgeryFollowUpDto>>(surgeryFollowUps);
@@ -82,6 +100,27 @@ namespace API.Controllers
         [Authorize]
         public async Task<ActionResult<SurgeryFollowUpDto>> GetCardiologySurgerySurgeryFollowUps(int cardiologySurgeryId, int surgeryFollowUpId)
         {
+            // Check the user
+            var userName = User.Identity.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                return Unauthorized(new ApiResponse(400, "User not found"));
+
+            // Check if the cardiology surgery belongs to a patient associated with the authenticated user
+            var cardiologySurgerySpec = new CardiologySurgerySpecification(cardiologySurgeryId);
+            var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(cardiologySurgerySpec);
+
+            if (cardiologySurgery == null || cardiologySurgery.Patient.AppUserId != user.Id)
+            {
+                return NotFound(new ApiResponse(404, "Cardiology surgery not found or not authorized"));
+            }
+
             var spec = new SurgeryFollowUpSpecification(cardiologySurgeryId, surgeryFollowUpId);
             var surgeryFollowUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(spec);
             var surgeryFollowUpDto = _mapper.Map<SurgeryFollowUpDto>(surgeryFollowUp);

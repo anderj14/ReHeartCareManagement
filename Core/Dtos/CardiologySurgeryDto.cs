@@ -25,8 +25,6 @@ namespace Core.Dtos
         public string SurgicalTeam { get; set; }
         public string IntraoperativeFindings { get; set; }
         public string PostOperativeInstructions { get; set; }
-        public ICollection<SurgeryFollowUp> SurgeryFollowUps { get; set; } = new List<SurgeryFollowUp>();
-
         public string Patient { get; set; }
     }
 }

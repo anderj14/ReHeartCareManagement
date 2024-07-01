@@ -11,6 +11,7 @@ namespace Core.Specification.CardiologySurgerySpec
             )
         {
             AddInclude(cs => cs.Patient);
+            AddInclude(cs => cs.SurgeryFollowUps);
 
             ApplyPaging(cardiologySurgeryParams.PageSize * (cardiologySurgeryParams.PageIndex - 1),
             cardiologySurgeryParams.PageSize);
@@ -37,12 +38,14 @@ namespace Core.Specification.CardiologySurgerySpec
         : base(a => getByPatientId ? a.PatientId == id : a.Id == id)
         {
             AddInclude(a => a.Patient);
+            AddInclude(cs => cs.SurgeryFollowUps);
         }
 
         public CardiologySurgerySpecification(int patientId, int cardiologySurgeryId)
             : base(cs => cs.PatientId == patientId && cs.Id == cardiologySurgeryId)
         {
             AddInclude(cs => cs.Patient);
+            AddInclude(cs => cs.SurgeryFollowUps);
         }
     }
 }
