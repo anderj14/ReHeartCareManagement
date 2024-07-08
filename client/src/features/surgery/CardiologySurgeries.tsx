@@ -10,7 +10,7 @@ import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import CardiologySurgerySearch from "./CardiologySurgerySearch";
 import Pager from "../../app/components/Pager";
 import PaginationItem from "../../app/components/PaginationItem";
-import CardiologySurgeryList from "../patient/cardiologySurgery/CardiologySurgeryList";
+import CardiologySurgeryList from "./CardiologySurgeryList";
 
 const sortOptions = [
   { value: 'patientName', label: 'Alphabetical' },
