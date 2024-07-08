@@ -1,7 +1,6 @@
-import React from 'react';
 import { Box, Card, CardContent } from '@mui/material';
 import { BloodTest } from '../../../app/Models/bloodTest';
-
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     bloodTests: BloodTest[];
@@ -21,7 +20,7 @@ export default function BloodTestPatient({ bloodTests }: Props) {
                         <div key={latestBloodTest.id}>
                             <Box className="details">
                                 <strong>Date: </strong>
-                                <span>{new Date(latestBloodTest.date).toLocaleDateString()}</span>
+                                <span>{formatDateTime(latestBloodTest.date)}</span>
                             </Box>
                             <Box className="details">
                                 <strong>Hemoglobin: </strong>
@@ -54,6 +53,78 @@ export default function BloodTestPatient({ bloodTests }: Props) {
                             <Box className="details">
                                 <strong>Tryglycerides: </strong>
                                 <span>{latestBloodTest.triglycerides}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Red Blood Cell: </strong>
+                                <span>{latestBloodTest.redBloodCell}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Mean Corpuscular Volume: </strong>
+                                <span>{latestBloodTest.meanCorpuscularVolume}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Mean Corpuscular Hemoglobin: </strong>
+                                <span>{latestBloodTest.meanCorpuscularHemoglobin}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Mean Corpuscular Hemoglobin Concentration: </strong>
+                                <span>{latestBloodTest.meanCorpuscularHemoglobinConcentration}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Red Cell Distribution Width: </strong>
+                                <span>{latestBloodTest.redCellDistributionWidth}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Blood Urea Nitrogen: </strong>
+                                <span>{latestBloodTest.bloodUreaNitrogen}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Creatinine: </strong>
+                                <span>{latestBloodTest.creatinine}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Sodium: </strong>
+                                <span>{latestBloodTest.sodium}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Potassium: </strong>
+                                <span>{latestBloodTest.potassium}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Chloride: </strong>
+                                <span>{latestBloodTest.chloride}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Bicarbonate: </strong>
+                                <span>{latestBloodTest.bicarbonate}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Calcium: </strong>
+                                <span>{latestBloodTest.calcium}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Magnesium: </strong>
+                                <span>{latestBloodTest.magnesium}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Neutrophils: </strong>
+                                <span>{latestBloodTest.neutrophils}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Lymphocytes: </strong>
+                                <span>{latestBloodTest.lymphocytes}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Monocytes: </strong>
+                                <span>{latestBloodTest.monocytes}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Eosinophils: </strong>
+                                <span>{latestBloodTest.eosinophils}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Basophils: </strong>
+                                <span>{latestBloodTest.basophils}</span>
                             </Box>
                         </div>
                     )}

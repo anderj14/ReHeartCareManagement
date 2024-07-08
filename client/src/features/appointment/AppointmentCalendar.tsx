@@ -21,6 +21,8 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import getBorderColor from './getBorderColor';
 import CircleIcons from '@mui/icons-material/Circle';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import formatDateTime from '../../app/components/formatDateTime';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -38,10 +40,8 @@ export default function AppointmentCalendar() {
 
   const transformAppointment = (appointments: Appointment[]) => {
     return appointments.map((appointment: Appointment) => {
-      const date = dayjs(appointment.date, 'YYYY-MM-DD');
-      const time = dayjs(appointment.time, 'HH:mm:ss');
-      const start = date.hour(time.hour()).minute(time.minute()).second(time.second()).toDate();
-      const end = dayjs(start).add(1, 'hour').toDate();
+      const start = new Date(appointment.startDate);
+      const end = new Date(appointment.endDate);
       const title = `${appointment.patient}`;
       const eventData = {
         id: appointment.id,
@@ -52,10 +52,11 @@ export default function AppointmentCalendar() {
         userDoctor: appointment.userDoctor,
         description: appointment.description,
         appointmentStatus: appointment.appointmentStatus,
-        date: date.format("YYYY-MM-DD"),
-        time: time.format("HH:mm:ss"),
+        appointmentType: appointment.appointmentType,
+        location: appointment.location,
+        start: appointment.startDate,
+        end: appointment.endDate
       };
-      console.log(eventData);
 
       return {
         id: appointment.id,
@@ -88,13 +89,17 @@ export default function AppointmentCalendar() {
     setSelectedEvent(null);
   };
 
+  // const formatDateTime = (date: string) => {
+  //   return dayjs(date).isValid() ? dayjs(date).format('MMMM D, YYYY h:mm A') : 'Invalid Date';
+  // };
+
   return (
     <div className="appointments-container" style={{ height: '100vh' }}>
       <div className="calendar">
         <Box className="title" sx={{ marginTop: 3 }}>
           <Typography variant='h4'>Appointments Calendar</Typography>
           <Typography variant='body1' color={'text.secondary'} textTransform={'initial'}>
-            There is the latest update for the last  month
+            There is the latest update for the last month
           </Typography>
         </Box>
         <Box className="header">
@@ -114,6 +119,7 @@ export default function AppointmentCalendar() {
           step={STEP}
           timeslots={TIME_SLOTS}
           onSelectEvent={handleSelectEvent}
+          style={{ height: '100%' }} // Ensure the calendar takes full height
         />
         {selectedEvent && (
           <Modal open={Boolean(selectedEvent)} onClose={handleClose}>
@@ -167,8 +173,11 @@ export default function AppointmentCalendar() {
                     <AccessTimeIcon sx={{ fontSize: '25px', color: "rgba(0, 0, 0, 0.800)", backgroundColor: 'rgba(0, 0, 0, 0.100)', padding: '5px', borderRadius: '8px' }} />
                     <div className="info">
                       <Typography sx={{ fontSize: 14, textTransform: 'uppercase' }} color="text.secondary">Date And Time</Typography>
-                      <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{selectedEvent.date}</Typography>
-                      <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{selectedEvent.time}</Typography>
+                      <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
+                        {selectedEvent.start && selectedEvent.end ?
+                          `${formatDateTime(selectedEvent.start)} - ${formatDateTime(selectedEvent.end)}`
+                          : 'No Date Info'}
+                      </Typography>
                     </div>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'start' }}>
@@ -179,14 +188,22 @@ export default function AppointmentCalendar() {
                     </div>
                   </Box>
                 </CardContent>
+                <CardContent className="appointment-info">
+                  <Box sx={{ display: 'flex', alignItems: 'start' }}>
+                    <LocationOnIcon sx={{ fontSize: '25px', color: "rgba(0, 0, 0, 0.800)", backgroundColor: 'rgba(0, 0, 0, 0.100)', padding: '5px', borderRadius: '8px' }} />
+                    <div className="info">
+                      <Typography sx={{ fontSize: 14, textTransform: 'uppercase' }} color="text.secondary">Location</Typography>
+                      <Typography sx={{ fontSize: 16, fontWeight: 500 }}>Dr. {selectedEvent.location}</Typography>
+                    </div>
+                  </Box>
+                </CardContent>
                 <Divider />
-
                 <CardContent className="general-info">
                   <Typography sx={{ fontSize: 16, }}>General Info</Typography>
                   <div className="patient-info">
                     <div className="info">
                       <Typography sx={{ fontSize: 14 }} color="text.secondary">Full Name</Typography>
-                      <Typography sx={{ fontSize: 16, fontWeight: 500 }}>Dr. {selectedEvent.patient}</Typography>
+                      <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{selectedEvent.patient}</Typography>
                     </div>
                     <div className="info">
                       <Typography sx={{ fontSize: 13 }} color="text.secondary">Phone</Typography>
@@ -201,12 +218,10 @@ export default function AppointmentCalendar() {
                       <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{selectedEvent.patientAddress}</Typography>
                     </div>
                   </div>
-
                 </CardContent>
               </Box>
             </Paper>
           </Modal>
-
         )}
       </div>
     </div>

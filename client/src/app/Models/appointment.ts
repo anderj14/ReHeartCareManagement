@@ -1,11 +1,12 @@
-import { Patient } from "./patient"
 
 export interface Appointment {
     id: number
-    date: string
-    time: string
+    startDate: string
+    endDate: string
     description: string
+    location: string
     appointmentStatus: string
+    appointmentType: string
     patient: string
     patientEmail: string
     patientPhone: number

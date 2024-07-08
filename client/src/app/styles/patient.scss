@@ -100,7 +100,7 @@
     display: flex;
     gap: 25px;
     justify-content: center;
-    // justify-content: space-between;
+    justify-content: space-between;
 
     section {
         display: flex;
@@ -164,4 +164,8 @@
         background-color: darken($green, 15%);
         color: $white;
     }
+}
+
+.css-1vwaa9k-MuiPaper-root-MuiCard-root {
+    max-width: 945px !important;
 }

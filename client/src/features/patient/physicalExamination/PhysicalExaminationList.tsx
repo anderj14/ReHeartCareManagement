@@ -3,7 +3,7 @@ import { PhysicalExamination } from '../../../app/Models/physicalExamination';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, Typography, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { format } from 'date-fns';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 
 interface Props {
@@ -37,7 +37,7 @@ export default function PhysicalExaminationList({ physicalExaminations }: Props)
                                 to={`/physicalExamination/patient/${patient?.id}/physicalExaminations/${examination.id}`}
                                 style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
                             >
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{examination.date ? format(new Date(examination.date), 'dd/MM/yyyy') : ''}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(examination.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{examination.time}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{examination.duration}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{examination.maxHeartRate}</TableCell>

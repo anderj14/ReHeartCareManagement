@@ -1,6 +1,6 @@
 import { Card, CardContent, Box } from '@mui/material';
-import React from 'react'
 import { Diagnostics } from '../../../app/Models/diagnostic';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     diagnostic: Diagnostics[];
@@ -21,7 +21,7 @@ export default function DiagnosticPatient({ diagnostic }: Props) {
                         <div key={latestDiagnostic.id}>
                             <Box className="details">
                                 <strong>Date: </strong>
-                                <span>{new Date(latestDiagnostic.date).toLocaleDateString()}</span>
+                                <span>{formatDateTime(latestDiagnostic.date)}</span>
                             </Box>
                             <Box className="details">
                                 <strong>Condition Name: </strong>
@@ -44,10 +44,17 @@ export default function DiagnosticPatient({ diagnostic }: Props) {
                                 <span>{latestDiagnostic.riskAssessment}</span>
                             </Box>
                             <Box className="details">
+                                <strong>Recomndations: </strong>
+                                <span>{latestDiagnostic.riskAssessment}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Follow Up Plan: </strong>
+                                <span>{latestDiagnostic.followUpPlan}</span>
+                            </Box>
+                            <Box className="details">
                                 <strong>Conclusions: </strong>
                                 <span>{latestDiagnostic.conclusions}</span>
                             </Box>
-
                         </div>
                     )}
                 </div>

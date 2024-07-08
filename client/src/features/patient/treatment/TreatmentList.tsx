@@ -1,9 +1,9 @@
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Box } from '@mui/material';
-import { format } from 'date-fns';
 import { Treatment } from '../../../app/Models/treatment';
 import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     treatments: Treatment[];
@@ -29,7 +29,7 @@ export default function TreatmentList({ treatments }: Props) {
                     <TableBody className="body">
                         {treatments.map((treatment) => (
                             <TableRow key={treatment.id} component={Link} to={`/treatment/patient/${patient?.id}/treatments/${treatment.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{treatment.date ? format(new Date(treatment.date), 'dd/MM/yyyy') : ''}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(treatment.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.medication}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.dosage}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.sideEffects}</TableCell>

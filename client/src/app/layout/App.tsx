@@ -7,7 +7,7 @@ import Sidebar from '../components/Sidebar';
 import { useEffect, useState } from 'react';
 import Notes from '../../features/notes/Notes';
 import CardiologySurgeries from '../../features/surgery/CardiologySurgeries';
-import CardiologySurgeryDetails from '../../features/surgery/CardiologySurgeryDetails';
+import CardiologySurgeryDetails from '../../features/patient/cardiologySurgery/CardiologySurgeryDetails';
 import { ContactPage } from '@mui/icons-material';
 import AboutPage from '../../features/about/AboutPage';
 import { ToastContainer } from 'react-toastify';
@@ -38,9 +38,10 @@ import Diagnostics from '../../features/patient/diagnostic/Diagnostics';
 import DiagnosticDetails from '../../features/patient/diagnostic/DiagnosticDetails';
 import Treatments from '../../features/patient/treatment/Treatments';
 import TreatmentDetails from '../../features/patient/treatment/TreatmentDetails';
-import Appointments from '../../features/appointment/AppointmentCalendar';
 import AppointmentCalendar from '../../features/appointment/AppointmentCalendar';
-import PatientForm from '../../features/patient/admin-patient/PatientForm';
+import CardiologySurgery from '../../features/patient/cardiologySurgery/CardiologySurgery';
+import StressTest from '../../features/patient/stressTest/StressTests';
+import StressTestDetails from '../../features/patient/stressTest/StressTestDetails';
 
 function App() {
   const [closeMenu, setCloseMenu] = useState(false);
@@ -90,6 +91,10 @@ function App() {
                 <Route path='/diagnostic/patient/:id/diagnostics/:diagnosticId' element={< DiagnosticDetails />}></Route>
                 <Route path='/treatment/patient/:id/treatments' element={< Treatments />}></Route>
                 <Route path='/treatment/patient/:id/treatments/:treatmentId' element={< TreatmentDetails />}></Route>
+                <Route path='/cardiologysurgery/patient/:id/cardiologysurgeries' element={< CardiologySurgery />}></Route>
+                <Route path='/cardiologysurgery/patient/:id/cardiologysurgeries/:cardiologySurgeryId' element={< CardiologySurgeryDetails />}></Route>
+                <Route path='/stresstest/patient/:id/stresstests' element={< StressTest />}></Route>
+                <Route path='/stresstest/patient/:id/stresstests/:stressTestId' element={< StressTestDetails />}></Route>
                 <Route path='/notes' element={< Notes />}></Route>
                 <Route path='/about' element={< AboutPage />}></Route>
                 <Route path='/contact' element={< ContactPage />}></Route>

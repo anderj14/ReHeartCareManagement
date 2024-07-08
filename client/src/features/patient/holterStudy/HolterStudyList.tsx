@@ -3,7 +3,7 @@ import { HolterStudy } from "../../../app/Models/holterStudy";
 import { useAppSelector } from "../../../app/store/configureStore";
 import { patientSelectors } from "../patientSlice";
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-import { format } from "date-fns";
+import formatDateTime from "../../../app/components/formatDateTime";
 
 interface Props {
     holterStudies: HolterStudy[];
@@ -31,7 +31,7 @@ export default function HolterStudyList({ holterStudies }: Props) {
                     <TableBody className="body">
                         {holterStudies.map((holterStudy) => (
                             <TableRow key={holterStudy.id} component={Link} to={`/holterstudy/patient/${patient?.id}/holterStudies/${holterStudy.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{holterStudy.date ? format(new Date(holterStudy.date), 'dd/MM/yyyy') : ''}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(holterStudy.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.time}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.studyDuration}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.averageHeartRate}</TableCell>

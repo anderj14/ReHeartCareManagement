@@ -11,9 +11,6 @@ import PatientSearch from "./PatientSearch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import PaginationItem from "../../app/components/PaginationItem";
 import Pager from "../../app/components/Pager";
-import PatientForm from "./admin-patient/PatientForm";
-import { Patient } from "../../app/Models/patient";
-import { Edit } from "@mui/icons-material";
 
 const sortOptions = [
     { value: 'patientName', label: 'Alphabetical' },
@@ -28,21 +25,23 @@ export default function Patients() {
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const [editMode, setEditMode] = useState(false);
+    // For the moment this part of the code is commented
+    
+    // const [editMode, setEditMode] = useState(false);
 
-    const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined);
+    // const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined);
 
-    function handleSelectPatient(patient: Patient) {
-        setSelectedPatient(patient);
-        setEditMode(true);
-    }
+    // function handleSelectPatient(patient: Patient) {
+    //     setSelectedPatient(patient);
+    //     setEditMode(true);
+    // }
 
-    function cancelEdit() {
-        if (selectedPatient) setSelectedPatient(undefined);
-        setEditMode(false);
-    }
+    // function cancelEdit() {
+    //     if (selectedPatient) setSelectedPatient(undefined);
+    //     setEditMode(false);
+    // }
 
-    if (editMode) return <PatientForm patient={selectedPatient} cancelEdit={cancelEdit} />
+    // if (editMode) return <PatientForm patient={selectedPatient} cancelEdit={cancelEdit} />
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -52,9 +51,9 @@ export default function Patients() {
     const canBeOpen = open && Boolean(anchorEl);
     const id = canBeOpen ? 'spring-popper' : undefined;
 
-    // useEffect(() => {
-    //     if (!patientsLoaded) dispatch(fetchPatientsAsync());
-    // }, [patientsLoaded, dispatch]);
+    useEffect(() => {
+        if (!patientsLoaded) dispatch(fetchPatientsAsync());
+    }, [patientsLoaded, dispatch]);
 
     if (!patientsLoaded || !metaData) {
         return (
@@ -86,7 +85,8 @@ export default function Patients() {
                                 <PatientSearch />
                             </div>
                             <div className="addPatientButton">
-                                <Button onClick={() => setEditMode(true)} className="button" startIcon={<AddRoundedIcon />}>Add Patient</Button>
+                                {/* <Button onClick={() => setEditMode(true)} className="button" startIcon={<AddRoundedIcon />}>Add Patient</Button> */}
+                                <Button className="button" startIcon={<AddRoundedIcon />}>Add Patient</Button>
                             </div>
                             <div className="addFilterButton">
                                 <Button className="button" startIcon={<SortRoundedIcon />} onClick={handleClick}>Filter</Button>

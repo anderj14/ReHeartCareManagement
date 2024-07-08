@@ -1,4 +1,4 @@
-import React from 'react'
+import formatDateTime from '../../../app/components/formatDateTime';
 import { PhysicalExamination } from '../../../app/Models/physicalExamination'
 import { Box, Card, CardContent } from '@mui/material';
 
@@ -21,7 +21,7 @@ export default function PhysicalExaminationPatient({ physicalExamination }: Prop
                                 <section>
                                     <Box className="details">
                                         <strong>Date: </strong>
-                                        <span>{new Date(latestPhysicalExaminationPatient.date).toLocaleDateString()}</span>
+                                        <span>{formatDateTime(latestPhysicalExaminationPatient.date)}</span>
                                     </Box>
                                     <Box className="details">
                                         <strong>Time: </strong>
@@ -33,14 +33,14 @@ export default function PhysicalExaminationPatient({ physicalExamination }: Prop
                                     </Box>
                                     <Box className="details">
                                         <strong>Maximum Heart Rate: </strong>
-                                        <span>{latestPhysicalExaminationPatient.maxHeartRate}</span>
+                                        <span>{latestPhysicalExaminationPatient.maxHeartRate} bpm</span>
                                     </Box>
+                                </section>
+                                <section>
                                     <Box className="details">
                                         <strong>Peak Pressure: </strong>
                                         <span>{latestPhysicalExaminationPatient.peakPressure}</span>
                                     </Box>
-                                </section>
-                                <section>
                                     <Box className="details">
                                         <strong>Exercise-induced Symptoms: </strong>
                                         <span>{latestPhysicalExaminationPatient.exerciseInducedSymptoms}</span>
@@ -48,14 +48,6 @@ export default function PhysicalExaminationPatient({ physicalExamination }: Prop
                                     <Box className="details">
                                         <strong>Abnormal ECG Findings: </strong>
                                         <span>{latestPhysicalExaminationPatient.abnormalEcgFindings}</span>
-                                    </Box>
-                                    <Box className="details">
-                                        <strong>Echocardiogram Image: </strong>
-                                        <span>{latestPhysicalExaminationPatient.imageEco}</span>
-                                    </Box>
-                                    <Box className="details">
-                                        <strong>Stress Test Image: </strong>
-                                        <span>{latestPhysicalExaminationPatient.imageStress}</span>
                                     </Box>
                                     <Box className="details">
                                         <strong>Conclusion: </strong>

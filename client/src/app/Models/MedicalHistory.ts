@@ -1,16 +1,16 @@
 export interface MedicalHistory {
-    id: number
-    date: string
-    previousHeartDisease: string
-    highBloodPressure: string
-    diabetes: string
-    hyperlipidemia: string
-    obesity: string
-    smoking: string
-    cardiacProceduresSurgeries: string
-    systemicDiseases: string
-    medications: string
-    familyDiseases: string
-    patient: string
-  }
-  
+  id: number
+  date: string
+  previousHeartDisease: boolean
+  highBloodPressure: boolean
+  diabetes: boolean
+  hyperlipidemia: boolean
+  obesity: boolean
+  smoking: boolean
+  cardiacProcedures: string
+  systemicDiseases: string
+  medications: string
+  familyDiseases: string
+  otherDetails: string
+  patient: string
+}

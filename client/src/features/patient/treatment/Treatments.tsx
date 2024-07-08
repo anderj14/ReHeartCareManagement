@@ -21,7 +21,7 @@ export default function Treatments() {
 
     return (
         <div className="contentPatient">
-            <Breadcrumb page="Blood Tests" />
+            <Breadcrumb page="Treatments" />
 
             <Box sx={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant="h5" key={patient?.patientName}>

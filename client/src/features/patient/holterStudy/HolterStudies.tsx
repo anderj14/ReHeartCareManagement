@@ -4,7 +4,6 @@ import { patientSelectors } from '../patientSlice';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
 import Breadcrumb from '../../../app/components/Breadcrumb';
-import BloodTestList from '../bloodTest/BloodTestList';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { useEffect } from 'react';
 import HolterStudyList from './HolterStudyList';

@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { format } from 'date-fns';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     echocardiograms: Echocardiogram[];
@@ -33,7 +33,7 @@ export default function EchocardiogramList({ echocardiograms }: Props) {
                         <TableBody className="body">
                             {echocardiograms.map((echocardiogram) => (
                                 <TableRow key={echocardiogram.id} component={Link} to={`/echocardiogram/patient/${patient?.id}/echocardiograms/${echocardiogram.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                    <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{echocardiogram.date ? format(new Date(echocardiogram.date), 'dd/MM/yyyy') : ''}</TableCell>
+                                    <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(echocardiogram.date)}</TableCell>
                                     <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{echocardiogram.cardiacDimensions}</TableCell>
                                     <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{echocardiogram.ejectionFraction}</TableCell>
                                     <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{echocardiogram.valveFunction}</TableCell>

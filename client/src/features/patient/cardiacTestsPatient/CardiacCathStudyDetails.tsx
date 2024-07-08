@@ -7,13 +7,13 @@ import { format } from 'date-fns';
 import Breadcrumb from '../../../app/components/Breadcrumb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 export default function CardiacCathStudyDetails() {
     const dispatch = useAppDispatch();
     const { id: patientId, cardiacCathStudyId } = useParams<{ id: string, cardiacCathStudyId: string }>();
     const patientIdNumber = patientId ? Number(patientId) : undefined;
     const cardiacCathStudyIdNumber = cardiacCathStudyId ? Number(cardiacCathStudyId) : undefined;
-    const { status: cardiacCathStudyByPatientStatus } = useAppSelector(state => state.cardiacCathStudy);
     const cardiacCathStudyByPatient = useAppSelector((state) =>
         cardiacCathStudyIdNumber ? cardiacCathStudySelectors.selectById(state, cardiacCathStudyIdNumber) : undefined
     );
@@ -40,8 +40,8 @@ export default function CardiacCathStudyDetails() {
                             <Typography gutterBottom variant="h5">
                                 {cardiacCathStudyByPatient?.patient}
                             </Typography>
-                            <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                                Cardiac Cath Study | {cardiacCathStudyByPatient?.date ? format(new Date(cardiacCathStudyByPatient.date), 'dd/MM/yyyy') : ''} | {cardiacCathStudyByPatient?.time}
+                            <Typography gutterBottom variant='body1' color="text.secondary">
+                                Cardiac Cath Study | {formatDateTime(cardiacCathStudyByPatient!.date)} | {cardiacCathStudyByPatient?.time}
                             </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
@@ -51,7 +51,7 @@ export default function CardiacCathStudyDetails() {
                                         Number of Locations in Main Coronary
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.numLocationMainCoronary}
+                                        {cardiacCathStudyByPatient?.locationMainCoronaryArteries}
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -67,7 +67,7 @@ export default function CardiacCathStudyDetails() {
                                         Description of Abnormality
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.descriptionAbnormality}
+                                        {cardiacCathStudyByPatient?.descriptionAbnormalities}
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -195,7 +195,7 @@ export default function CardiacCathStudyDetails() {
                                         Functions of Cardiac Chambers
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.functionsCardiacChambers}
+                                        {cardiacCathStudyByPatient?.cardiacChamberFunctions}
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -203,7 +203,7 @@ export default function CardiacCathStudyDetails() {
                                         Description of Complication
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.descriptionComplication}
+                                        {cardiacCathStudyByPatient?.descriptionComplications}
                                     </Typography>
                                 </Box>
                                 <Box>

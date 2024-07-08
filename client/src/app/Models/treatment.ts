@@ -7,5 +7,7 @@ export interface Treatment {
   otherTreatments: string
   sideEffects: string
   treatmentMonitoring: string
+  treatmentDuration: string
+  treatmentOutcome: string
   patient: string
 }

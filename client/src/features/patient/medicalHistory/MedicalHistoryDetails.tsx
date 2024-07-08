@@ -7,8 +7,8 @@ import { medicalHistorySelectors, fetchMedicalHistoryByPatientAsync } from './me
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { Box, Card, CardContent, Typography, CardActions, Button } from '@mui/material';
-import { format } from 'date-fns';
 import Breadcrumb from '../../../app/components/Breadcrumb';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 export default function MedicalHistoryDetails() {
 
@@ -46,7 +46,7 @@ export default function MedicalHistoryDetails() {
                             {medicalHistoryByPatient?.patient}
                         </Typography>
                         <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Medical History | {medicalHistoryByPatient?.date ? format(new Date(medicalHistoryByPatient.date), 'dd/MM/yyyy') : ''}
+                            Medical History | {formatDateTime(medicalHistoryByPatient?.date)}
                         </Typography>
                     </Box>
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', marginTop: '20px' }}>
@@ -55,7 +55,7 @@ export default function MedicalHistoryDetails() {
                                 Previous Heart Disease
                             </Typography>
                             <Typography>
-                                {medicalHistoryByPatient?.previousHeartDisease}
+                                {medicalHistoryByPatient?.previousHeartDisease ? 'YES' : 'NO'}
                             </Typography>
                         </Box>
                         <Box>
@@ -63,7 +63,7 @@ export default function MedicalHistoryDetails() {
                                 High Blood Pressure
                             </Typography>
                             <Typography>
-                                {medicalHistoryByPatient?.highBloodPressure}
+                                {medicalHistoryByPatient?.highBloodPressure ? 'YES' : 'NO'}
                             </Typography>
                         </Box>
                         <Box>
@@ -71,7 +71,7 @@ export default function MedicalHistoryDetails() {
                                 Diabetes
                             </Typography>
                             <Typography>
-                                {medicalHistoryByPatient?.diabetes}
+                                {medicalHistoryByPatient?.diabetes ? 'YES' : 'NO'}
                             </Typography>
                         </Box>
                         <Box>
@@ -79,7 +79,7 @@ export default function MedicalHistoryDetails() {
                                 Hyperlipidemia
                             </Typography>
                             <Typography>
-                                {medicalHistoryByPatient?.hyperlipidemia}
+                                {medicalHistoryByPatient?.hyperlipidemia ? 'YES' : 'NO'}
                             </Typography>
                         </Box>
                         <Box>
@@ -87,7 +87,7 @@ export default function MedicalHistoryDetails() {
                                 Obesity
                             </Typography>
                             <Typography>
-                                {medicalHistoryByPatient?.obesity}
+                                {medicalHistoryByPatient?.obesity ? 'YES' : 'NO'}
                             </Typography>
                         </Box>
                         <Box>
@@ -95,7 +95,7 @@ export default function MedicalHistoryDetails() {
                                 Smoking
                             </Typography>
                             <Typography>
-                                {medicalHistoryByPatient?.smoking}
+                                {medicalHistoryByPatient?.smoking ? 'YES' : 'NO'}
                             </Typography>
                         </Box>
                         <Box>
@@ -103,7 +103,7 @@ export default function MedicalHistoryDetails() {
                                 Cardiac Procedures/Surgeries
                             </Typography>
                             <Typography>
-                                {medicalHistoryByPatient?.cardiacProceduresSurgeries}
+                                {medicalHistoryByPatient?.cardiacProcedures}
                             </Typography>
                         </Box>
                         <Box>

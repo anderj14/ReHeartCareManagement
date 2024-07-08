@@ -1,3 +1,4 @@
+
 export interface BloodTest {
     id: number
     date: string
@@ -9,5 +10,23 @@ export interface BloodTest {
     cholesterolHDL: string
     cholesterolLDL: string
     triglycerides: string
-    patient: string
+    redBloodCell: string
+    meanCorpuscularVolume: string
+    meanCorpuscularHemoglobin: string
+    meanCorpuscularHemoglobinConcentration: string
+    redCellDistributionWidth: string
+    bloodUreaNitrogen: string
+    creatinine: string
+    sodium: string
+    potassium: string
+    chloride: string
+    bicarbonate: string
+    calcium: string
+    magnesium: string
+    neutrophils: string
+    lymphocytes: string
+    monocytes: string
+    eosinophils: string
+    basophils: string
+    patientId: number
 }

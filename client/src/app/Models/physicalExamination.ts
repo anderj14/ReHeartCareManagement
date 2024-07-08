@@ -7,8 +7,6 @@ export interface PhysicalExamination {
     peakPressure: string
     exerciseInducedSymptoms: string
     abnormalEcgFindings: string
-    imageEco: string
-    imageStress: string
     conclusion: string
     patient: string
 }

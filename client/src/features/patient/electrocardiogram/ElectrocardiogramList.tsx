@@ -1,24 +1,17 @@
-import React from 'react'
 import { Electrocardiogram } from '../../../app/Models/electrocardiogram';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { format } from 'date-fns';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     electrocardiograms: Electrocardiogram[];
 }
 
 export default function ElectrocardiogramList({ electrocardiograms }: Props) {
-    const history = useNavigate();
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
-
-    const handleRowClick = (electrocardiogramId: number) => {
-        console.log(electrocardiogramId);
-        history(`/electrocardiograms/${electrocardiogramId}`);
-    }
 
     return (
         <Box>
@@ -44,7 +37,7 @@ export default function ElectrocardiogramList({ electrocardiograms }: Props) {
                                 style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
                             >
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">
-                                    {ecg.date ? format(new Date(ecg.date), 'dd/MM/yyyy') : ''}
+                                    {formatDateTime(ecg.date)}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">
                                     {ecg.heartRhythm}

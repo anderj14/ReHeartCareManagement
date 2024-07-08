@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import NotFound from '../../../app/errors/NotFound';
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
 import { echocardiogramSelectors, fetchEchocardiogramByPatientAsync } from './echocardiogramSlice';
 import { Box, Card, CardContent, Typography, CardActions, Button } from '@mui/material';
-import { format } from 'date-fns';
 import Breadcrumb from '../../../app/components/Breadcrumb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import formatDateTime from '../../../app/components/formatDateTime';
+import { useEffect } from 'react';
 
 export default function EchocardiogramDetails() {
     const dispatch = useAppDispatch();
@@ -37,18 +37,18 @@ export default function EchocardiogramDetails() {
         <Box sx={{ margin: '30px 0px 0px 30px' }}>
             <Breadcrumb page="Echocardiograms" />
 
-            <Card sx={{ maxWidth: 745, padding: '20px' }}>
+            <Card sx={{ maxWidth: 945, padding: '20px' }}>
                 <CardContent>
                     <Box>
                         <Typography gutterBottom variant="h5">
                             {echocardiogramByPatient?.patient}
                         </Typography>
                         <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Echocardiogram | {echocardiogramByPatient?.date ? format(new Date(echocardiogramByPatient.date), 'dd/MM/yyyy') : ''}
+                            Echocardiogram | {formatDateTime(echocardiogramByPatient?.date)}
                         </Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px' }}>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
                                     Cardiac Dimensions
@@ -65,8 +65,6 @@ export default function EchocardiogramDetails() {
                                     {echocardiogramByPatient?.ejectionFraction}
                                 </Typography>
                             </Box>
-                        </Box>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
                                     Valve Function
@@ -83,8 +81,6 @@ export default function EchocardiogramDetails() {
                                     {echocardiogramByPatient?.velocitiesBloodFlows}
                                 </Typography>
                             </Box>
-                        </Box>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
                             <Box>
                                 <Typography variant="body1" color="text.secondary">
                                     Movement Cardiac Walls
@@ -101,16 +97,49 @@ export default function EchocardiogramDetails() {
                                     {echocardiogramByPatient?.pulmonaryArterialPressure}
                                 </Typography>
                             </Box>
-                        </Box>
-                        <Box>
-                            <Typography variant="body1" color="text.secondary">
-                                Blood Flow
-                            </Typography>
-                            <Typography>
-                                {echocardiogramByPatient?.bloodFlow}
-                            </Typography>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Blood Flow
+                                </Typography>
+                                <Typography>
+                                    {echocardiogramByPatient?.bloodFlow}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Indications
+                                </Typography>
+                                <Typography>
+                                    {echocardiogramByPatient?.indications}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Findings
+                                </Typography>
+                                <Typography>
+                                    {echocardiogramByPatient?.findings}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Clinical Impression
+                                </Typography>
+                                <Typography>
+                                    {echocardiogramByPatient?.clinicalImpression}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Technical Details
+                                </Typography>
+                                <Typography>
+                                    {echocardiogramByPatient?.technicalDetails}
+                                </Typography>
+                            </Box>
                         </Box>
                     </Box>
+
                 </CardContent>
                 <CardActions sx={{ padding: '0px', marginTop: '10px' }}>
                     <Button startIcon size="small" color="info"><ModeEditIcon sx={{ marginRight: '5px', }} />Edit</Button>

@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
 import { fetchPhysicalExaminationByPatientAsync, physicalExaminationSelectors } from './physicalExaminationSlice';
 import NotFound from '../../../app/errors/NotFound';
 import { Box, Card, CardContent, Typography, CardActions, Button } from '@mui/material';
-import { format } from 'date-fns';
 import Breadcrumb from '../../../app/components/Breadcrumb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import formatDateTime from '../../../app/components/formatDateTime';
+import { useEffect } from 'react';
 
 export default function PhysicalExaminationDetails() {
 
@@ -46,7 +46,7 @@ export default function PhysicalExaminationDetails() {
                             {physicalExaminationByPatient?.patient}
                         </Typography>
                         <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Physical Examination | {physicalExaminationByPatient?.date ? format(new Date(physicalExaminationByPatient.date), 'dd/MM/yyyy') : ''}
+                            Physical Examination | {formatDateTime(physicalExaminationByPatient.date)}
                         </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
@@ -72,7 +72,7 @@ export default function PhysicalExaminationDetails() {
                                     Max Heart Rate
                                 </Typography>
                                 <Typography>
-                                    {physicalExaminationByPatient?.maxHeartRate}
+                                    {physicalExaminationByPatient?.maxHeartRate} bpm
                                 </Typography>
                             </Box>
                             <Box>
@@ -97,22 +97,6 @@ export default function PhysicalExaminationDetails() {
                                 </Typography>
                                 <Typography>
                                     {physicalExaminationByPatient?.abnormalEcgFindings}
-                                </Typography>
-                            </Box>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Image Eco
-                                </Typography>
-                                <Typography>
-                                    {physicalExaminationByPatient?.imageEco}
-                                </Typography>
-                            </Box>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Image Stress
-                                </Typography>
-                                <Typography>
-                                    {physicalExaminationByPatient?.imageStress}
                                 </Typography>
                             </Box>
                             <Box sx={{ gridColumn: 'span 2' }}>

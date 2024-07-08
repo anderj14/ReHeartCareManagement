@@ -1,6 +1,5 @@
 import { Card, CardContent, Box, Typography, Button, CardActions } from '@mui/material';
-import React, { useEffect } from 'react';
-import { format } from 'date-fns';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
 import { fetchTreatmentByPatientAsync, treatmentSelectors } from './treatmentSlice';
 import { useParams } from 'react-router-dom';
@@ -8,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import Breadcrumb from '../../../app/components/Breadcrumb';
 import NotFound from '../../../app/errors/NotFound';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 export default function TreatmentDetails() {
     const dispatch = useAppDispatch();
@@ -44,7 +44,7 @@ export default function TreatmentDetails() {
                             {treatmentByPatient?.patient}
                         </Typography>
                         <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Treatment | {treatmentByPatient?.date ? format(new Date(treatmentByPatient.date), 'dd/MM/yyyy') : ''}
+                            Treatment | {formatDateTime(treatmentByPatient?.date)}
                         </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
@@ -97,6 +97,24 @@ export default function TreatmentDetails() {
                                 </Typography>
                                 <Typography>
                                     {treatmentByPatient?.treatmentMonitoring}
+                                </Typography>
+                            </Box>
+                        </Box>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Treatment Duration
+                                </Typography>
+                                <Typography>
+                                    {treatmentByPatient?.treatmentDuration}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Treatment Outcome
+                                </Typography>
+                                <Typography>
+                                    {treatmentByPatient?.treatmentOutcome}
                                 </Typography>
                             </Box>
                         </Box>

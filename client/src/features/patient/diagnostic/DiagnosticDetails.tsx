@@ -4,10 +4,10 @@ import { useAppDispatch, useAppSelector } from '../../../app/store/configureStor
 import { diagnosticSelectors, fetchDiagnosticByPatientAsync } from './diagnosticSlice';
 import NotFound from '../../../app/errors/NotFound';
 import { Box, Card, CardContent, Typography, CardActions, Button } from '@mui/material';
-import { format } from 'date-fns';
 import Breadcrumb from '../../../app/components/Breadcrumb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 export default function DiagnosticDetails() {
 
@@ -43,10 +43,10 @@ export default function DiagnosticDetails() {
                 <CardContent>
                     <Box>
                         <Typography gutterBottom variant="h5">
-                            {diagnosticByPatient?.conditionName}
+                            {diagnosticByPatient?.patient}
                         </Typography>
                         <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Diagnostic | {diagnosticByPatient?.date ? format(new Date(diagnosticByPatient.date), 'dd/MM/yyyy') : ''}
+                            Diagnostic | {formatDateTime(diagnosticByPatient.date)}
                         </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
@@ -80,6 +80,22 @@ export default function DiagnosticDetails() {
                             </Typography>
                             <Typography>
                                 {diagnosticByPatient?.riskAssessment}
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="body1" color="text.secondary">
+                                Recommendations
+                            </Typography>
+                            <Typography>
+                                {diagnosticByPatient?.recommendations}
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="body1" color="text.secondary">
+                                Follow Up Plan
+                            </Typography>
+                            <Typography>
+                                {diagnosticByPatient?.followUpPlan}
                             </Typography>
                         </Box>
                         <Box>

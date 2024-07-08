@@ -31,7 +31,6 @@ export const fetchPatientsAsync = createAsyncThunk<Patient[], void, { state: Roo
         try {
             const response = await agent.Patient.list(params);
             thunkAPI.dispatch(setMetaData(response.metadata));
-            // console.log(response);
             return response.items;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data });
@@ -56,7 +55,7 @@ function initParams() {
         pageIndex: 1,
         pageSize: 8,
         sort: 'patientName'
-    }
+    };
 }
 
 export const patientSlice = createSlice({
@@ -74,10 +73,10 @@ export const patientSlice = createSlice({
         },
         setPageIndex: (state, action) => {
             state.patientsLoaded = false;
-            state.patientParams = { ...state.patientParams, ...action.payload }
+            state.patientParams = { ...state.patientParams, ...action.payload };
         },
         setMetaData: (state, action) => {
-            state.metaData = action.payload
+            state.metaData = action.payload;
         },
         resetPatientParams: (state) => {
             state.patientParams = initParams();
@@ -106,10 +105,10 @@ export const patientSlice = createSlice({
         builder.addCase(fetchPatientAsync.rejected, (state, action) => {
             console.log(action);
             state.status = 'idle';
-        })
+        });
     }
 });
 
-export const { setPatientParams, resetPatientParams, setMetaData, setPageIndex  } = patientSlice.actions;
+export const { setPatientParams, resetPatientParams, setMetaData, setPageIndex } = patientSlice.actions;
 
 export const patientSelectors = patientsAdapter.getSelectors((state: RootState) => state.patient);

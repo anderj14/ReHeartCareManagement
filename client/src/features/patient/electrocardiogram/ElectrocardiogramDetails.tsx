@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
 import { electrocardiogramSelectors, fetchElectrocardiogramByPatientAsync } from './electrocardiogramSlice';
 import NotFound from '../../../app/errors/NotFound';
 import { Box, Button, Card, CardActions, CardContent, Typography } from '@mui/material';
-import { format } from 'date-fns';
 import Breadcrumb from '../../../app/components/Breadcrumb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 export default function ElectrocardiogramDetails() {
     const dispatch = useAppDispatch();
@@ -35,17 +35,17 @@ export default function ElectrocardiogramDetails() {
 
 
     return (
-        <Box sx={{ margin: '30px 0px 0px 30px' }}>
+        <Box sx={{ margin: '30px 30px 0px 30px' }}>
             <Breadcrumb page="Electrocardiograms" />
 
-            <Card sx={{ maxWidth: 745, padding: '20px' }}>
+            <Card sx={{ maxWidth: 945, padding: '20px' }}>
                 <CardContent>
                     <Box>
                         <Typography gutterBottom variant="h5">
                             Patient {electrocardiogramByPatient?.patient}
                         </Typography>
                         <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Electrocardiogram | {electrocardiogramByPatient?.date ? format(new Date(electrocardiogramByPatient.date), 'dd/MM/yyyy') : ''}
+                            Electrocardiogram | {formatDateTime(electrocardiogramByPatient.date)}
                         </Typography>
                     </Box>
                     <Box sx={{ marginTop: '20px' }}>
@@ -96,6 +96,54 @@ export default function ElectrocardiogramDetails() {
                                 </Typography>
                                 <Typography>
                                     {electrocardiogramByPatient?.artifacts}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Interpretation
+                                </Typography>
+                                <Typography>
+                                    {electrocardiogramByPatient?.interpretation}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Detailed Findings
+                                </Typography>
+                                <Typography>
+                                    {electrocardiogramByPatient?.detailedFindings}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Blood Pressure Systolic
+                                </Typography>
+                                <Typography>
+                                    {electrocardiogramByPatient?.bloodPressureSystolic} mmHg
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Blood Pressure Diastolic
+                                </Typography>
+                                <Typography>
+                                    {electrocardiogramByPatient?.bloodPressureDiastolic} mmHg
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Temperature
+                                </Typography>
+                                <Typography>
+                                    {electrocardiogramByPatient?.temperature}° Celcius
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="body1" color="text.secondary">
+                                    Clinical Notes
+                                </Typography>
+                                <Typography>
+                                    {electrocardiogramByPatient?.clinicalNotes}
                                 </Typography>
                             </Box>
                         </Box>

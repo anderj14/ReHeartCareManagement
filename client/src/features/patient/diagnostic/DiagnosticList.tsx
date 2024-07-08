@@ -1,10 +1,9 @@
-import React from 'react'
 import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { format } from 'date-fns';
 import { Diagnostics } from '../../../app/Models/diagnostic';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     diagnostics: Diagnostics[];
@@ -31,7 +30,7 @@ export default function DiagnosticList({ diagnostics }: Props) {
                     <TableBody className="body">
                         {diagnostics.map((diagnostic) => (
                             <TableRow key={diagnostic.id} component={Link} to={`/diagnostic/patient/${patient?.id}/diagnostics/${diagnostic.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{diagnostic.date ? format(new Date(diagnostic.date), 'dd/MM/yyyy') : ''}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(diagnostic.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{diagnostic.conditionName}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{diagnostic.classificationCondition}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{diagnostic.severity}</TableCell>

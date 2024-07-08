@@ -1,5 +1,5 @@
 
-import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Dialog, DialogContent, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ApiService from "../../services/ApiService";
@@ -34,6 +34,11 @@ import { fetchTreatmentsByPatientAsync, treatmentSelectors } from "./treatment/t
 import { Edit } from "@mui/icons-material";
 import { Patient } from "../../app/Models/patient";
 import PatientForm from "./admin-patient/PatientForm";
+import calculateAge from "../../app/components/calculateAge";
+import { fetchCardiologySurgeriesByPatientAsync, surgerySelectors } from "../surgery/surgerySlice";
+import CardiologySurgeryPatient from "./components/CardiolodySurgeryPatient";
+import { fetchStressTestsByPatientAsync, stressTestSelectors } from "./stressTest/stressTest";
+import StressTestPatient from "./components/StressTestPatient";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -96,13 +101,17 @@ export default function PatientDetail() {
     const diagnosticByPatient = useAppSelector(diagnosticSelectors.selectAll);
     const { treatmentsByPatientLoaded } = useAppSelector(state => state.treatment);
     const treatmentByPatient = useAppSelector(treatmentSelectors.selectAll);
+    const { surgeryByPatientLoaded } = useAppSelector(state => state.cardiologySurgery);
+    const surgeryByPatient = useAppSelector(surgerySelectors.selectAll);
+    const { stressTestByPatientLoaded } = useAppSelector(state => state.stressTest);
+    const stressTestByPatient = useAppSelector(stressTestSelectors.selectAll);
 
-    const [editMode, setEditMode] = useState(false); // Estado para controlar el modo de edición
-    const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined); // Estado para el paciente seleccionado
+    const [editMode, setEditMode] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined);
     const handleEditClick = () => {
         if (patient) {
-            setSelectedPatient(patient); // Establecer el paciente seleccionado para la edición
-            setEditMode(true); // Activar el modo de edición
+            setSelectedPatient(patient);
+            setEditMode(true);
         }
     };
 
@@ -154,6 +163,12 @@ export default function PatientDetail() {
         const fetchTreatment = async () => {
             if (!treatmentsByPatientLoaded) dispatch(fetchTreatmentsByPatientAsync(id));
         };
+        const fetchSurgery = async () => {
+            if (!surgeryByPatientLoaded) dispatch(fetchCardiologySurgeriesByPatientAsync(id));
+        };
+        const fetchStressTest = async () => {
+            if (!stressTestByPatientLoaded) dispatch(fetchStressTestsByPatientAsync(id));
+        }
 
         fetchPatient();
         fetchAppointments();
@@ -166,7 +181,9 @@ export default function PatientDetail() {
         fetchDiseaseHistory();
         fetchMedicalHistory();
         fetchDiagnostic();
-        fetchTreatment()
+        fetchTreatment();
+        fetchSurgery();
+        fetchStressTest();
     }, [id, dispatch, patient,
         bloodTestByPatientLoaded,
         cardiacCathStudyByPatientLoaded,
@@ -177,22 +194,9 @@ export default function PatientDetail() {
         diseaseHistoryByPatientLoaded,
         diagnosticByPatientLoaded,
         treatmentsByPatientLoaded,
+        surgeryByPatientLoaded,
+        stressTestByPatientLoaded
     ]);
-
-    function calculateAge(dob: any) {
-        if (dob) {
-            const today = new Date();
-            const birthDate = new Date(dob);
-            let age = today.getFullYear() - birthDate.getFullYear();
-
-            const monthDifference = today.getMonth() - birthDate.getMonth();
-            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age;
-        }
-        return undefined;
-    }
 
     const age = calculateAge(patient?.dob);
 
@@ -245,7 +249,7 @@ export default function PatientDetail() {
                                     <a href={`mailto:${patient.email}`} style={{ textTransform: 'lowercase', color: '#1f2dac', textDecoration: 'none' }}>{patient.email}</a>
                                     <p style={{ color: '#1f2dac' }}>{patient.phone}</p>
                                     <p style={{ color: '#1f2dac' }}>{patient.phone}</p>
-                                    <p style={{ color: '#1f2dac' }}>-----</p>
+                                    <p style={{ color: '#1f2dac' }}>{patient.fax}</p>
                                 </Box>
                             </div>
                         </Box>
@@ -259,9 +263,9 @@ export default function PatientDetail() {
                                     <p>Family Doctor:</p>
                                 </Box>
                                 <Box className="patientInfoData">
-                                    <p>Alberth West</p>
-                                    <p>Alejandra Roman</p>
-                                    <p>-----</p>
+                                    <p>{patient.referringDoctor}</p>
+                                    <p>{patient.assignedDoctor}</p>
+                                    <p>{patient.familyDoctor}</p>
                                 </Box>
                             </div>
                         </Box>
@@ -271,23 +275,23 @@ export default function PatientDetail() {
                             <div className="contentInfo">
                                 <Box className="active">
                                     <div className="circleTrigger"></div>
-                                    <p>PAT</p>
+                                    <p>{patient.status}</p>
                                 </Box>
                             </div>
                         </Box>
                         <div className="line"></div>
                         <Box>
-                            <Typography variant="h5" sx={{ fontWeight: '500', fontSize: '18px' }}>Patient Referrer Information</Typography>
+                            <Typography variant="h5" sx={{ fontWeight: '500', fontSize: '18px' }}>Emergency Contact</Typography>
                             <div className="contentInfo">
                                 <Box className="patientInfo">
-                                    <p>Referring Doctor:</p>
-                                    <p>Assigned Doctor:</p>
-                                    <p>Family Doctor:</p>
+                                    <p>Contact Name:</p>
+                                    <p>Number Phone:</p>
+                                    <p>Contact Relation:</p>
                                 </Box>
                                 <Box className="patientInfoData">
-                                    <p>Alberth West</p>
-                                    <p>Alejandra Roman</p>
-                                    <p>-----</p>
+                                    <p>{patient.emergencyContactName}</p>
+                                    <p>{patient.emergencyContactNumber}</p>
+                                    <p>{patient.emergencyContactRelation}</p>
                                 </Box>
                             </div>
                         </Box>
@@ -317,7 +321,7 @@ export default function PatientDetail() {
                             <Tab label="appointments" sx={{ textTransform: 'capitalize' }} />
                             <Tab label="Tests / Studies" {...a11yProps(0)} sx={{ textTransform: 'capitalize' }} />
                             <Tab label="Histories" {...a11yProps(1)} sx={{ textTransform: 'capitalize' }} />
-                            <Tab label="Diagnostics / Treatments" sx={{ textTransform: 'capitalize' }} />
+                            <Tab label="Diagnostics / Treatments / Surgeries" sx={{ textTransform: 'capitalize' }} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
@@ -327,7 +331,7 @@ export default function PatientDetail() {
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
                         <Box className="componentContainer">
-                            <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '350px' }}>
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25 }}>
                                 <Link to={`/bloodtests/patient/${patient.id}/bloodtests`} style={{ textDecoration: 'none' }}>
                                     <BloodTestPatient bloodTests={bloodTestsByPatient} />
                                 </Link>
@@ -348,6 +352,10 @@ export default function PatientDetail() {
                                 <Link to={`/physicalexamination/patient/${patient.id}/physicalexaminations`} style={{ textDecoration: 'none' }}>
                                     <PhysicalExaminationPatient physicalExamination={physicalExaminationByPatient} />
                                 </Link>
+                                <Link to={`/stresstest/patient/${patient.id}/stresstests`} style={{ textDecoration: 'none' }}>
+                                    <StressTestPatient stressTest={stressTestByPatient} />
+                                </Link>
+
                             </section>
                         </Box>
                     </CustomTabPanel>
@@ -367,12 +375,15 @@ export default function PatientDetail() {
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
                         <Box className="componentContainer">
-                            <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
+                            <section style={{ display: "flex", flexDirection: "column" }}>
+                                <Link to={`/cardiologysurgery/patient/${patient.id}/cardiologysurgeries`} style={{ textDecoration: 'none' }}>
+                                    <CardiologySurgeryPatient cardiologySurgery={surgeryByPatient} />
+                                </Link>
+                            </section>
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25 }}>
                                 <Link to={`/diagnostic/patient/${patient.id}/diagnostics`} style={{ textDecoration: 'none' }}>
                                     <DiagnosticPatient diagnostic={diagnosticByPatient} />
                                 </Link>
-                            </section>
-                            <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '100%' }}>
                                 <Link to={`/treatment/patient/${patient.id}/treatments`} style={{ textDecoration: 'none' }}>
                                     <TreatmentPatient treatment={treatmentByPatient} />
                                 </Link>

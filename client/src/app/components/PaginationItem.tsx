@@ -1,5 +1,5 @@
 // PaginationItem.js
-import { Box, Pagination as MuiPagination, Pagination, Typography } from '@mui/material';
+import { Box, Pagination as Pagination, Typography } from '@mui/material';
 import { Metadata } from '../Models/pagination';
 
 interface Props {

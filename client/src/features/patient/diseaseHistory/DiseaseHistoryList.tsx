@@ -3,7 +3,7 @@ import { DiseaseHistory } from "../../../app/Models/DiseaseHistory";
 import { useAppSelector } from "../../../app/store/configureStore";
 import { patientSelectors } from "../patientSlice";
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-import { format } from "date-fns";
+import formatDateTime from "../../../app/components/formatDateTime";
 
 interface Props {
     diseaseHistories: DiseaseHistory[];
@@ -33,7 +33,7 @@ export default function DiseaseHistoryList({ diseaseHistories }: Props) {
                                 style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
                             >
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">
-                                    {diseaseHistory.startDate ? format(new Date(diseaseHistory.startDate), 'dd/MM/yyyy') : ''}
+                                    {formatDateTime(diseaseHistory.startDate)}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{diseaseHistory.description}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{diseaseHistory.treatment}</TableCell>

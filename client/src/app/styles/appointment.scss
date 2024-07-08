@@ -120,9 +120,6 @@
 .rbc-events-container {
     width: 100% !important;
 
-    div {
-        height: 100px !important;
-    }
 }
 
 .rbc-day-slot .rbc-time-slot:after {
@@ -133,7 +130,7 @@
 }
 
 .rbc-timeslot-group {
-    min-height: 120px !important;
+    min-height: 100px !important;
 }
 
 .rbc-event-content {
@@ -144,6 +141,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    height: 100%;
 
     div {
         padding: 10px;
@@ -160,8 +158,6 @@
             color: $black;
         }
     }
-
-
 
     .MuiBox-root {
         max-width: 100%;
@@ -207,8 +203,8 @@
     border: $borderNone;
     box-sizing: border-box;
     box-shadow: none;
-    margin: 0;
-    padding: 2px 5px;
+    padding: 0 !important;
+    margin: 0 !important;
     border-radius: $borderRadius;
     color: $white;
     cursor: pointer;

@@ -7,5 +7,7 @@ export interface Diagnostics {
     severity: string
     riskAssessment: string
     conclusions: string
+    recommendations: string
+    followUpPlan: string
     patient: string
 }

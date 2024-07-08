@@ -1,4 +1,4 @@
-import React from 'react'
+import formatDateTime from '../../../app/components/formatDateTime';
 import { HolterStudy } from '../../../app/Models/holterStudy'
 import { Box, Card, CardContent } from '@mui/material';
 
@@ -21,7 +21,7 @@ export default function HolterStudyPatient({ holterStudy }: Props) {
                 <section>
                   <Box className="details">
                     <strong>Date: </strong>
-                    <span>{new Date(latestHolterStudy.date).toLocaleDateString()}</span>
+                    <span>{formatDateTime(latestHolterStudy.date)}</span>
                   </Box>
                   <Box className="details">
                     <strong>Time: </strong>
@@ -33,11 +33,11 @@ export default function HolterStudyPatient({ holterStudy }: Props) {
                   </Box>
                   <Box className="details">
                     <strong>Average Heart Rate: </strong>
-                    <span>{latestHolterStudy.averageHeartRate}</span>
+                    <span>{latestHolterStudy.averageHeartRate} BPM</span>
                   </Box>
                   <Box className="details">
                     <strong>Maximum Heart Rate: </strong>
-                    <span>{latestHolterStudy.maximumHeartRate}</span>
+                    <span>{latestHolterStudy.maximumHeartRate} BPM</span>
                   </Box>
                 </section>
                 <section>
@@ -46,16 +46,8 @@ export default function HolterStudyPatient({ holterStudy }: Props) {
                     <span>{latestHolterStudy.typeHeartRhythm}</span>
                   </Box>
                   <Box className="details">
-                    <strong>Arrhythmia Episodes: </strong>
-                    <span>{latestHolterStudy.arrhythmiaEpisodes}</span>
-                  </Box>
-                  <Box className="details">
                     <strong>Physical Activity: </strong>
                     <span>{latestHolterStudy.physicalActivity}</span>
-                  </Box>
-                  <Box className="details">
-                    <strong>Patient Symptoms: </strong>
-                    <span>{latestHolterStudy.patientSymptoms}</span>
                   </Box>
                   <Box className="details">
                     <strong>Conclusion: </strong>

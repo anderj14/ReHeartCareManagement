@@ -1,11 +1,9 @@
-import React from 'react'
 import { MedicalHistory } from '../../../app/Models/MedicalHistory';
 import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { format } from 'date-fns';
-
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     medicalHistories: MedicalHistory[];
@@ -33,13 +31,13 @@ export default function MedicalHistoryList({ medicalHistories }: Props) {
                     <TableBody className="body">
                         {medicalHistories.map((medicalHistory) => (
                             <TableRow key={medicalHistory.id} component={Link} to={`/medicalhistory/patient/${patient?.id}/medicalhistories/${medicalHistory.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{medicalHistory.date ? format(new Date(medicalHistory.date), 'dd/MM/yyyy') : ''}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.previousHeartDisease}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.highBloodPressure}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.diabetes}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.hyperlipidemia}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.obesity}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.smoking}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(medicalHistory.date)}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.previousHeartDisease ? 'YES' : 'NO'}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.highBloodPressure ? 'YES' : 'NO'}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.diabetes ? 'YES' : 'NO'}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.hyperlipidemia ? 'YES' : 'NO'}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.obesity ? 'YES' : 'NO'}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.smoking ? 'YES' : 'NO'}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

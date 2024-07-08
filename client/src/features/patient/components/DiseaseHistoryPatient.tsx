@@ -1,4 +1,4 @@
-import React from 'react'
+import formatDateTime from '../../../app/components/formatDateTime';
 import { DiseaseHistory } from '../../../app/Models/DiseaseHistory'
 import { Card, CardContent, Box } from '@mui/material'
 
@@ -19,17 +19,36 @@ export default function DiseaseHistoryPatient({ diseaseHistory }: Props) {
                         <div key={latestDiseaseHistory.id}>
                             <Box className="details">
                                 <strong>Start Date: </strong>
-                                <span>{new Date(latestDiseaseHistory.startDate).toLocaleDateString()}</span>
+                                <span>{formatDateTime(latestDiseaseHistory.startDate)}</span>
                             </Box>
                             <Box className="details">
                                 <strong>Description: </strong>
                                 <span>{latestDiseaseHistory.description}</span>
                             </Box>
                             <Box className="details">
+                                <strong>Diagnosis: </strong>
+                                <span>{latestDiseaseHistory.diagnosis}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Severity: </strong>
+                                <span>{latestDiseaseHistory.severity}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Notes: </strong>
+                                <span>{latestDiseaseHistory.notes}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Is Chronic: </strong>
+                                <span>{latestDiseaseHistory.isChronic ? 'YES' : 'NO'}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Doctor Name: </strong>
+                                <span>{latestDiseaseHistory.doctorName}</span>
+                            </Box>
+                            <Box className="details">
                                 <strong>Treatment: </strong>
                                 <span>{latestDiseaseHistory.treatment}</span>
                             </Box>
-
                         </div>
                     )}
                 </div>

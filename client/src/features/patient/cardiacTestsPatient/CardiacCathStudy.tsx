@@ -26,10 +26,10 @@ export default function CardiacCathStudy() {
 
                 <Box sx={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Typography variant="h5" key={patient?.id}>
-                        list of blood tests for patient {patient?.patientName}
+                        list of cardiac catheterization studies for patient {patient?.patientName}
                     </Typography>
                     <div className="addButton">
-                        <Button className="button" startIcon={<AddRoundedIcon />}>Add Blood Test</Button>
+                        <Button className="button" startIcon={<AddRoundedIcon />}>Add Catheterization Study</Button>
                     </div>
                 </Box>
 

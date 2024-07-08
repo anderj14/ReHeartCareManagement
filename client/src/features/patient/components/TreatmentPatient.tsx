@@ -1,4 +1,4 @@
-import React from 'react'
+import formatDateTime from '../../../app/components/formatDateTime';
 import { Treatment } from '../../../app/Models/treatment'
 import { Card, CardContent, Box } from '@mui/material';
 
@@ -21,7 +21,7 @@ export default function TreatmentPatient({ treatment }: Props) {
                         <div key={latestTreatment.id}>
                             <Box className="details">
                                 <strong>Date: </strong>
-                                <span>{new Date(latestTreatment.date).toLocaleDateString()}</span>
+                                <span>{formatDateTime(latestTreatment.date)}</span>
                             </Box>
                             <Box className="details">
                                 <strong>Medication: </strong>
@@ -47,7 +47,14 @@ export default function TreatmentPatient({ treatment }: Props) {
                                 <strong>Treatment Monitoring: </strong>
                                 <span>{latestTreatment.treatmentMonitoring}</span>
                             </Box>
-
+                            <Box className="details">
+                                <strong>Treatment Duration: </strong>
+                                <span>{latestTreatment.treatmentDuration}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Treatment Outcome: </strong>
+                                <span>{latestTreatment.treatmentOutcome}</span>
+                            </Box>
                         </div>
                     )}
                 </div>

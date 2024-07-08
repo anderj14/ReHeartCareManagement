@@ -7,5 +7,11 @@ export interface Electrocardiogram {
     heartRate: string
     abnormalities: string
     artifacts: string
+    interpretation: string
+    detailedFindings: string
+    bloodPressureSystolic: number
+    bloodPressureDiastolic: number
+    temperature: number
+    clinicalNotes: string
     patient: number
 }

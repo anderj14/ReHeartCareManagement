@@ -70,6 +70,8 @@ const Patient = {
 const CardiologySurgery = {
     list: (params: URLSearchParams) => requests.get('cardiologysurgeries', params),
     details: (id: number) => requests.get(`cardiologysurgeries/${id}`),
+    listByPatientId: (patientId: number) => requests.get(`cardiologysurgeries/patient/${patientId}/cardiologysurgeries`),
+    detailsPatientId: (patientId: number, cardiologySurgeryId: number) => requests.get(`cardiologysurgery/patient/${patientId}/cardiologysurgeries/${cardiologySurgeryId}`)
 };
 
 const Note = {
@@ -78,15 +80,11 @@ const Note = {
 };
 
 const BloodTest = {
-    list: (params: URLSearchParams) => requests.get('bloodtests', params),
-    details: (id: number) => requests.get(`bloodtests/${id}`),
     listByPatientId: (patientId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests`),
     detailsByPatientId: (patientId: number, bloodTestId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests/${bloodTestId}`),
 };
 
 const CardiacCathStudy = {
-    list: (params: URLSearchParams) => requests.get('cardiaccatheterizationstudy', params),
-    details: (id: number) => requests.get(`cardiaccatheterizationstudy/${id}`),
     listByPatientId: (patientId: number) => requests.get(`cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`),
     detailsByPatientId: (patientId: number, cardiacCathStudyId: number) => requests.get(`cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies/${cardiacCathStudyId}`),
 };
@@ -137,6 +135,11 @@ const Appointment = {
     details: (id: number) => requests.get(`appointment/${id}`),
 };
 
+const StressTest = {
+    listByPatientId: (patientId: number) => requests.get(`stresstest/patient/${patientId}/stresstests`),
+    detailsByPatientId: (patientId: number, treatmentId: number) => requests.get(`stresstest/patient/${patientId}/stresstests/${treatmentId}`),
+};
+
 const TestErrors = {
     get400Error: () => requests.get('buggy/badrequest'),
     get401Error: () => requests.get('buggy/unauthorized'),
@@ -167,6 +170,7 @@ const agent = {
     Diagnostic,
     Treatment,
     Appointment,
+    StressTest,
 };
 
 export default agent;

@@ -5,16 +5,22 @@ export interface CardiologySurgery {
     time: string
     procedureDescription: string
     notes: string
-    isEmergency: string
-    isElective: string
+    isEmergency: boolean
+    isElective: boolean
     operationRoom: string
     preOpDiagnosis: string
     postOpDiagnosis: string
-    isSuccessful: string
+    isSuccessful: boolean
     duration: number
     cardiacCondition: string
-    isMinimallyInvasive: string
-    patient: string
+    isMinimallyInvasive: boolean
+    complications: string
+    postOperativeStatus: string
+    anesthesiaType: string
+    surgicalTeam: string
+    intraoperativeFindings: string
+    postOperativeInstructions: string
+    patient: number
 }
 
 export interface CardiologySurgeryParams {

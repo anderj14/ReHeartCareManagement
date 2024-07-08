@@ -1,9 +1,9 @@
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Box } from '@mui/material';
-import { format } from 'date-fns';
 import { BloodTest } from '../../../app/Models/bloodTest';
 import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     bloodTests: BloodTest[];
@@ -31,7 +31,7 @@ export default function BloodTestList({ bloodTests }: Props) {
                     <TableBody className="body">
                         {bloodTests.map((bloodTest) => (
                             <TableRow key={bloodTest.id} component={Link} to={`/bloodtests/patient/${patient?.id}/bloodtests/${bloodTest.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{bloodTest.date ? format(new Date(bloodTest.date), 'dd/MM/yyyy') : ''}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(bloodTest.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.hemoglobin}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.hematocrit}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.whiteBloodCell}</TableCell>

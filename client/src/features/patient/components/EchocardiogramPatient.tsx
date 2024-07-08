@@ -1,4 +1,4 @@
-import React from 'react'
+import formatDateTime from '../../../app/components/formatDateTime';
 import { Echocardiogram } from '../../../app/Models/echocardiogram'
 import { Card, CardContent, Box } from '@mui/material';
 
@@ -19,7 +19,7 @@ export default function EchocardiogramPatient({ echocardiogram }: Props) {
                         <div key={latestEchocardiogram.id}>
                             <Box className="details">
                                 <strong>Date: </strong>
-                                <span>{new Date(latestEchocardiogram.date).toLocaleDateString()}</span>
+                                <span>{formatDateTime(latestEchocardiogram.date)}</span>
                             </Box>
                             <Box className="details">
                                 <strong>Cardiac Dimensions: </strong>
@@ -48,6 +48,22 @@ export default function EchocardiogramPatient({ echocardiogram }: Props) {
                             <Box className="details">
                                 <strong>Blood Flow: </strong>
                                 <span>{latestEchocardiogram.bloodFlow}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Indications: </strong>
+                                <span>{latestEchocardiogram.indications}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Findings: </strong>
+                                <span>{latestEchocardiogram.findings}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Clinical Impression: </strong>
+                                <span>{latestEchocardiogram.clinicalImpression}</span>
+                            </Box>
+                            <Box className="details">
+                                <strong>Technical Details: </strong>
+                                <span>{latestEchocardiogram.technicalDetails}</span>
                             </Box>
                         </div>
                     )}

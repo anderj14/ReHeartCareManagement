@@ -3,7 +3,6 @@ import { Box, Typography, Card, CardContent, Button } from "@mui/material";
 import Breadcrumb from "../../app/components/Breadcrumb";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
-import CardiologySurgeryList from "./CardiologySurgeryList";
 import '../../app/styles/surgery.scss'
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchCardiologySurgeriesAsync, setCardiologySurgeryParams, surgerySelectors } from "./surgerySlice";
@@ -11,6 +10,7 @@ import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import CardiologySurgerySearch from "./CardiologySurgerySearch";
 import Pager from "../../app/components/Pager";
 import PaginationItem from "../../app/components/PaginationItem";
+import CardiologySurgeryList from "../patient/cardiologySurgery/CardiologySurgeryList";
 
 const sortOptions = [
   { value: 'patientName', label: 'Alphabetical' },
@@ -21,14 +21,14 @@ const sortOptions = [
 export default function CardiologySurgeries() {
 
   const cardiologySurgeries = useAppSelector(surgerySelectors.selectAll);
-  const { surgieriesLoaded, cardiologySurgeryParams, metaData, status } = useAppSelector(state => state.cardiologySurgery);
+  const { surgeriesLoaded, cardiologySurgeryParams, metaData, status } = useAppSelector(state => state.cardiologySurgery);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
-    if (!surgieriesLoaded) dispatch(fetchCardiologySurgeriesAsync());
-  }, [surgieriesLoaded, dispatch]);
+    if (!surgeriesLoaded) dispatch(fetchCardiologySurgeriesAsync());
+  }, [surgeriesLoaded, dispatch]);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -83,16 +83,16 @@ export default function CardiologySurgeries() {
         {status === 'pendingFetchCardiologySurgeriesAsync' && (
           <Typography variant="h6">Loading Surgeries...</Typography>
         )}
-        {surgieriesLoaded && cardiologySurgeries.length === 0 && (
+        {surgeriesLoaded && cardiologySurgeries.length === 0 && (
           <Typography variant="h6">No Surgeries Found</Typography>
         )}
-        {surgieriesLoaded && cardiologySurgeries.length > 0 && (
+        {surgeriesLoaded && cardiologySurgeries.length > 0 && (
           <div className="surgeryList">
             <CardiologySurgeryList cardiologySurgeries={cardiologySurgeries} />
           </div>
         )}
       </Box>
-      {surgieriesLoaded && (
+      {surgeriesLoaded && (
         <Box marginTop={'30px'}>
           {metaData && (
             <PaginationItem

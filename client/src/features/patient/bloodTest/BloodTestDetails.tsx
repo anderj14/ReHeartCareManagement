@@ -4,21 +4,24 @@ import { useParams } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import Breadcrumb from '../../../app/components/Breadcrumb';
-import { format } from 'date-fns';
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
 import { bloodTestSelectors, fetchBloodTestByPatientAsync } from './bloodTestSlice';
 import NotFound from '../../../app/errors/NotFound';
+import { patientSelectors } from '../patientSlice';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 export default function BloodTestDetails() {
     const dispatch = useAppDispatch();
     const { id: patientId, bloodTestId } = useParams<{ id: string, bloodTestId: string }>();
     const patientIdNumber = patientId ? Number(patientId) : undefined;
     const bloodTestIdNumber = bloodTestId ? Number(bloodTestId) : undefined;
+    const { id } = useParams<{ id: any }>();
 
     const { status: bloodTestsByPatientStatus } = useAppSelector(state => state.bloodTest);
     const bloodTestByPatient = useAppSelector((state) =>
         bloodTestIdNumber ? bloodTestSelectors.selectById(state, bloodTestIdNumber) : undefined
     );
+    const patient = useAppSelector(state => patientSelectors.selectById(state, id));
 
     useEffect(() => {
         const fetchBloodTestIdByPatientId = async () => {
@@ -40,11 +43,11 @@ export default function BloodTestDetails() {
             <Card sx={{ maxWidth: 745, padding: '20px' }}>
                 <CardContent>
                     <Box>
-                        <Typography gutterBottom variant="h5">
-                            {bloodTestByPatient?.patient}
+                        <Typography gutterBottom variant="h5" key={patient?.id}>
+                            {patient?.patientName}
                         </Typography>
                         <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Blood Test | {bloodTestByPatient?.date ? format(new Date(bloodTestByPatient.date), 'dd/MM/yyyy') : ''}
+                            Blood Test | {formatDateTime(bloodTestByPatient.date)}
                         </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>

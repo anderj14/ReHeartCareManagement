@@ -1,6 +1,6 @@
-import React from 'react'
 import { CardiacCathStudy } from '../../../app/Models/cardiacCathStudy'
 import { Card, CardContent, Box } from '@mui/material';
+import formatDateTime from '../../../app/components/formatDateTime';
 
 interface Props {
     cardiacCathStudy: CardiacCathStudy[];
@@ -22,23 +22,23 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                             <section>
                                 <Box className="details">
                                     <strong>Date: </strong>
-                                    <span>{new Date(latestCardiacCathStudyPatient.date).toLocaleDateString()}</span>
+                                    <span>{formatDateTime(latestCardiacCathStudyPatient.date)}</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Time: </strong>
                                     <span>{latestCardiacCathStudyPatient.time}</span>
                                 </Box>
                                 <Box className="details">
-                                    <strong>Number of Main Coronary Locations: </strong>
-                                    <span>{latestCardiacCathStudyPatient.numLocationMainCoronary}</span>
+                                    <strong>Location of Main Coronary Artery: </strong>
+                                    <span>{latestCardiacCathStudyPatient.locationMainCoronaryArteries}</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Blockage in Each Coronary Artery: </strong>
                                     <span>{latestCardiacCathStudyPatient.blockageEachCoronaryArtery}</span>
                                 </Box>
                                 <Box className="details">
-                                    <strong>Description of Abnormality: </strong>
-                                    <span>{latestCardiacCathStudyPatient.descriptionAbnormality}</span>
+                                    <strong>Description of Abnormalities: </strong>
+                                    <span>{latestCardiacCathStudyPatient.descriptionAbnormalities}</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Blood Pressure in Aorta: </strong>
@@ -104,11 +104,11 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                                 </Box>
                                 <Box className="details">
                                     <strong>Functional Status of Cardiac Chambers: </strong>
-                                    <span>{latestCardiacCathStudyPatient.functionsCardiacChambers}</span>
+                                    <span>{latestCardiacCathStudyPatient.cardiacChamberFunctions}</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Description of Complications: </strong>
-                                    <span>{latestCardiacCathStudyPatient.descriptionComplication}</span>
+                                    <span>{latestCardiacCathStudyPatient.descriptionComplications}</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Conclusion: </strong>
