@@ -19,10 +19,11 @@ import { stressTestSlice } from "../../features/patient/stressTest/stressTest";
 
 export const store = configureStore({
     reducer: {
+        // Account related reducer
         account: accountSlice.reducer,
+
+        // Patient related reducers
         patient: patientSlice.reducer,
-        cardiologySurgery: surgerySlice.reducer,
-        note: noteSlice.reducer,
         bloodTest: bloodTestSlice.reducer,
         cardiacCathStudy: cardiaccathstudySlice.reducer,
         electrocardiogram: electrocardiogramSlice.reducer,
@@ -33,8 +34,12 @@ export const store = configureStore({
         medicalHistory: medicalHistorySlice.reducer,
         diagnostic: diagnosticSlice.reducer,
         treatment: treatmentSlice.reducer,
-        appointment: appointmentSlice.reducer,
         stressTest: stressTestSlice.reducer,
+
+        // Other reducers
+        cardiologySurgery: surgerySlice.reducer,
+        note: noteSlice.reducer,
+        appointment: appointmentSlice.reducer,
     }
 });
 

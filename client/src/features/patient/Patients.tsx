@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import '../../app/styles/patient.scss';
 import Breadcrumb from "../../app/components/Breadcrumb";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
@@ -11,6 +11,8 @@ import PatientSearch from "./PatientSearch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import PaginationItem from "../../app/components/PaginationItem";
 import Pager from "../../app/components/Pager";
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 
 const sortOptions = [
     { value: 'patientName', label: 'Alphabetical' },
@@ -20,28 +22,11 @@ const sortOptions = [
 
 export default function Patients() {
     const patients = useAppSelector(patientSelectors.selectAll);
-    const { patientsLoaded, patientParams, metaData } = useAppSelector(state => state.patient);
+    const { patientsLoaded, patientParams, metaData, status } = useAppSelector(state => state.patient);
     const dispatch = useAppDispatch();
     const [open, setOpen] = useState(false);
+    const [openForm, setOpenForm] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-    // For the moment this part of the code is commented
-    
-    // const [editMode, setEditMode] = useState(false);
-
-    // const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined);
-
-    // function handleSelectPatient(patient: Patient) {
-    //     setSelectedPatient(patient);
-    //     setEditMode(true);
-    // }
-
-    // function cancelEdit() {
-    //     if (selectedPatient) setSelectedPatient(undefined);
-    //     setEditMode(false);
-    // }
-
-    // if (editMode) return <PatientForm patient={selectedPatient} cancelEdit={cancelEdit} />
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -55,11 +40,38 @@ export default function Patients() {
         if (!patientsLoaded) dispatch(fetchPatientsAsync());
     }, [patientsLoaded, dispatch]);
 
-    if (!patientsLoaded || !metaData) {
-        return (
-            <Typography variant="h6">Loading patients...</Typography>
-        );
-    }
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpenForm(newOpen);
+    };
+    const DrawerList = (
+        <Box sx={{ width: 650 }} role="presentation" onClick={toggleDrawer(false)}>
+            <List>
+                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                    <ListItem key={text} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+            <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                    <ListItem key={text} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+    );
 
     return (
         <div className="contentPatient">
@@ -74,10 +86,9 @@ export default function Patients() {
                         <Box>
                             <Typography variant="h6">Patient List</Typography>
                             <div className="pager">
-                                {/* <p>
-                                    Showing <strong>1 - 6</strong> of <strong>6</strong> result
-                                </p> */}
-                                <Pager metaData={metaData} />
+                                {metaData && (
+                                    <Pager metaData={metaData} />
+                                )}
                             </div>
                         </Box>
                         <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '-35px' }}>
@@ -85,8 +96,10 @@ export default function Patients() {
                                 <PatientSearch />
                             </div>
                             <div className="addPatientButton">
-                                {/* <Button onClick={() => setEditMode(true)} className="button" startIcon={<AddRoundedIcon />}>Add Patient</Button> */}
-                                <Button className="button" startIcon={<AddRoundedIcon />}>Add Patient</Button>
+                                <Button className="button" onClick={toggleDrawer(true)} startIcon={<AddRoundedIcon />}>Add Patient</Button>
+                                <Drawer open={openForm} onClose={toggleDrawer(false)} anchor="right">
+                                    {DrawerList}
+                                </Drawer>
                             </div>
                             <div className="addFilterButton">
                                 <Button className="button" startIcon={<SortRoundedIcon />} onClick={handleClick}>Filter</Button>
@@ -106,18 +119,25 @@ export default function Patients() {
 
             <Box sx={{ marginTop: '20px' }}>
                 <div className="patientList">
-                    <PatientList patients={patients} />
+                    {status === 'pendingFetchCardiologySurgeriesAsync' && (
+                        <Typography variant="h6">Loading Surgeries...</Typography>
+                    )}
+                    {patientsLoaded && patients.length === 0 && (
+                        <Typography variant="h6">No Surgeries Found</Typography>
+                    )}
+                    {patientsLoaded && patients.length > 0 && (
+                        <PatientList patients={patients} />
+                    )}
                 </div>
             </Box>
             <Box marginTop='30px'>
-
-                <PaginationItem
-                    metaData={metaData}
-                    onPageChange={(page: number) => dispatch(setPatientParams({ pageIndex: page }))}
-                />
+                {metaData && (
+                    <PaginationItem
+                        metaData={metaData}
+                        onPageChange={(page: number) => dispatch(setPatientParams({ pageIndex: page }))}
+                    />
+                )}
             </Box>
-            {/* <Button onClick={() => handleSelectPatient(patient)} startIcon={<Edit />} /> */}
-
         </div>
     )
 }

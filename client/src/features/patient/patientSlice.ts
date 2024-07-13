@@ -31,8 +31,10 @@ export const fetchPatientsAsync = createAsyncThunk<Patient[], void, { state: Roo
         try {
             const response = await agent.Patient.list(params);
             thunkAPI.dispatch(setMetaData(response.metadata));
+            console.log(response);
             return response.items;
         } catch (error: any) {
+            console.error('Failed to fetch patients:', error);
             return thunkAPI.rejectWithValue({ error: error.data });
         }
     }
@@ -55,17 +57,19 @@ function initParams() {
         pageIndex: 1,
         pageSize: 8,
         sort: 'patientName'
-    };
+    }
+}
+
+const initialState: PatientState = {
+    patientsLoaded: false,
+    status: 'idle',
+    patientParams: initParams(),
+    metaData: null
 }
 
 export const patientSlice = createSlice({
     name: 'patient',
-    initialState: patientsAdapter.getInitialState<PatientState>({
-        patientsLoaded: false,
-        status: 'idle',
-        patientParams: initParams(),
-        metaData: null
-    }),
+    initialState: patientsAdapter.getInitialState<PatientState>(initialState),
     reducers: {
         setPatientParams: (state, action) => {
             state.patientsLoaded = false;
@@ -73,10 +77,10 @@ export const patientSlice = createSlice({
         },
         setPageIndex: (state, action) => {
             state.patientsLoaded = false;
-            state.patientParams = { ...state.patientParams, ...action.payload };
+            state.patientParams = { ...state.patientParams, ...action.payload }
         },
         setMetaData: (state, action) => {
-            state.metaData = action.payload;
+            state.metaData = action.payload
         },
         resetPatientParams: (state) => {
             state.patientParams = initParams();
@@ -92,8 +96,8 @@ export const patientSlice = createSlice({
             state.patientsLoaded = true;
         });
         builder.addCase(fetchPatientsAsync.rejected, (state, action) => {
-            console.log(action.payload);
             state.status = 'idle';
+            console.error('Fetch patients failed:', action.payload);
         });
         builder.addCase(fetchPatientAsync.pending, (state) => {
             state.status = 'pendingFetchPatient';
@@ -103,12 +107,13 @@ export const patientSlice = createSlice({
             state.status = 'idle';
         });
         builder.addCase(fetchPatientAsync.rejected, (state, action) => {
-            console.log(action);
             state.status = 'idle';
-        });
+            console.error('Fetch patient failed:', action.payload);
+        })
     }
 });
 
 export const { setPatientParams, resetPatientParams, setMetaData, setPageIndex } = patientSlice.actions;
 
 export const patientSelectors = patientsAdapter.getSelectors((state: RootState) => state.patient);
+
