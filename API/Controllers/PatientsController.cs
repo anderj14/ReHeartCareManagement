@@ -31,8 +31,7 @@ namespace API.Controllers
             IGenericRepository<Patient> patientRepo,
             UserManager<AppUser> userManager,
             ManagementContext context
-
-            )
+        )
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
@@ -41,40 +40,54 @@ namespace API.Controllers
             _context = context;
         }
 
+        // Retrieves the currently authenticated user based on the username from the claims
+        private async Task<AppUser> GetAuthenticatedUserAsync()
+        {
+            var userName = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return null; // Return null if no username is found
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+            return user; // Fetch the user details from the UserManager
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<PagedList<PatientDto>>> GetPatientsByUser([FromQuery] PatientSpecParams patientSpecParams)
         {
             try
             {
-                var userName = User.Identity.Name;
-
-                if (string.IsNullOrEmpty(userName))
-                {
-                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
-                }
-
-                var user = await _userManager.FindByNameAsync(userName);
+                var user = await GetAuthenticatedUserAsync();
 
                 if (user == null)
-                    return Unauthorized(new ApiResponse(400, "User not found"));
+                    return Unauthorized(new ApiResponse(401, "User not authenticated")); // Return 401 if user is not authenticated
 
+                // Define a filter expression to get only the patients associated with the authenticated user
                 Expression<Func<Patient, bool>> filter = patient => patient.AppUserId == user.Id;
 
+                // Create a specification for querying the patients
                 var spec = new PatientWithAllSpecification(patientSpecParams);
                 var countSpec = new PatientWithFiltersForCountSpecification(patientSpecParams);
 
+                // Get the total number of patients matching the filter
                 var totalItems = await _unitOfWork.Repository<Patient>().CountByUserAsync(filter, countSpec);
 
                 if (totalItems == 0)
                 {
+                    // Return an empty paginated list if no patients are found
                     return Ok(new PagedList<PatientDto>(new List<PatientDto>(), 0, patientSpecParams.PageIndex, patientSpecParams.PageSize));
                 }
 
+                // Retrieve the patients based on the filter and specification
                 var userPatients = await _unitOfWork.Repository<Patient>().ListAllByUserAsync(filter, spec, patientSpecParams.PageIndex, patientSpecParams.PageSize);
 
+                // Map the retrieved patients to the PatientDto
                 var data = _mapper.Map<IReadOnlyList<PatientDto>>(userPatients);
 
+                // Create a paginated list of patients
                 var paginatedPatients = new PagedList<PatientDto>(
                     data.ToList(),
                     totalItems,
@@ -82,13 +95,14 @@ namespace API.Controllers
                     patientSpecParams.PageSize
                 );
 
+                // Add pagination headers to the response
                 Response.AddPaginationHeader(paginatedPatients.MetaData);
 
-                return Ok(paginatedPatients);
+                return Ok(paginatedPatients); // Return the paginated list of patients
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}"); // Return 500 for internal server errors
             }
         }
 
@@ -98,83 +112,63 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PatientDto>> GetPatient(int id)
         {
-            var userName = User.Identity.Name;
-
-            if (string.IsNullOrEmpty(userName))
-            {
-                return Unauthorized(new ApiResponse(401, "User not authenticated"));
-            }
-
-            // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await GetAuthenticatedUserAsync();
 
             if (user == null)
-                return Unauthorized(new ApiResponse(401, "User not found"));
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated or not found")); // Return 401 if user is not authenticated
+            }
 
+            // Define a filter expression to get only the patient associated with the authenticated user
             Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == user.Id;
 
+            // Create a specification to query the patient by ID
             var spec = new PatientWithAllSpecification(id);
 
+            // Retrieve the patient based on the filter and specification
             var patient = await _unitOfWork.Repository<Patient>().GetEntityByUserAsync(filter, spec);
 
-            if (patient == null) return NotFound(new ApiResponse(404));
+            if (patient == null) return NotFound(new ApiResponse(404)); // Return 404 if the patient is not found
 
+            // Map the retrieved patient to PatientDto
             return _mapper.Map<Patient, PatientDto>(patient);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddPatientByUser([FromBody] PatientCreateDto patientDto)
+        public async Task<IActionResult> AddPatientByUser([FromBody] PatientCreateDto patientCreateDto)
         {
             try
             {
-                var userName = User.Identity.Name;
-
-                if (string.IsNullOrEmpty(userName))
+                if (!ModelState.IsValid)
                 {
-                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
+                    return BadRequest(new ApiResponse(400, "Invalid data")); // Return 400 for invalid data
                 }
 
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+                var user = await GetAuthenticatedUserAsync();
 
                 if (user == null)
-                    return Unauthorized(new ApiResponse(401, "User not found"));
-
-
-                var newPatient = new Patient
                 {
-                    AppUserId = user.Id,
-                    PatientName = patientDto.PatientName,
-                    CarnetIdentification = patientDto.CarnetIdentification,
-                    DOB = patientDto.DOB,
-                    Gender = patientDto.Gender,
-                    Address = patientDto.Address,
-                    Phone = patientDto.Phone,
-                    Email = patientDto.Email,
-                    SocialSecurity = patientDto.SocialSecurity
-                };
+                    return Unauthorized(new ApiResponse(401, "User not authenticated or not found")); // Return 401 if user is not authenticated
+                }
 
-                _context.Patients.Add(newPatient);
-                await _context.SaveChangesAsync();
+                // Map the PatientCreateDto to a new Patient entity
+                var newPatient = _mapper.Map<Patient>(patientCreateDto);
+                newPatient.AppUserId = user.Id; // Set the AppUserId for the new patient
 
-                var patient = new PatientDto
-                {
-                    Id = newPatient.Id,
-                    PatientName = newPatient.PatientName,
-                    CarnetIdentification = newPatient.CarnetIdentification,
-                    DOB = newPatient.DOB,
-                    Gender = newPatient.Gender,
-                    Address = newPatient.Address,
-                    Phone = newPatient.Phone,
-                    Email = newPatient.Email,
-                    SocialSecurity = newPatient.SocialSecurity
-                };
+                // _context.Patients.Add(newPatient); // Add the new patient to the context
+                _unitOfWork.Repository<Patient>().Add(newPatient);
+                // await _context.SaveChangesAsync(); // Save changes to the database
+                await _unitOfWork.Complete();
 
-                return CreatedAtAction(nameof(GetPatient), new { id = newPatient.Id }, patient);
+                // Map the new patient entity to PatientDto
+                var patient = _mapper.Map<PatientDto>(newPatient);
+
+                return CreatedAtAction(nameof(GetPatient), new { id = newPatient.Id }, patient); // Return 201 with the created patient details
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.Message); // Return 400 for exceptions
             }
         }
 
@@ -182,31 +176,53 @@ namespace API.Controllers
         [Authorize]
         public async Task<ActionResult<Patient>> UpdatePatient(int id, PatientCreateDto patientToUpdate)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse(400, "Invalid data")); // Return 400 for invalid data
+            }
+
+            var user = GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated or not found")); // Return 401 if user is not authenticated
+            }
+
+            // Retrieve the patient to update
             var patient = await _unitOfWork.Repository<Patient>().GetByIdAsync(id);
 
+            // Map the updated data from the DTO to the existing patient entity
             _mapper.Map(patientToUpdate, patient);
-            _unitOfWork.Repository<Patient>().Update(patient);
+            _unitOfWork.Repository<Patient>().Update(patient); // Mark the patient entity as updated
 
-            var result = await _unitOfWork.Complete();
+            var result = await _unitOfWork.Complete(); // Save changes to the database
 
-            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem updating patient information"));
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem updating patient information")); // Return 400 if the update fails
 
-            return Ok(patient);
+            return Ok(patientToUpdate); // Return 200 with the updated patient details
         }
 
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult> DeletePatient(int id)
         {
+            var user = await GetAuthenticatedUserAsync();
+
+            if (user == null)
+            {
+                return Unauthorized(new ApiResponse(401, "User not authenticated or not found")); // Return 401 if user is not authenticated
+            }
+
+            // Retrieve the patient to delete
             var patient = await _unitOfWork.Repository<Patient>().GetByIdAsync(id);
 
-            _unitOfWork.Repository<Patient>().Delete(patient);
+            _unitOfWork.Repository<Patient>().Delete(patient); // Mark the patient entity as deleted
 
-            var result = await _unitOfWork.Complete();
+            var result = await _unitOfWork.Complete(); // Save changes to the database
 
-            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem deleting patient information"));
+            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem deleting patient information")); // Return 400 if the deletion fails
 
-            return Ok();
+            return Ok(); // Return 200 on successful deletion
         }
     }
 }

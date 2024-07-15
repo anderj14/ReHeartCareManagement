@@ -20,5 +20,20 @@ namespace Core.Dtos.CreateDto
         public string Email { get; set; }
         [Required]
         public string SocialSecurity { get; set; }
+        [Required]
+        public string PolicyNumber { get; set; }
+        public string Fax { get; set; }
+        public string ReferringDoctor { get; set; }
+        public string AssignedDoctor { get; set; }
+        public string FamilyDoctor { get; set; }
+        public string EmergencyContactName { get; set; }
+        public string EmergencyContactNumber { get; set; }
+        public string EmergencyContactRelation { get; set; }
+        [Required]
+        public string MaritalStatus { get; set; }
+        [Required]
+        public string Occupation { get; set; }
+        [Required]
+        public int StatusId { get; set; }
     }
 }

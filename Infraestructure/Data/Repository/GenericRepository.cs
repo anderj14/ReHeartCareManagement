@@ -15,11 +15,6 @@ namespace Infraestructure.Data.Repository
             _context = context;
         }
 
-        public Task<List<T>> GetUserEntity(AppUser user)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);
@@ -58,15 +53,6 @@ namespace Infraestructure.Data.Repository
             return await query.ToListAsync();
         }
 
-        // public async Task<IReadOnlyList<Appointment>> ListAllAppointmentByUserAsync(Expression<Func<Appointment, bool>> filter)
-        // {
-        //     return await _context.Set<Appointment>()
-        //         .Include(a => a.Patient)
-        //         .Include(a => a.AppointmentStatus)
-        //         .Where(filter)
-        //         .ToListAsync();
-        // }
-
         public async Task<T> GetEntityByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec)
         {
             var query = ApplySpecification(spec);
@@ -86,6 +72,7 @@ namespace Infraestructure.Data.Repository
             return await query.CountAsync();
         }
 
+        // 'Set<T>()' is used to access the DbSet for the entity type.
         public void Add(T entity)
         {
             _context.Set<T>().Add(entity);
