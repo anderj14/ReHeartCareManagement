@@ -1,5 +1,5 @@
 
-import { Box, Button, Card, CardContent, Dialog, DialogContent, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Drawer, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ApiService from "../../services/ApiService";
@@ -108,16 +108,6 @@ export default function PatientDetail() {
 
     const [editMode, setEditMode] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined);
-    const handleEditClick = () => {
-        if (patient) {
-            setSelectedPatient(patient);
-            setEditMode(true);
-        }
-    };
-
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
 
     useEffect(() => {
         const fetchPatient = async () => {
@@ -198,15 +188,25 @@ export default function PatientDetail() {
         stressTestByPatientLoaded
     ]);
 
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
+
     const age = calculateAge(patient?.dob);
+
+    const handleEditClick = () => {
+        if (patient) {
+            setSelectedPatient(patient);
+            setEditMode(true);
+        }
+    };
+
+    const toggleDrawer = () => {
+        setEditMode(false);
+    };
 
     if (patientStatus.includes('pending')) return <h3>Loading...</h3>;
     if (!patient) return <NotFound />;
-
-    const handleClose = () => {
-        setEditMode(false);
-        setSelectedPatient(undefined);
-    };
 
     return (
         <div className="container">
@@ -302,13 +302,15 @@ export default function PatientDetail() {
                         </Button>
                     </CardContent>
                 </Card>
-
-                {/* Modal para el formulario de edición */}
-                <Dialog open={editMode} onClose={handleClose} fullWidth maxWidth="sm">
-                    <DialogContent>
-                        {selectedPatient && <PatientForm patient={selectedPatient} cancelEdit={handleClose} />}
-                    </DialogContent>
-                </Dialog>
+                <Drawer
+                    anchor="right"
+                    open={editMode}
+                    onClose={toggleDrawer}
+                >
+                    <Box sx={{ width: 600, p: 2 }}>
+                        <PatientForm patient={selectedPatient} cancelEdit={toggleDrawer} />
+                    </Box>
+                </Drawer>
 
                 <Card sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

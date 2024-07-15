@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Drawer, Grid, TextField, Typography } from "@mui/material";
 import '../../app/styles/patient.scss';
 import Breadcrumb from "../../app/components/Breadcrumb";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
@@ -11,8 +11,9 @@ import PatientSearch from "./PatientSearch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import PaginationItem from "../../app/components/PaginationItem";
 import Pager from "../../app/components/Pager";
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import AppTextInput from "../../app/components/AppTextInput";
+import { useForm } from "react-hook-form";
+import PatientForm from "./admin-patient/PatientForm";
 
 const sortOptions = [
     { value: 'patientName', label: 'Alphabetical' },
@@ -27,6 +28,8 @@ export default function Patients() {
     const [open, setOpen] = useState(false);
     const [openForm, setOpenForm] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { control, reset, handleSubmit } = useForm();
+
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -44,32 +47,10 @@ export default function Patients() {
         setOpenForm(newOpen);
     };
     const DrawerList = (
-        <Box sx={{ width: 650 }} role="presentation" onClick={toggleDrawer(false)}>
-            <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
+        <Box sx={{ width: 650, padding: '20px' }} role="presentation" onClick={toggleDrawer(false)}>
+            <PatientForm cancelEdit={function (): void {
+                throw new Error("Function not implemented.");
+            }} />
         </Box>
     );
 
