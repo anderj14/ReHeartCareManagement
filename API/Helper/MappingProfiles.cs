@@ -2,8 +2,10 @@ using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.CreateDto;
 using Core.Dtos.HolterStudyDtos;
+using Core.Dtos.Identity;
 using Core.Entities;
 using Core.Entities.HolterStudyInfo;
+using Core.Entities.Identity;
 
 namespace API.Helper
 {
@@ -11,6 +13,8 @@ namespace API.Helper
     {
         public MappingProfiles()
         {
+
+            CreateMap<AppUser, UserDto>();
             CreateMap<Patient, PatientDto>()
             .ForMember(d => d.Status, o => o.MapFrom(s => s.PatientStatus.PatientStatusName));
 

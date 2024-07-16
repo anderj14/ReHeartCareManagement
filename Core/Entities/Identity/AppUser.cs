@@ -6,7 +6,7 @@ namespace Core.Entities.Identity
     {
 
         public Photo Photo { get; set; }
-
+        
         public ICollection<Notes> Notes { get; set; } = new List<Notes>();
         public ICollection<Patient> Patients { get; set; } = new List<Patient>();
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

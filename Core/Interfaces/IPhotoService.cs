@@ -1,6 +1,5 @@
 
 using CloudinaryDotNet.Actions;
-using Core.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace Core.Interfaces
