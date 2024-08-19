@@ -137,7 +137,7 @@ namespace API.Controllers
         /// <returns>The updated additional test result.</returns>
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<ActionResult<AdditionalTestResultDto>> UpdateAdditionalTestResult(int id, [FromBody] AdditionalTestResultCreateDto additionalTestResultUpdateDto)
+        public async Task<ActionResult<AdditionalTestResultDto>> UpdateAdditionalTestResult(int id, AdditionalTestResultCreateDto additionalTestResultUpdateDto)
         {
             if (!ModelState.IsValid)
             {
@@ -168,6 +168,12 @@ namespace API.Controllers
                 if (holterStudy == null || holterStudy.Patient.AppUserId != user.Id)
                 {
                     return NotFound(new ApiResponse(404, "Additional test result not found or not authorized"));
+                }
+
+                // Validate that the provided HolterStudyId in the DTO matches the appointment HolterStudyId
+                if (additionalTestResult.HolterStudyId != additionalTestResultUpdateDto.HolterStudyId)
+                {
+                    return NotFound(new ApiResponse(404, "Additional test result does not belong to the specified holter study"));
                 }
 
                 // Map the updated details to the entity

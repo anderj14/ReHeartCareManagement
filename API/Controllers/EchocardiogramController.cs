@@ -227,6 +227,12 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
                 }
 
+                // Validate that the provided PatientId in the DTO matches the echocardiogram PatientId
+                if (echocardiogram.PatientId != echocardiogramUpdateDto.PatientId)
+                {
+                    return NotFound(new ApiResponse(404, "Echocardiogram does not belong to the specified patient"));
+                }
+
                 _mapper.Map(echocardiogramUpdateDto, echocardiogram);
 
                 _unitOfWork.Repository<Echocardiogram>().Update(echocardiogram);

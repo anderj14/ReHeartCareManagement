@@ -168,6 +168,12 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Surgery follow-up not found or not authorized"));
                 }
 
+                // Validate that the provided SurgeryFollowUpId in the DTO matches the medication SurgeryFollowUpId
+                if (medication.SurgeryFollowUpId != medicationUpdateDto.SurgeryFollowUpId)
+                {
+                    return NotFound(new ApiResponse(404, "Medication does not belong to the specified surgery follow up"));
+                }
+
                 // Map the update DTO to the existing medication entity.
                 _mapper.Map(medicationUpdateDto, medication);
 

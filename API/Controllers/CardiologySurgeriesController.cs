@@ -323,6 +323,12 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
                 }
 
+                // Validate that the provided PatientId in the DTO matches the cardiology surgery PatientId
+                if (cardiologySurgery.PatientId != cardiologySurgeryUpdateDto.PatientId)
+                {
+                    return NotFound(new ApiResponse(404, "Cardiology surgery does not belong to the specified patient"));
+                }
+
                 // Maps the updated details from the DTO to the existing surgery entity
                 _mapper.Map(cardiologySurgeryUpdateDto, cardiologySurgery);
                 _unitOfWork.Repository<CardiologySurgery>().Update(cardiologySurgery);

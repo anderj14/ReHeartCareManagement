@@ -168,6 +168,12 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Medication administration not found or not authorized"));
                 }
 
+                // Validate that the provided HolterStudyId in the DTO matches the medication administration HolterStudyId
+                if (medicationAdmin.HolterStudyId != medicationAdministrationUpdateDto.HolterStudyId)
+                {
+                    return NotFound(new ApiResponse(404, "Medication administration does not belong to the specified holter study"));
+                }
+
                 // Map the update DTO to the existing medication administration entity.
                 _mapper.Map(medicationAdministrationUpdateDto, medicationAdmin);
 

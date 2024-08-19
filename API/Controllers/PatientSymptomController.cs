@@ -158,6 +158,12 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Patient symptom not found or not authorized"));
                 }
 
+                // Validate that the provided holterStudyId in the DTO matches the patient symptom holterStudyId
+                if (patientSymptom.HolterStudyId != patientSymptomUpdateDto.HolterStudyId)
+                {
+                    return NotFound(new ApiResponse(404, "Patient symptom does not belong to the specified Patient"));
+                }
+
                 // Map the update DTO to the existing patient symptom entity.
                 _mapper.Map(patientSymptomUpdateDto, patientSymptom);
 

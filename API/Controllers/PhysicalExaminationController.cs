@@ -230,6 +230,12 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
                 }
 
+                // Validate that the provided patientId in the DTO matches the physical examination patientId
+                if (physicalExamination.PatientId != physicalExaminationUpdateDto.PatientId)
+                {
+                    return NotFound(new ApiResponse(404, "Stress test does not belong to the specified Patient"));
+                }
+
                 // Map the updated DTO data to the existing entity
                 _mapper.Map(physicalExaminationUpdateDto, physicalExamination);
 

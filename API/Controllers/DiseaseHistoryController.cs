@@ -218,6 +218,12 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
                 }
 
+                // Validate that the provided PatientId in the DTO matches the disease history PatientId
+                if (existingDiseaseHistory.PatientId != diseaseHistoryUpdateDto.PatientId)
+                {
+                    return NotFound(new ApiResponse(404, "Disease history does not belong to the specified patient"));
+                }
+
                 // Map the updated DTO data to the existing entity
                 _mapper.Map(diseaseHistoryUpdateDto, existingDiseaseHistory);
                 _unitOfWork.Repository<DiseaseHistory>().Update(existingDiseaseHistory);

@@ -240,6 +240,19 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Appointment not found")); // Return 404 if appointment not found
                 }
 
+                // Ensures the patient associated with the appointment belongs to the authenticated user
+                var patient = appointment.Patient;
+                if (patient == null || patient.AppUserId != user.Id)
+                {
+                    return NotFound(new ApiResponse(404, "Appointment not found or not authorized"));
+                }
+
+                // Validate that the provided PatientId in the DTO matches the appointment PatientId
+                if (appointment.PatientId != appointmentUpdateDto.PatientId)
+                {
+                    return NotFound(new ApiResponse(404, "Appointment does not belong to the specified patient"));
+                }
+
                 // Map the updated data from the DTO to the existing appointment entity
                 _mapper.Map(appointmentUpdateDto, appointment);
                 _unitOfWork.Repository<Appointment>().Update(appointment); // Mark the appointment entity as updated

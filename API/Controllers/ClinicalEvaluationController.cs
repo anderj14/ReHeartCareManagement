@@ -158,6 +158,13 @@ namespace API.Controllers
                     return NotFound(new ApiResponse(404, "Clinical evaluation not found or not authorized"));
                 }
 
+
+                // Validate that the provided HolterStudyId in the DTO matches the clinical evaluation HolterStudyId
+                if (clinicalEvaluation.HolterStudyId != clinicalEvaluationUpdateDto.HolterStudyId)
+                {
+                    return NotFound(new ApiResponse(404, "clinical evaluation does not belong to the specified holter study"));
+                }
+
                 // Map the update DTO to the existing clinical evaluation entity.
                 _mapper.Map(clinicalEvaluationUpdateDto, clinicalEvaluation);
 
