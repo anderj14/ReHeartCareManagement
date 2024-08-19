@@ -8,19 +8,19 @@ namespace Core.Dtos.CreateDto
         [Required]
         public DateTime Date { get; set; }
         [Required]
-        public string PreviousHeartDisease { get; set; }
+        public bool PreviousHeartDisease { get; set; }
         [Required]
-        public string HighBloodPressure { get; set; }
+        public bool HighBloodPressure { get; set; }
         [Required]
-        public string Diabetes { get; set; }
+        public bool Diabetes { get; set; }
         [Required]
-        public string Hyperlipidemia { get; set; }
+        public bool Hyperlipidemia { get; set; }
         [Required]
-        public string Obesity { get; set; }
+        public bool Obesity { get; set; }
         [Required]
-        public string Smoking { get; set; }
+        public bool Smoking { get; set; }
         [Required]
-        public string CardiacProceduresSurgeries { get; set; }
+        public string CardiacProcedures { get; set; }
         [Required]
         public string SystemicDiseases { get; set; }
         [Required]

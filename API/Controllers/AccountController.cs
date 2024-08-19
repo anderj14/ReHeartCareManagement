@@ -13,44 +13,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// Handles account-related operations such as login, registration, and profile management.
+    /// </summary>
     public class AccountController : BaseApiController
     {
-        private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly IPhotoService _photoService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// </summary>
+        /// <param name="userManager">The user manager to manage user accounts.</param>
+        /// <param name="signInManager">The sign-in manager to handle user sign-ins.</param>
+        /// <param name="tokenService">The token service to generate authentication tokens.</param>
+        /// <param name="photoService">The photo service to handle photo operations.</param>
+        /// <param name="unitOfWork">The unit of work to manage repository transactions.</param>
+        /// <param name="mapper">The mapper to handle object-to-object mapping.</param>
+
         public AccountController(UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
         ITokenService tokenService,
         IPhotoService photoService,
         IUnitOfWork unitOfWork,
-        IMapper mapper
-        )
+        IMapper mapper) : base(userManager)
         {
             _tokenService = tokenService;
             _signInManager = signInManager;
-            _userManager = userManager;
             _photoService = photoService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        private async Task<AppUser> GetAuthenticatedUserAsync()
-        {
-            var userName = User.Identity.Name;
-
-            if (string.IsNullOrEmpty(userName))
-            {
-                return null; // Return null if no username is found
-            }
-
-            var user = await _userManager.FindByNameAsync(userName);
-            return user; // Fetch the user details from the UserManager
-        }
-
+        /// <summary>
+        /// Logs in a user by validating their credentials and generating a JWT token.
+        /// </summary>
+        /// <param name="loginDto">The login details provided by the user.</param>
+        /// <returns>A UserDto containing user information and JWT token.</returns>
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
@@ -59,13 +61,13 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            //finding a user
+            // Find user by username
             var user = await _userManager.FindByNameAsync(loginDto.Username);
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized();
 
-            // Success or not
+            // Check if password is correct
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
             if (!result.Succeeded) return Unauthorized(new ApiResponse(401));
@@ -78,24 +80,29 @@ namespace API.Controllers
             };
         }
 
-
+        /// <summary>
+        /// Registers a new user account.
+        /// </summary>
+        /// <param name="registerDto">The registration details provided by the user.</param>
+        /// <returns>A UserDto containing user information and JWT token.</returns>
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
+                // Check if email is already in use
                 if (CheckEmailExistsAsync(registerDto.Email).Result.Value)
                 {
                     return new BadRequestObjectResult(new ApiValidationErrorResponse
                     { Errors = new[] { "Email address is in use", registerDto.Email } });
                 }
 
-
+                // Create new user
                 var appUser = new AppUser
                 {
                     UserName = registerDto.Username,
@@ -106,8 +113,8 @@ namespace API.Controllers
 
                 if (!result.Succeeded) return BadRequest(new ApiResponse(400));
 
+                // Assign user role
                 var roleAddResult = await _userManager.AddToRoleAsync(appUser, "USER");
-                // var roleAddResult = await _userManager.AddToRolesAsync(appUser, new[] { "USER", "ADMIN" });
 
                 if (!roleAddResult.Succeeded) return BadRequest("Failed to add to role");
 
@@ -124,13 +131,21 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks if an email address is already registered.
+        /// </summary>
+        /// <param name="email">The email address to check.</param>
+        /// <returns>A boolean indicating whether the email is already in use.</returns>
         [HttpGet("emailexists")]
         public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery] string email)
         {
             return await _userManager.FindByEmailAsync(email) != null;
         }
 
-
+        /// <summary>
+        /// Gets the current authenticated user's information.
+        /// </summary>
+        /// <returns>A UserDto containing user information and JWT token.</returns>
         [HttpGet("currentUser")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
@@ -141,7 +156,7 @@ namespace API.Controllers
                 return Unauthorized(new ApiResponse(401, "User not authenticated"));
             }
 
-            // var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
+            // Find user by username
             var user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
@@ -150,10 +165,15 @@ namespace API.Controllers
             return new UserDto()
             {
                 UserName = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                Token = await _tokenService.CreateToken(user)
             };
         }
 
+        /// <summary>
+        /// Gets a list of all registered users. Only accessible by Admins.
+        /// </summary>
+        /// <returns>A collection of UserDto objects representing all users.</returns>
         [HttpGet("users")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ICollection<UserDto>>> GetUsers()
@@ -165,6 +185,11 @@ namespace API.Controllers
             return Ok(userDtos);
         }
 
+        /// <summary>
+        /// Deletes a user account by ID. Only accessible by Admins.
+        /// </summary>
+        /// <param name="id">The ID of the user to delete.</param>
+        /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("delete/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteUser(string id)
@@ -186,6 +211,10 @@ namespace API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Gets the current authenticated user's profile, including photos.
+        /// </summary>
+        /// <returns>A UserDto containing user information and associated photos.</returns>
         [HttpGet("profile")]
         [Authorize]
         public async Task<ActionResult<UserDto>> GetUserProfile()
@@ -197,6 +226,7 @@ namespace API.Controllers
                 return Unauthorized(new ApiResponse(401, "User not authenticated or not found"));
             }
 
+            // Get user's photos
             var spec = new UserPhotoSpecification(user.Id);
             var photos = await _unitOfWork.Repository<Photo>().ListAsync(spec);
 
@@ -215,29 +245,42 @@ namespace API.Controllers
             return Ok(userProfile);
         }
 
+        /// <summary>
+        /// Uploads a photo for the currently authenticated user.
+        /// </summary>
+        /// <param name="file">The photo file to upload.</param>
+        /// <returns>A PhotoDto representing the uploaded photo, or an error response if the upload fails.</returns>
         [HttpPost("uploadPhoto")]
         [Authorize]
         public async Task<ActionResult<PhotoDto>> UploadPhoto(IFormFile file)
         {
+            // Retrieve the currently authenticated user
             var user = await GetAuthenticatedUserAsync();
 
+            // Check if the user is authenticated
             if (user == null)
             {
+                // Return an unauthorized response if the user is not found
                 return Unauthorized(new ApiResponse(401, "User not authenticated or not found"));
             }
 
+            // Attempt to upload the photo using the photo service
             var uploadResult = await _photoService.AddPhotoAsync(file);
 
+            // Check if there was an error during the upload
             if (uploadResult.Error != null)
             {
+                // Return a bad request response if there was an error
                 return BadRequest(new ApiResponse(400, uploadResult.Error.Message));
             }
 
-            // Check if the user already has a main photo
+            // Get existing photos of the user to determine if this photo should be set as the main photo
             var spec = new UserPhotoSpecification(user.Id);
             var userPhotos = await _unitOfWork.Repository<Photo>().ListAsync(spec);
+            // Set this photo as the main photo if the user does not already have one
             var isMain = !userPhotos.Any(p => p.IsMain);
 
+            // Create a new Photo entity with the upload result and user information
             var photo = new Photo
             {
                 Url = uploadResult.SecureUrl.AbsoluteUri,
@@ -246,10 +289,13 @@ namespace API.Controllers
                 IsMain = isMain
             };
 
+            // Add the new photo to the database
             _unitOfWork.Repository<Photo>().Add(photo);
 
+            // Save changes to the database
             if (await _unitOfWork.Complete() > 0)
             {
+                // Return the photo details if the save operation is successful
                 var photoDto = new PhotoDto
                 {
                     Id = photo.Id,
@@ -261,7 +307,9 @@ namespace API.Controllers
                 return Ok(photoDto);
             }
 
+            // Return a bad request response if there was a problem saving the photo
             return BadRequest(new ApiResponse(400, "Problem saving photo"));
         }
+
     }
 }

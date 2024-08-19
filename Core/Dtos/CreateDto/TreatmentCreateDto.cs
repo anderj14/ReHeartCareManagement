@@ -19,6 +19,11 @@ namespace Core.Dtos.CreateDto
         [Required]
         public string TreatmentMonitoring { get; set; }
         [Required]
+        public string TreatmentDuration { get; set; }
+        [Required]
+        public string TreatmentOutcome { get; set; }
+
+        [Required]
         public int PatientId { get; set; }
     }
 }

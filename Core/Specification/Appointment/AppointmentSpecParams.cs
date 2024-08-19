@@ -10,11 +10,14 @@ namespace Core.Specification
         public int PageSize
         {
             get => _pageSize;
-            set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
+            set => _pageSize = (value > MaxPageSize || value <= 0) ? MaxPageSize : value;
         }
+        
+        // Optional status filter for appointments
         public int? AppointmentStatusId { get; set; }
         public int? AppointmentTypeId { get; set; }
 
+        // Sorting criteria
         public string Sort { get; set; }
         private string _search;
         public string Search

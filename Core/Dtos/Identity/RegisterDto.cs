@@ -4,13 +4,6 @@ namespace Core.Dtos.Identity
 {
     public class RegisterDto
     {
-        // [Required]
-        // public string DisplayName { get; set; }
-        // [Required]
-        // public string FirstName { get; set; }
-        // [Required]
-        // public string LastName { get; set; }
-        
         [Required]
         public string Username { get; set; }
         [Required]

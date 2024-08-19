@@ -11,7 +11,10 @@ namespace Core.Dtos.CreateDto
         [Required]
         public string Complications { get; set; }
         [Required]
-        public string FollowUpComplete { get; set; }
+        public string Recommendations { get; set; }
+        [Required]
+        public string FunctionalAssessment { get; set; }
+        public bool IsFollowUpComplete { get; set; }
         [Required]
         public int CardiologySurgeryId { get; set; }
     }

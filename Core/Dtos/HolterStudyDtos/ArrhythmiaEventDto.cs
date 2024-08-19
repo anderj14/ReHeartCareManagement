@@ -8,5 +8,6 @@ namespace Core.Dtos.HolterStudyDtos
         public string Duration { get; set; }
         public int HeartRateDuringEvent { get; set; }
         public string Description { get; set; }
+        public int HolterStudyId { get; set; }
     }
 }

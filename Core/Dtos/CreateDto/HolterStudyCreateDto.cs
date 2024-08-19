@@ -12,17 +12,13 @@ namespace Core.Dtos.CreateDto
         [Required]
         public string StudyDuration { get; set; }
         [Required]
-        public string AverageHeartRate { get; set; }
+        public int AverageHeartRate { get; set; }
         [Required]
-        public string MaximumHeartRate { get; set; }
+        public int MaximumHeartRate { get; set; }
         [Required]
         public string TypeHeartRhythm { get; set; }
         [Required]
-        public string ArrhythmiaEpisodes { get; set; }
-        [Required]
         public string PhysicalActivity { get; set; }
-        [Required]
-        public string PatientSymptoms { get; set; }
         [Required]
         public string Conclusion { get; set; }
         [Required]

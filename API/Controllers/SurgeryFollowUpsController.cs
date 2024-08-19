@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using API.Errors;
+using API.Extensions;
 using API.Helper;
 using AutoMapper;
 using Core.Dtos;
@@ -6,6 +8,7 @@ using Core.Dtos.CreateDto;
 using Core.Entities;
 using Core.Entities.Identity;
 using Core.Interfaces;
+using Core.Specification;
 using Core.Specification.CardiologySurgerySpec;
 using Core.Specification.SurgeryFollowUpSpec;
 using Microsoft.AspNetCore.Authorization;
@@ -14,132 +17,303 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class SurgeryFollowUpsController : BaseApiController
+    /// <summary>
+    /// Manages surgery follow-up records. Provides endpoints for creating, retrieving, updating, and deleting follow-ups.
+    /// </summary>
+    public class SurgeryFollowUpController : BaseApiController
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SurgeryFollowUpsController(
-            IMapper mapper,
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SurgeryFollowUpController"/> class.
+        /// </summary>
+        /// <param name="unitOfWork">Unit of work for handling data operations.</param>
+        /// <param name="mapper">Mapper for converting between DTOs and entities.</param>
+        /// <param name="userManager">User manager for handling authentication and user management.</param>
+        public SurgeryFollowUpController(
             IUnitOfWork unitOfWork,
+            IMapper mapper,
             UserManager<AppUser> userManager
-            )
+        ) : base(userManager)
         {
-            _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _userManager = userManager;
-
+            _mapper = mapper;
         }
 
-        // [HttpGet]
-        // public async Task<ActionResult<IReadOnlyList<SurgeryFollowUpDto>>> GetSurgeryFollowUps(
-        //     [FromQuery] SurgeryFollowUpSpecParams surgeryFollowUpParams
-        // )
-        // {
-        //     var spec = new SurgeryFollowUpSpecification(surgeryFollowUpParams);
-
-        //     var countSpec = new SurgeryFollowUpFilterForCountSpecification(surgeryFollowUpParams);
-        //     var totalItems = await _unitOfWork.Repository<SurgeryFollowUp>().CountAsync(countSpec);
-
-        //     var surgeryFollowUps = await _unitOfWork.Repository<SurgeryFollowUp>().ListAsync(spec);
-
-        //     var data = _mapper.Map<IReadOnlyList<SurgeryFollowUpDto>>(surgeryFollowUps);
-
-        //     return Ok(new Pagination<SurgeryFollowUpDto>(surgeryFollowUpParams.PageIndex,
-        //     surgeryFollowUpParams.PageSize, totalItems, data));
-        // }
-
-        // [HttpGet("{id}")]
-        // [ProducesResponseType(StatusCodes.Status200OK)]
-        // [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        // public async Task<ActionResult<SurgeryFollowUpDto>> GetSurgeryFollowUp(int id)
-        // {
-        //     var spec = new SurgeryFollowUpSpecification(id);
-        //     var surgeryFollowUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(spec);
-
-        //     if (surgeryFollowUp == null) return NotFound(new ApiResponse(404));
-
-        //     return Ok(_mapper.Map<SurgeryFollowUpDto>(surgeryFollowUp));
-        // }
-
-        [HttpGet("cardiologySurgeries/{cardiologySurgeryId}/surgeryFollowUps")]
+        /// <summary>
+        /// Retrieves follow-ups for a specific cardiology surgery.
+        /// </summary>
+        /// <param name="cardiologySurgeryId">ID of the cardiology surgery.</param>
+        /// <param name="baseSpecParams">Pagination and sorting parameters.</param>
+        /// <returns>A list of follow-ups.</returns>
+        [HttpGet("cardiologySurgery/{cardiologySurgeryId}/followUps")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<IReadOnlyList<SurgeryFollowUpDto>>> GetCardiologySurgerySurgeryFollowUps(int cardiologySurgeryId)
+        public async Task<ActionResult<IReadOnlyList<SurgeryFollowUpDto>>> GetFollowUpsByCardiologySurgeryId(
+            int cardiologySurgeryId, [FromQuery] BaseSpecParams baseSpecParams)
         {
-            // Check the user
-            var userName = User.Identity.Name;
-            if (string.IsNullOrEmpty(userName)) return Unauthorized(new ApiResponse(401, "User not authenticated"));
-
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null)
-                return Unauthorized(new ApiResponse(400, "User not found"));
-
-            // Check if the cardiology surgery belongs to a patient associated with the authenticated user
-            var cardiologySurgerySpec = new CardiologySurgerySpecification(cardiologySurgeryId);
-            var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(cardiologySurgerySpec);
-
-            if (cardiologySurgery == null || cardiologySurgery.Patient.AppUserId != user.Id)
+            try
             {
-                return NotFound(new ApiResponse(404, "Cardiology surgery not found or not authorized"));
+                // Retrieve the authenticated user
+                var user = await GetAuthenticatedUserAsync();
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
+                // Define specification to get the cardiology surgery with all related data
+                var cardiologySurgerySpec = new CardiologySurgerySpecification(cardiologySurgeryId);
+                var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(cardiologySurgerySpec);
+
+                // Check if the cardiology surgery exists and if the authenticated user is authorized
+                if (cardiologySurgery == null || cardiologySurgery.AppUserId != user.Id)
+                {
+                    return NotFound(new ApiResponse(404, "Cardiology surgery not found or not authorized"));
+                }
+
+                // Define specification to get the follow-ups for the cardiology surgery with pagination and sorting
+                var spec = new SurgeryFollowUpSpecification(cardiologySurgeryId, baseSpecParams);
+
+                // Define a filter for follow-ups based on the cardiology surgery ID
+                Expression<Func<SurgeryFollowUp, bool>> filter = (followUp) => followUp.CardiologySurgeryId == cardiologySurgeryId;
+
+                // Get the total count of follow-ups matching the filter
+                var totalItems = await _unitOfWork.Repository<SurgeryFollowUp>().CountByPatientAsync(filter, spec);
+
+                if (totalItems == 0)
+                {
+                    return Ok(new PagedList<SurgeryFollowUpDto>(new List<SurgeryFollowUpDto>(), 0, baseSpecParams.PageIndex, baseSpecParams.PageSize));
+                }
+
+                // Get the list of follow-ups for the cardiology surgery with pagination
+                var followUps = await _unitOfWork.Repository<SurgeryFollowUp>().ListAllByPatientAsync(filter, spec, baseSpecParams.PageIndex, baseSpecParams.PageSize);
+
+                // Map the list of follow-ups to DTOs
+                var followUpsDtos = _mapper.Map<IReadOnlyList<SurgeryFollowUpDto>>(followUps);
+
+                // Create a paginated list of follow-up DTOs
+                var paginatedFollowUps = new PagedList<SurgeryFollowUpDto>(
+                    followUpsDtos.ToList(),
+                    totalItems,
+                    baseSpecParams.PageIndex,
+                    baseSpecParams.PageSize
+                );
+
+                // Add pagination headers to the response
+                Response.AddPaginationHeader(paginatedFollowUps.MetaData);
+                return Ok(followUpsDtos);
             }
-
-            var spec = new SurgeryFollowUpSpecification(cardiologySurgeryId);
-            var surgeryFollowUps = await _unitOfWork.Repository<SurgeryFollowUp>().ListAsync(spec);
-            var surgeryFollowUpDtos = _mapper.Map<IReadOnlyList<SurgeryFollowUpDto>>(surgeryFollowUps);
-
-            return Ok(surgeryFollowUpDtos);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        [HttpGet("cardiologySurgeries/{cardiologySurgeryId}/surgeryFollowUps/{surgeryFollowUpId}")]
+        /// <summary>
+        /// Retrieves a specific follow-up for a cardiology surgery by its ID.
+        /// </summary>
+        /// <param name="cardiologySurgeryId">ID of the cardiology surgery.</param>
+        /// <param name="followUpId">ID of the follow-up.</param>
+        /// <returns>The requested follow-up.</returns>
+        [HttpGet("cardiologySurgery/{cardiologySurgeryId}/followUps/{followUpId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<SurgeryFollowUpDto>> GetCardiologySurgerySurgeryFollowUps(int cardiologySurgeryId, int surgeryFollowUpId)
+        public async Task<ActionResult<SurgeryFollowUpDto>> GetFollowUpByCardiologySurgeryId(int cardiologySurgeryId, int followUpId)
         {
-            // Check the user
-            var userName = User.Identity.Name;
-            if (string.IsNullOrEmpty(userName))
+            try
             {
-                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+                // Retrieve the authenticated user
+                var user = await GetAuthenticatedUserAsync();
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
+                // Define specification to get the cardiology surgery with all related data
+                var cardiologySurgerySpec = new CardiologySurgerySpecification(cardiologySurgeryId);
+                var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(cardiologySurgerySpec);
+
+                // Check if the cardiology surgery exists and if the authenticated user is authorized
+                if (cardiologySurgery == null || cardiologySurgery.AppUserId != user.Id)
+                {
+                    return NotFound(new ApiResponse(404, "Cardiology surgery not found or not authorized"));
+                }
+
+                // Define specification to get the follow-up by cardiology surgery ID and follow-up ID
+                var spec = new SurgeryFollowUpSpecification(cardiologySurgeryId, followUpId);
+                var followUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(spec);
+
+                // Check if the follow-up exists
+                if (followUp == null)
+                    return NotFound(new ApiResponse(404, "Follow-up not found"));
+
+                // Map the follow-up to a DTO
+                var followUpDto = _mapper.Map<SurgeryFollowUpDto>(followUp);
+
+                return Ok(followUpDto);
             }
-
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null)
-                return Unauthorized(new ApiResponse(400, "User not found"));
-
-            // Check if the cardiology surgery belongs to a patient associated with the authenticated user
-            var cardiologySurgerySpec = new CardiologySurgerySpecification(cardiologySurgeryId);
-            var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(cardiologySurgerySpec);
-
-            if (cardiologySurgery == null || cardiologySurgery.Patient.AppUserId != user.Id)
+            catch (Exception ex)
             {
-                return NotFound(new ApiResponse(404, "Cardiology surgery not found or not authorized"));
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-
-            var spec = new SurgeryFollowUpSpecification(cardiologySurgeryId, surgeryFollowUpId);
-            var surgeryFollowUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(spec);
-            var surgeryFollowUpDto = _mapper.Map<SurgeryFollowUpDto>(surgeryFollowUp);
-
-            return Ok(surgeryFollowUpDto);
         }
 
+        /// <summary>
+        /// Creates a new follow-up record.
+        /// </summary>
+        /// <param name="surgeryFollowUpCreateDto">Data transfer object containing the details of the follow-up to be created.</param>
+        /// <returns>The created follow-up record.</returns>
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<SurgeryFollowUp>> CreateSurgeryFollowUp(SurgeryFollowUpsCreateDto surgeryFollowUpsCreateDto)
+        public async Task<ActionResult<SurgeryFollowUpDto>> CreateFollowUp(SurgeryFollowUpsCreateDto surgeryFollowUpCreateDto)
         {
-            var surgeryFollowUp = _mapper.Map<SurgeryFollowUpsCreateDto, SurgeryFollowUp>(surgeryFollowUpsCreateDto);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse(400, "Invalid data"));
+            }
 
-            _unitOfWork.Repository<SurgeryFollowUp>().Add(surgeryFollowUp);
+            try
+            {
+                // Retrieve the authenticated user
+                var user = await GetAuthenticatedUserAsync();
 
-            var result = await _unitOfWork.Complete();
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
 
-            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating surgery follow-up"));
-            return Ok(surgeryFollowUp);
+                // Map the DTO to a new follow-up entity
+                var newFollowUp = _mapper.Map<SurgeryFollowUpsCreateDto, SurgeryFollowUp>(surgeryFollowUpCreateDto);
+
+                // Add the new follow-up to the repository
+                _unitOfWork.Repository<SurgeryFollowUp>().Add(newFollowUp);
+
+                // Save changes to the database
+                var result = await _unitOfWork.Complete();
+
+                if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating follow-up"));
+
+                // Map the new follow-up to a DTO
+                var followUpDto = _mapper.Map<SurgeryFollowUpDto>(newFollowUp);
+
+                return CreatedAtAction(
+                    nameof(GetFollowUpByCardiologySurgeryId),
+                    new { cardiologySurgeryId = newFollowUp.CardiologySurgeryId, followUpId = newFollowUp.Id },
+                    followUpDto
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing follow-up record.
+        /// </summary>
+        /// <param name="id">ID of the follow-up to be updated.</param>
+        /// <param name="surgeryFollowUpUpdateDto">Data transfer object containing the updated details of the follow-up.</param>
+        /// <returns>No content if successful.</returns>
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<ActionResult<SurgeryFollowUpDto>> UpdateFollowUp(int id, SurgeryFollowUpsCreateDto surgeryFollowUpUpdateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse(400, "Invalid data"));
+            }
+
+            try
+            {
+                // Retrieve the authenticated user
+                var user = await GetAuthenticatedUserAsync();
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
+                // Define specification to get the follow-up by ID
+                var spec = new SurgeryFollowUpSpecification(id);
+                var followUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(spec);
+
+                // Check if the follow-up exists
+                if (followUp == null)
+                    return NotFound(new ApiResponse(404, "Follow-up not found"));
+
+                var cardiologySurgery = followUp.CardiologySurgery;
+                if (cardiologySurgery == null || cardiologySurgery.AppUserId != user.Id)
+                {
+                    return NotFound(new ApiResponse(404, "Cardiology surgery not found or not authorized"));
+                }
+                if (followUp.CardiologySurgeryId != surgeryFollowUpUpdateDto.CardiologySurgeryId)
+                {
+                    return NotFound(new ApiResponse(404, "Cardiology surgery does not belong to the specified Patient"));
+                }
+
+                // Update the follow-up entity with new values
+                _mapper.Map(surgeryFollowUpUpdateDto, followUp);
+
+                // Mark the entity as modified and save changes
+                _unitOfWork.Repository<SurgeryFollowUp>().Update(followUp);
+                var result = await _unitOfWork.Complete();
+
+                if (result <= 0) return BadRequest(new ApiResponse(400, "Problem updating follow-up"));
+
+                var surgeryFollowUpDto = _mapper.Map<SurgeryFollowUpDto>(followUp);
+
+                return Ok(surgeryFollowUpDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Deletes a specific follow-up record.
+        /// </summary>
+        /// <param name="id">ID of the follow-up to be deleted.</param>
+        /// <returns>No content if successful.</returns>
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult> DeleteFollowUp(int id)
+        {
+            try
+            {
+                // Retrieve the authenticated user
+                var user = await GetAuthenticatedUserAsync();
+
+                if (user == null)
+                {
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+                }
+
+                // Define specification to get the follow-up by ID
+                var spec = new SurgeryFollowUpSpecification(id);
+                var followUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(spec);
+
+                // Check if the follow-up exists
+                if (followUp == null)
+                {
+                    return NotFound(new ApiResponse(404, "Follow-up not found"));
+                }
+
+                var cardiologySurgery = followUp.CardiologySurgery;
+                if (cardiologySurgery == null || cardiologySurgery.AppUserId != user.Id)
+                {
+                    return NotFound(new ApiResponse(404, "Cardiology surgery not found or not authorized"));
+                }
+
+                // Delete the follow-up entity
+                _unitOfWork.Repository<SurgeryFollowUp>().Delete(followUp);
+                var result = await _unitOfWork.Complete();
+
+                if (result <= 0) return BadRequest(new ApiResponse(400, "Problem deleting follow-up"));
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

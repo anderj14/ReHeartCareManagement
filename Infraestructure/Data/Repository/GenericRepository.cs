@@ -72,6 +72,19 @@ namespace Infraestructure.Data.Repository
             return await query.CountAsync();
         }
 
+        public async Task<int> CountByPatientAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec)
+        {
+            var query = ApplySpecification(spec).Where(filter);
+            return await query.CountAsync();
+        }
+
+        public async Task<IReadOnlyList<T>> ListAllByPatientAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec, int pageIndex, int pageSize)
+        {
+            var query = ApplySpecification(spec).Where(filter);
+            query = query.Skip(pageSize * (pageIndex - 1)).Take(pageSize);
+            return await query.ToListAsync();
+        }
+
         // 'Set<T>()' is used to access the DbSet for the entity type.
         public void Add(T entity)
         {

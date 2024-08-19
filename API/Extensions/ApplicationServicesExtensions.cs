@@ -1,6 +1,4 @@
-using System.Text.Json.Serialization;
 using API.Errors;
-using API.Helper;
 using Core.Entities.Identity;
 using Core.Interfaces;
 using Infraestructure.Data;
@@ -78,7 +76,6 @@ namespace API.Extensions
             services.AddScoped<IPhotoService, PhotoService>();
 
             ////
-            // services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             ////
             // Configure the behavior of the API by configuring 'ApiBehaviorOptions'
             services.Configure<ApiBehaviorOptions>(options =>

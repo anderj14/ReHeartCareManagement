@@ -14,7 +14,8 @@ namespace API.Helper
         public MappingProfiles()
         {
 
-            CreateMap<AppUser, UserDto>();
+            CreateMap<AppUser, UserDto>()
+            .ForMember(d => d.Photos, o => o.MapFrom(s => s.Photo.Url));
             CreateMap<Patient, PatientDto>()
             .ForMember(d => d.Status, o => o.MapFrom(s => s.PatientStatus.PatientStatusName));
 
@@ -83,7 +84,7 @@ namespace API.Helper
 
 
             CreateMap<Notes, NotesDto>()
-            .ForMember(d => d.NoteStatus, o => o.MapFrom(s => s.NoteStatus.NoteStatusName));
+            .ForMember(d => d.NoteStatusName, o => o.MapFrom(s => s.NoteStatus.NoteStatusName));
 
             CreateMap<NoteStatus, NoteStatusDto>();
 
@@ -102,20 +103,29 @@ namespace API.Helper
             // Create
             CreateMap<PatientCreateDto, Patient>();
             CreateMap<AppointmentCreateDto, Appointment>();
+            CreateMap<AppointmentTypeCreateDto, AppointmentType>();
+            CreateMap<AppointmentStatusCreateDto, AppointmentStatus>();
             CreateMap<BloodTestCreateDto, BloodTest>();
             CreateMap<NoteCreateDto, Notes>();
-            CreateMap<AppointmentStatusCreateDto, AppointmentStatus>();
             CreateMap<CardiacCathStudyCreateDto, CardiacCatheterizationStudy>();
             CreateMap<DiagnosticCreateDto, Diagnostic>();
             CreateMap<DiseaseHistoryCreateDto, DiseaseHistory>();
             CreateMap<EchocardiogramCreateDto, Echocardiogram>();
             CreateMap<ElectrocardiogramCreateDto, Electrocardiogram>();
             CreateMap<HolterStudyCreateDto, HolterStudy>();
+            CreateMap<ArrhythmiaEventCreateDto, ArrhythmiaEvent>();
+            CreateMap<MedicationAdministrationCreateDto, MedicationAdministration>();
+            CreateMap<ClinicalEvaluationCreateDto, ClinicalEvaluation>();
+            CreateMap<AdditionalTestResultCreateDto, AdditionalTestResult>();
+            CreateMap<PatientSymptomCreateDto, PatientSymptom>();
             CreateMap<MedicalHistoryCreateDto, MedicalHistory>();
             CreateMap<PhysicalExaminationCreateDto, PhysicalExamination>();
             CreateMap<StressTestCreateDto, StressTest>();
             CreateMap<SurgeryFollowUpsCreateDto, SurgeryFollowUp>();
             CreateMap<TreatmentCreateDto, Treatment>();
+            CreateMap<CardiologySurgeryCreateDto, CardiologySurgery>();
+            CreateMap<NoteStatusCreateDto, NoteStatus>();
+            CreateMap<PatientStatusCreateDto, PatientStatus>();
         }
     }
 }

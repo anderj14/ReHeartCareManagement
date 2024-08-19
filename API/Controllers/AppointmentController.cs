@@ -1,4 +1,3 @@
-
 using System.Linq.Expressions;
 using API.Errors;
 using API.Extensions;
@@ -10,11 +9,9 @@ using Core.Entities;
 using Core.Entities.Identity;
 using Core.Interfaces;
 using Core.Specification;
-using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -22,39 +19,28 @@ namespace API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ManagementContext _context;
-        private readonly UserManager<AppUser> _userManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppointmentController"/> class.
+        /// </summary>
+        /// <param name="unitOfWork">Unit of work for handling data operations.</param>
+        /// <param name="mapper">Mapper for converting between DTOs and entities.</param>
+        /// <param name="userManager">User manager for handling authentication and user management.</param>
         public AppointmentController(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            ManagementContext context,
             UserManager<AppUser> userManager
-        )
+        ) : base(userManager)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _context = context;
-            _userManager = userManager;
+            _unitOfWork = unitOfWork; // Initializes the unit of work for managing repository transactions
+            _mapper = mapper; // Initializes the mapper for object-to-object mapping
         }
 
-        [HttpGet("allappointments")]
-        // [Authorize]
-        public async Task<ActionResult<Pagination<AppointmentDto>>> GetAppointments(
-            [FromQuery] AppointmentSpecParams appointmentParams
-        )
-        {
-            var spec = new AppointmentSpecification(appointmentParams);
-            var countSpec = new AppointmentFilterForCountSpecification(appointmentParams);
-            var totalItems = await _unitOfWork.Repository<Appointment>().CountAsync(countSpec);
-
-            var appointments = await _unitOfWork.Repository<Appointment>().ListAsync(spec);
-
-            var data = _mapper.Map<IReadOnlyList<AppointmentDto>>(appointments);
-
-            return Ok(new Pagination<AppointmentDto>(appointmentParams.PageIndex, appointmentParams.PageSize, totalItems, data));
-        }
-
+        /// <summary>
+        /// Retrieves the appointment calendar for the authenticated user.
+        /// </summary>
+        /// <param name="appointmentParams">Parameters for filtering and sorting appointments.</param>
+        /// <returns>A list of appointments for the authenticated user.</returns>
         [HttpGet("calendar")]
         [Authorize]
         public async Task<ActionResult<IReadOnlyList<AppointmentDto>>> GetAppointmentCalendarByUser(
@@ -63,24 +49,20 @@ namespace API.Controllers
         {
             try
             {
-                var userName = User.Identity.Name;
-
-                if (string.IsNullOrEmpty(userName))
-                {
-                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
-                }
-
-                var user = await _userManager.FindByNameAsync(userName);
+                var user = await GetAuthenticatedUserAsync();
 
                 if (user == null)
                     return Unauthorized(new ApiResponse(401, "User not found"));
 
                 var spec = new AppointmentSpecification(appointmentParams);
 
+                // Define a filter expression to get only the appointments associated with the authenticated user
                 Expression<Func<Appointment, bool>> filter = (appointment) => appointment.AppUserId == user.Id;
 
+                // Retrieve the appointments based on the filter and specification
                 var userAppointments = await _unitOfWork.Repository<Appointment>().ListAllByUserAsync(filter, spec);
 
+                // Map the retrieved appointments to AppointmentDto
                 var data = _mapper.Map<IReadOnlyList<AppointmentDto>>(userAppointments);
 
                 return Ok(data);
@@ -91,40 +73,45 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves a paginated list of appointments for the authenticated user.
+        /// </summary>
+        /// <param name="appointmentParams">Parameters for filtering, sorting, and pagination.</param>
+        /// <returns>A paginated list of appointments for the authenticated user.</returns>
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<Pagination<AppointmentDto>>> GetAppointmentByUser([FromQuery] AppointmentSpecParams appointmentParams)
         {
             try
             {
-                var userName = User.Identity.Name;
-
-                if (string.IsNullOrEmpty(userName))
-                {
-                    return Unauthorized(new ApiResponse(401, "User not authenticated"));
-                }
-
-                var user = await _userManager.FindByNameAsync(userName);
+                var user = await GetAuthenticatedUserAsync();
 
                 if (user == null)
                     return Unauthorized(new ApiResponse(401, "User not found"));
 
-
+                // Define a filter expression to get only the appointments associated with the authenticated user
                 Expression<Func<Appointment, bool>> filter = (appointment) => appointment.AppUserId == user.Id;
 
+                // Create a specification for querying the appointments
                 var spec = new AppointmentSpecification(appointmentParams);
                 var countSpec = new AppointmentFilterForCountSpecification(appointmentParams);
+
+                // Get the total number of appointments matching the filter
                 var totalItems = await _unitOfWork.Repository<Appointment>().CountByUserAsync(filter, countSpec);
 
                 if (totalItems == 0)
                 {
+                    // Return an empty paginated list if no appointments are found
                     return Ok(new PagedList<AppointmentDto>(new List<AppointmentDto>(), 0, appointmentParams.PageIndex, appointmentParams.PageSize));
                 }
 
+                // Retrieve the appointments based on the filter and specification
                 var userAppointments = await _unitOfWork.Repository<Appointment>().ListAllByUserAsync(filter, spec, appointmentParams.PageIndex, appointmentParams.PageSize);
 
+                // Map the retrieved appointments to AppointmentDto
                 var data = _mapper.Map<IReadOnlyList<AppointmentDto>>(userAppointments);
 
+                // Create a paginated list of appointments
                 var paginatedAppointments = new PagedList<AppointmentDto>(
                     data.ToList(),
                     totalItems,
@@ -132,6 +119,7 @@ namespace API.Controllers
                     appointmentParams.PageSize
                     );
 
+                // Add pagination headers to the response
                 Response.AddPaginationHeader(paginatedAppointments.MetaData);
 
                 return Ok(paginatedAppointments);
@@ -142,162 +130,169 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves a specific appointment by its ID for the authenticated user.
+        /// </summary>
+        /// <param name="id">The ID of the appointment to retrieve.</param>
+        /// <returns>The details of the requested appointment.</returns>
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AppointmentDto>> GetAppointment(int id)
         {
-            var spec = new AppointmentSpecification(id);
-            var appointment = await _unitOfWork.Repository<Appointment>().GetEntityWithSpec(spec);
+            var user = await GetAuthenticatedUserAsync();
 
-            if (appointment == null) return NotFound(new ApiResponse(404));
+            try
+            {
+                if (user == null)
+                {
+                    return Unauthorized(new ApiResponse(401, "User not authenticated or not found"));
+                }
 
-            return Ok(_mapper.Map<AppointmentDto>(appointment));
+                // Define a filter expression to get only the appointments associated with the authenticated user
+                Expression<Func<Appointment, bool>> filter = (appointment) => appointment.AppUserId == user.Id;
+
+                // Create a specification to query the appointment by ID
+                var spec = new AppointmentSpecification(id);
+
+                // Retrieve the appointment based on the filter and specification
+                var appointment = await _unitOfWork.Repository<Appointment>().GetEntityByUserAsync(filter, spec);
+
+                if (appointment == null) return NotFound(new ApiResponse(404));
+
+                // Map the retrieved appointment to AppointmentDto
+                return Ok(_mapper.Map<AppointmentDto>(appointment));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
+        /// <summary>
+        /// Creates a new appointment for the authenticated user.
+        /// </summary>
+        /// <param name="appointmentCreateDto">The data to create a new appointment.</param>
+        /// <returns>The created appointment.</returns>
         [HttpPost]
         [Authorize]
         public async Task<ActionResult> CreateAppointmentByUser([FromBody] AppointmentCreateDto appointmentCreateDto)
         {
-            var userName = User.Identity.Name;
-
-            if (string.IsNullOrEmpty(userName))
+            if (!ModelState.IsValid)
             {
-                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+                return BadRequest(new ApiResponse(400, "Invalid data")); // Return 400 for invalid data
             }
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
-
-            if (user == null)
-                return Unauthorized(new ApiResponse(401, "User not found"));
-
-
-            var newAppointment = new Appointment
+            try
             {
-                AppUserId = user.Id,
-                StartDate = appointmentCreateDto.StartDate,
-                EndDate = appointmentCreateDto.EndDate,
-                Time = TimeSpan.Parse(appointmentCreateDto.Time),
-                Description = appointmentCreateDto.Description,
-                Location = appointmentCreateDto.Location,
-                AppointmentStatusId = appointmentCreateDto.AppointmentStatusId,
-                AppointmentTypeId = appointmentCreateDto.AppointmentTypeId,
-                PatientId = appointmentCreateDto.PatientId
-            };
+                var user = await GetAuthenticatedUserAsync();
 
-            _context.Appointments.Add(newAppointment);
-            await _context.SaveChangesAsync();
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
 
-            var appointment = new AppointmentDto
+                // Map the AppointmentCreateDto to a new Appointment entity
+                var newAppointment = _mapper.Map<Appointment>(appointmentCreateDto);
+                newAppointment.AppUserId = user.Id; // Set the AppUserId for the new appointment
+
+                // Add the new appointment to the context
+                _unitOfWork.Repository<Appointment>().Add(newAppointment);
+                // Save changes to the database
+                await _unitOfWork.Complete();
+
+                // Map the new appointment entity to AppointmentDto
+                var appointment = _mapper.Map<AppointmentDto>(newAppointment);
+
+                return CreatedAtAction(nameof(GetAppointment), new { id = newAppointment.Id }, appointment);
+            }
+            catch (Exception ex)
             {
-                Id = newAppointment.Id,
-                StartDate = newAppointment.StartDate,
-                EndDate = newAppointment.EndDate,
-                Time = newAppointment.Time,
-                Description = newAppointment.Description,
-                Location = newAppointment.Location,
-                AppointmentStatus = newAppointment.AppointmentStatusId.ToString(),
-                AppointmentType = newAppointment.AppointmentTypeId.ToString(),
-                Patient = newAppointment.PatientId.ToString()
-            };
-
-            return CreatedAtAction(nameof(GetAppointment), new { id = newAppointment.Id }, appointment);
+                return BadRequest(new ApiResponse(400, $"Problem creating appointment: {ex.Message}")); // Return 400 for exceptions
+            }
         }
 
+        /// <summary>
+        /// Updates an existing appointment by its ID for the authenticated user.
+        /// </summary>
+        /// <param name="id">The ID of the appointment to update.</param>
+        /// <param name="appointmentUpdateDto">The updated data for the appointment.</param>
+        /// <returns>The updated appointment.</returns>
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<ActionResult<Appointment>> UpdatePatient(int id, AppointmentCreateDto appointmentUpdateDto)
+        public async Task<ActionResult<Appointment>> UpdateAppointment(int id, AppointmentCreateDto appointmentUpdateDto)
         {
-            var appointment = await _unitOfWork.Repository<Appointment>().GetByIdAsync(id);
-            _mapper.Map(appointmentUpdateDto, appointment);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse(400, "Invalid data")); // Return 400 for invalid data
+            }
+            try
+            {
+                var user = await GetAuthenticatedUserAsync();
 
-            var result = await _unitOfWork.Complete();
-            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem updating appointment information"));
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
 
-            return Ok(appointment);
+                // Retrieve the appointment to update
+                var appointment = await _unitOfWork.Repository<Appointment>().GetByIdAsync(id);
+
+                if (appointment == null)
+                {
+                    return NotFound(new ApiResponse(404, "Appointment not found")); // Return 404 if appointment not found
+                }
+
+                // Map the updated data from the DTO to the existing appointment entity
+                _mapper.Map(appointmentUpdateDto, appointment);
+                _unitOfWork.Repository<Appointment>().Update(appointment); // Mark the appointment entity as updated
+
+                // Save changes to the database
+                var result = await _unitOfWork.Complete();
+                if (result <= 0) return BadRequest(new ApiResponse(400, "Problem updating appointment information"));
+
+                return Ok(_mapper.Map<AppointmentDto>(appointmentUpdateDto)); // Return the updated appointment
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(400, $"Problem updating appointment: {ex.Message}")); // Return 400 for exceptions
+            }
         }
 
+        /// <summary>
+        /// Deletes an appointment by its ID for the authenticated user.
+        /// </summary>
+        /// <param name="id">The ID of the appointment to delete.</param>
+        /// <returns>A response indicating the result of the deletion.</returns>
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult> DeleteAppointment(int id)
         {
-            var appointment = await _unitOfWork.Repository<Appointment>().GetByIdAsync(id);
-
-            _unitOfWork.Repository<Appointment>().Delete(appointment);
-
-            var result = await _unitOfWork.Complete();
-
-            if (result <= 0) return BadRequest(new ApiResponse(400, "Problem deleting appointment information"));
-
-            return Ok();
-        }
-
-        [HttpGet("patient/{patientId}/appointments")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        [Authorize]
-        public async Task<ActionResult<IReadOnlyList<AppointmentDto>>> GetPatientAppointments(int patientId)
-        {
-            var userName = User.Identity.Name;
-
-            if (string.IsNullOrEmpty(userName))
+            try
             {
-                return Unauthorized(new ApiResponse(401, "User not authenticated"));
+                var user = await GetAuthenticatedUserAsync();
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not found"));
+
+                // Retrieve the appointment to delete
+                var appointment = await _unitOfWork.Repository<Appointment>().GetByIdAsync(id);
+
+                if (appointment == null)
+                {
+                    return NotFound(new ApiResponse(404, "Appointment not found")); // Return 404 if appointment not found
+                }
+
+                // Remove the appointment from the context
+                _unitOfWork.Repository<Appointment>().Delete(appointment);
+
+                // Save changes to the database
+                var result = await _unitOfWork.Complete();
+                if (result <= 0) return BadRequest(new ApiResponse(400, "Problem deleting appointment"));
+
+                return Ok(new ApiResponse(200, "Appointment successfully deleted"));
             }
-
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null)
-                return Unauthorized(new ApiResponse(400, "User not found"));
-                
-            // Check if the patient belongs to the authenticated user
-            var patientSpec = new PatientWithAllSpecification(patientId);
-            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
-
-            if (patient == null || patient.AppUserId != user.Id)
+            catch (Exception ex)
             {
-                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+                return BadRequest(new ApiResponse(400, $"Problem deleting appointment: {ex.Message}")); // Return 400 for exceptions
             }
-            // Filter and get patient appointments
-            var appointmentSpec = new AppointmentSpecification(patientId, getByPatientId: true);
-            var appointments = await _unitOfWork.Repository<Appointment>().ListAsync(appointmentSpec);
-            var appointmentDtos = _mapper.Map<IReadOnlyList<AppointmentDto>>(appointments);
-
-            return Ok(appointmentDtos);
-        }
-
-        [HttpGet("patient/{patientId}/appointments/{appointmentId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        [Authorize]
-        public async Task<ActionResult<AppointmentDto>> GetPatientAppointment(int patientId, int appointmentId)
-        {
-            var userName = User.Identity.Name;
-            if (string.IsNullOrEmpty(userName))
-            {
-                return Unauthorized(new ApiResponse(401, "User not authenticated"));
-            }
-
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null)
-                return Unauthorized(new ApiResponse(400, "User not found"));
-
-            // Check if the patient belongs to the authenticated user
-            var patientSpec = new PatientWithAllSpecification(patientId);
-            var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
-
-            if (patient == null || patient.AppUserId != user.Id)
-            {
-                return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
-            }
-
-            var appointmentSpec = new AppointmentSpecification(patientId, appointmentId);
-            var appointment = await _unitOfWork.Repository<Appointment>().GetEntityWithSpec(appointmentSpec);
-            var appointmentDto = _mapper.Map<AppointmentDto>(appointment);
-
-            return Ok(appointmentDto);
         }
     }
 }
-

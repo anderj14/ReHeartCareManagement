@@ -9,11 +9,9 @@ using Core.Entities;
 using Core.Entities.Identity;
 using Core.Interfaces;
 using Core.Specification;
-using Infraestructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -21,37 +19,17 @@ namespace API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IGenericRepository<Patient> _patientRepo;
         private readonly UserManager<AppUser> _userManager;
-        private readonly ManagementContext _context;
 
         public PatientsController(
             IUnitOfWork unitOfwork,
             IMapper mapper,
             IGenericRepository<Patient> patientRepo,
-            UserManager<AppUser> userManager,
-            ManagementContext context
-        )
+            UserManager<AppUser> userManager
+        ): base(userManager)
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
-            _patientRepo = patientRepo;
-            _userManager = userManager;
-            _context = context;
-        }
-
-        // Retrieves the currently authenticated user based on the username from the claims
-        private async Task<AppUser> GetAuthenticatedUserAsync()
-        {
-            var userName = User.Identity.Name;
-
-            if (string.IsNullOrEmpty(userName))
-            {
-                return null; // Return null if no username is found
-            }
-
-            var user = await _userManager.FindByNameAsync(userName);
-            return user; // Fetch the user details from the UserManager
         }
 
         [HttpGet]
@@ -120,9 +98,9 @@ namespace API.Controllers
             }
 
             // Define a filter expression to get only the patient associated with the authenticated user
-            Expression<Func<Patient, bool>> filter = (note) => note.AppUserId == user.Id;
+            Expression<Func<Patient, bool>> filter = (patient) => patient.AppUserId == user.Id;
 
-            // Create a specification to query the patient by ID
+            // Create a specification to query the patient by Id
             var spec = new PatientWithAllSpecification(id);
 
             // Retrieve the patient based on the filter and specification
@@ -136,7 +114,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddPatientByUser([FromBody] PatientCreateDto patientCreateDto)
+        public async Task<ActionResult> AddPatientByUser([FromBody] PatientCreateDto patientCreateDto)
         {
             try
             {
@@ -156,9 +134,9 @@ namespace API.Controllers
                 var newPatient = _mapper.Map<Patient>(patientCreateDto);
                 newPatient.AppUserId = user.Id; // Set the AppUserId for the new patient
 
-                // _context.Patients.Add(newPatient); // Add the new patient to the context
+                // Add the new patient to the context
                 _unitOfWork.Repository<Patient>().Add(newPatient);
-                // await _context.SaveChangesAsync(); // Save changes to the database
+                // Save changes to the database
                 await _unitOfWork.Complete();
 
                 // Map the new patient entity to PatientDto

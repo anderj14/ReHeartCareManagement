@@ -12,6 +12,8 @@ namespace Core.Dtos.CreateDto
 
         [Required]
         public DateTime Date { get; set; }
+        [Required]
+        public int NoteStatusId { get; set; }
         // public TimeSpan Time { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Core.Entities;
-using Core.Entities.Identity;
 using Core.Specification;
 
 namespace Core.Interfaces
@@ -18,6 +17,9 @@ namespace Core.Interfaces
         Task<int> CountAsync(ISpecification<T> spec);
         Task<int> CountByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec);
         Task<IReadOnlyList<T>> ListAllByUserAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec, int pageIndex, int pageSize);
+
+        Task<int> CountByPatientAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec);
+        Task<IReadOnlyList<T>> ListAllByPatientAsync(Expression<Func<T, bool>> filter, ISpecification<T> spec, int pageIndex, int pageSize);
 
         void Add(T entity);
         void Update(T entity);

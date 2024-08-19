@@ -2,24 +2,32 @@ using Core.Entities;
 
 namespace Core.Specification.SurgeryFollowUpSpec
 {
+    /// <summary>
+    /// Specification for filtering and retrieving surgery follow-ups.
+    /// </summary>
     public class SurgeryFollowUpSpecification : BaseSpecification<SurgeryFollowUp>
     {
-        public SurgeryFollowUpSpecification(SurgeryFollowUpSpecParams surgeryFollowUpParams)
-            : base(x =>
-                (string.IsNullOrEmpty(surgeryFollowUpParams.Search) || x.CardiologySurgery.SurgeryName.ToLower().Contains
-                (surgeryFollowUpParams.Search))
-                && (!surgeryFollowUpParams.CardiologySurgeryId.HasValue || x.CardiologySurgeryId == surgeryFollowUpParams.CardiologySurgeryId)
-            )
+        /// <summary>
+        /// Creates a new specification to filter and retrieve surgery follow-ups based on the provided parameters.
+        /// </summary>
+        /// <param name="surgeryFollowUpParams">Parameters for filtering and sorting surgery follow-ups.</param>
+        public SurgeryFollowUpSpecification(int cardiologySurgeryId, BaseSpecParams baseSpecParams)
+            : base(a => a.CardiologySurgeryId == cardiologySurgeryId)
         {
+            // Include related entities in the query
             AddInclude(sfu => sfu.CardiologySurgery);
             AddInclude(sfu => sfu.MedicationsPrescribed);
 
-            ApplyPaging(surgeryFollowUpParams.PageSize * (surgeryFollowUpParams.PageIndex - 1),
-            surgeryFollowUpParams.PageSize);
+            // Apply pagination based on the provided parameters
+            ApplyPaging(
+                baseSpecParams.PageSize * (baseSpecParams.PageIndex - 1),
+                baseSpecParams.PageSize
+            );
 
-            if (!string.IsNullOrEmpty(surgeryFollowUpParams.Sort))
+            // Apply sorting based on the provided sorting criteria
+            if (!string.IsNullOrEmpty(baseSpecParams.Sort))
             {
-                switch (surgeryFollowUpParams.Sort)
+                switch (baseSpecParams.Sort)
                 {
                     case "followUpDateAsc":
                         AddOrderBy(sfu => sfu.FollowUpDate);
@@ -27,7 +35,6 @@ namespace Core.Specification.SurgeryFollowUpSpec
                     case "followUpDateDesc":
                         AddOrderByDescending(sfu => sfu.FollowUpDate);
                         break;
-
                     default:
                         AddOrderBy(n => n.CardiologySurgery.SurgeryName);
                         break;
@@ -35,19 +42,29 @@ namespace Core.Specification.SurgeryFollowUpSpec
             }
         }
 
+        /// <summary>
+        /// Creates a new specification to retrieve a specific surgery follow-up for a given cardiology surgery.
+        /// </summary>
+        /// <param name="cardiologySurgeryId">ID of the cardiology surgery.</param>
+        /// <param name="surgeryFollowUpId">ID of the surgery follow-up.</param>
         public SurgeryFollowUpSpecification(int cardiologySurgeryId, int surgeryFollowUpId)
-        : base(sfu => sfu.CardiologySurgeryId == cardiologySurgeryId && sfu.Id == surgeryFollowUpId)
+            : base(sfu => sfu.CardiologySurgeryId == cardiologySurgeryId && sfu.Id == surgeryFollowUpId)
         {
+            // Include related entities in the query
             AddInclude(sfu => sfu.CardiologySurgery);
             AddInclude(sfu => sfu.MedicationsPrescribed);
         }
 
-        public SurgeryFollowUpSpecification(int cardiologySurgeryId)
-        : base(sfu => sfu.CardiologySurgeryId == cardiologySurgeryId)
+        /// <summary>
+        /// Creates a new specification to retrieve all surgery follow-ups for a given cardiology surgery.
+        /// </summary>
+        /// <param name="cardiologySurgeryId">ID of the cardiology surgery.</param>
+        public SurgeryFollowUpSpecification(int id)
+            : base(sfu => sfu.Id == id)
         {
+            // Include related entities in the query
             AddInclude(sfu => sfu.CardiologySurgery);
             AddInclude(sfu => sfu.MedicationsPrescribed);
         }
     }
-
 }

@@ -6,7 +6,7 @@ namespace Core.Dtos
         public DateTime Date { get; set; }
         public TimeSpan Time { get; set; }
         public string Duration { get; set; }
-        public string MaxHeartRate { get; set; }
+        public int MaxHeartRate { get; set; }
         public string PeakPressure { get; set; }
         public string ExerciseInducedSymptoms { get; set; }
         public string AbnormalEcgFindings { get; set; }

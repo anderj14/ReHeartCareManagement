@@ -17,11 +17,17 @@ namespace Core.Dtos.CreateDto
         [Required]
         public string ExerciseInducedSymptoms { get; set; }
         [Required]
+        public int RestingHeartRate { get; set; }
+        [Required]
+        public decimal MaxBloodPressureSystolic { get; set; }
+        [Required]
+        public decimal MaxBloodPressureDiastolic { get; set; }
+        [Required]
+        public string ExerciseProtocol { get; set; }
+        [Required]
+        public string Indications { get; set; }
+        [Required]
         public string AbnormalEcgFindings { get; set; }
-        [Required]
-        public string ImageEco { get; set; }
-        [Required]
-        public string ImageStress { get; set; }
         [Required]
         public string Conclusion { get; set; }
         [Required]
