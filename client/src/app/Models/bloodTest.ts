@@ -28,5 +28,11 @@ export interface BloodTest {
     monocytes: string
     eosinophils: string
     basophils: string
-    patientId: number
+    patient: string
+}
+
+export interface BloodTestParams {
+    sort: string;
+    pageIndex: number;
+    pageSize: number;
 }

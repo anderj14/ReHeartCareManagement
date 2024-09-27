@@ -8,8 +8,8 @@ namespace Infraestructure.config
     {
         public void Configure(EntityTypeBuilder<Notes> builder)
         {
-            // builder.HasOne(n => n.AppUser).WithMany(u => u.Notes).HasForeignKey(n => n.UserId)
-            //     .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(n => n.AppUser).WithMany(u => u.Notes).HasForeignKey(n => n.AppUserId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

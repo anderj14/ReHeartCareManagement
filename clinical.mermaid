@@ -1,0 +1,14 @@
+graph TD
+    A["Client Browser"] -->|HTTP/HTTPS| B["Load Balancer"]
+    B --> C["Web Server"]
+    C --> D["ASP.NET Core Web API"]
+    D --> E["Business Logic Layer"]
+    E --> F["Data Access Layer"]
+    F --> G["SQL Server"]
+    F --> H["MongoDB"]
+    D --> I["Identity Server"]
+    I --> G
+    D --> J["Integration Services"]
+    J --> K["HL7"]
+    J --> L["PACS"]
+    J --> M["LIS"]

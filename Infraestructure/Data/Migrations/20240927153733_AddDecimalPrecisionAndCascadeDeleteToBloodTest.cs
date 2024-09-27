@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infraestructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class ModelEntityV2 : Migration
+    public partial class AddDecimalPrecisionAndCascadeDeleteToBloodTest : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -230,7 +230,8 @@ namespace Infraestructure.Data.Migrations
                         name: "FK_Notes_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Notes_NoteStatuses_NoteStatusId",
                         column: x => x.NoteStatusId,
@@ -335,32 +336,32 @@ namespace Infraestructure.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Hemoglobin = table.Column<string>(type: "TEXT", nullable: true),
-                    Hematocrit = table.Column<string>(type: "TEXT", nullable: true),
-                    WhiteBloodCell = table.Column<string>(type: "TEXT", nullable: true),
-                    Platelets = table.Column<string>(type: "TEXT", nullable: true),
-                    Glucose = table.Column<string>(type: "TEXT", nullable: true),
-                    CholesterolHDL = table.Column<string>(type: "TEXT", nullable: true),
-                    CholesterolLDL = table.Column<string>(type: "TEXT", nullable: true),
-                    Triglycerides = table.Column<string>(type: "TEXT", nullable: true),
-                    RedBloodCell = table.Column<string>(type: "TEXT", nullable: true),
-                    MeanCorpuscularVolume = table.Column<string>(type: "TEXT", nullable: true),
-                    MeanCorpuscularHemoglobin = table.Column<string>(type: "TEXT", nullable: true),
-                    MeanCorpuscularHemoglobinConcentration = table.Column<string>(type: "TEXT", nullable: true),
-                    RedCellDistributionWidth = table.Column<string>(type: "TEXT", nullable: true),
-                    BloodUreaNitrogen = table.Column<string>(type: "TEXT", nullable: true),
-                    Creatinine = table.Column<string>(type: "TEXT", nullable: true),
-                    Sodium = table.Column<string>(type: "TEXT", nullable: true),
-                    Potassium = table.Column<string>(type: "TEXT", nullable: true),
-                    Chloride = table.Column<string>(type: "TEXT", nullable: true),
-                    Bicarbonate = table.Column<string>(type: "TEXT", nullable: true),
-                    Calcium = table.Column<string>(type: "TEXT", nullable: true),
-                    Magnesium = table.Column<string>(type: "TEXT", nullable: true),
-                    Neutrophils = table.Column<string>(type: "TEXT", nullable: true),
-                    Lymphocytes = table.Column<string>(type: "TEXT", nullable: true),
-                    Monocytes = table.Column<string>(type: "TEXT", nullable: true),
-                    Eosinophils = table.Column<string>(type: "TEXT", nullable: true),
-                    Basophils = table.Column<string>(type: "TEXT", nullable: true),
+                    Hemoglobin = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Hematocrit = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    WhiteBloodCell = table.Column<int>(type: "int", nullable: true),
+                    Platelets = table.Column<int>(type: "int", nullable: true),
+                    Glucose = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    CholesterolHDL = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    CholesterolLDL = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Triglycerides = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    RedBloodCell = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    MeanCorpuscularVolume = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    MeanCorpuscularHemoglobin = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    MeanCorpuscularHemoglobinConcentration = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    RedCellDistributionWidth = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    BloodUreaNitrogen = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Creatinine = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Sodium = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Potassium = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Chloride = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Bicarbonate = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Calcium = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Magnesium = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Neutrophils = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Lymphocytes = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Monocytes = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Eosinophils = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Basophils = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     PatientId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -995,8 +996,8 @@ namespace Infraestructure.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "542d4cf5-83a5-4720-a546-fe2b6956d9c7", null, "Admin", "ADMIN" },
-                    { "c1963c70-7b5e-45c0-92f8-eab1a0715fdd", null, "User", "USER" }
+                    { "12b117a9-8dbb-483b-aee7-c3fe55eb0a5f", null, "User", "USER" },
+                    { "d28ce0c9-eb6b-4af2-a39d-b45b10aad8eb", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

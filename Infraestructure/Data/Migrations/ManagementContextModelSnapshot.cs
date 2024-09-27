@@ -122,89 +122,89 @@ namespace Infraestructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Basophils")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Basophils")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Bicarbonate")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Bicarbonate")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("BloodUreaNitrogen")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("BloodUreaNitrogen")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Calcium")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Calcium")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Chloride")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Chloride")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("CholesterolHDL")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("CholesterolHDL")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("CholesterolLDL")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("CholesterolLDL")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Creatinine")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Creatinine")
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Eosinophils")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Eosinophils")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Glucose")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Glucose")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Hematocrit")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Hematocrit")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Hemoglobin")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Hemoglobin")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Lymphocytes")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Lymphocytes")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Magnesium")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Magnesium")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("MeanCorpuscularHemoglobin")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("MeanCorpuscularHemoglobin")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("MeanCorpuscularHemoglobinConcentration")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("MeanCorpuscularHemoglobinConcentration")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("MeanCorpuscularVolume")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("MeanCorpuscularVolume")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Monocytes")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Monocytes")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Neutrophils")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Neutrophils")
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Platelets")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("Platelets")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Potassium")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Potassium")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("RedBloodCell")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("RedBloodCell")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("RedCellDistributionWidth")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("RedCellDistributionWidth")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Sodium")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Sodium")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Triglycerides")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("Triglycerides")
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("WhiteBloodCell")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("WhiteBloodCell")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1324,13 +1324,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "542d4cf5-83a5-4720-a546-fe2b6956d9c7",
+                            Id = "d28ce0c9-eb6b-4af2-a39d-b45b10aad8eb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c1963c70-7b5e-45c0-92f8-eab1a0715fdd",
+                            Id = "12b117a9-8dbb-483b-aee7-c3fe55eb0a5f",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -1659,7 +1659,8 @@ namespace Infraestructure.Data.Migrations
                 {
                     b.HasOne("Core.Entities.Identity.AppUser", "AppUser")
                         .WithMany("Notes")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Core.Entities.NoteStatus", "NoteStatus")
                         .WithMany()

@@ -80,7 +80,7 @@ const Note = {
 };
 
 const BloodTest = {
-    listByPatientId: (patientId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests`),
+    listByPatientId: (params: URLSearchParams, patientId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests`, params),
     detailsByPatientId: (patientId: number, bloodTestId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests/${bloodTestId}`),
 };
 

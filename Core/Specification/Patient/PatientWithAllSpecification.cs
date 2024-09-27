@@ -13,7 +13,8 @@ namespace Core.Specification
         /// <param name="patientParams">Parameters for filtering, sorting, and paging patients.</param>
         public PatientWithAllSpecification(PatientSpecParams patientParams)
             : base(x =>
-                (string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower().Contains(patientParams.Search.ToLower()))
+                (string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower()
+                .Contains(patientParams.Search.ToLower()))
                 && (!patientParams.StatusId.HasValue || x.StatusId == patientParams.StatusId)
             )
         {

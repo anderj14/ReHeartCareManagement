@@ -225,6 +225,7 @@ namespace API.Controllers
             {
                 return BadRequest(new ApiResponse(400, "Invalid data")); // Return 400 for invalid data
             }
+            
             try
             {
                 var user = await GetAuthenticatedUserAsync();

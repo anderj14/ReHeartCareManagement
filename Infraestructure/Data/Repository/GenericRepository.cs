@@ -85,7 +85,6 @@ namespace Infraestructure.Data.Repository
             return await query.ToListAsync();
         }
 
-        // 'Set<T>()' is used to access the DbSet for the entity type.
         public void Add(T entity)
         {
             _context.Set<T>().Add(entity);

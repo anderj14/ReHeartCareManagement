@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function BloodTestPatient({ bloodTests }: Props) {
-    const latestBloodTest = bloodTests?.slice(-1)[0];
+    const latestBloodTest = bloodTests.slice(-1)[0];
 
     return (
         <Card className="detailsContainer" >

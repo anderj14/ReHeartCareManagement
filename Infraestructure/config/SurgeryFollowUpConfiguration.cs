@@ -9,7 +9,8 @@ namespace Infraestructure.config
         public void Configure(EntityTypeBuilder<SurgeryFollowUp> builder)
         {
             builder.HasMany(sf => sf.MedicationsPrescribed).WithOne(mp => mp.SurgeryFollowUp)
-            .HasForeignKey(mp => mp.SurgeryFollowUpId);
+            .HasForeignKey(mp => mp.SurgeryFollowUpId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

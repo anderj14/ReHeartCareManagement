@@ -46,6 +46,7 @@ export default function Patients() {
     const toggleDrawer = (newOpen: boolean) => () => {
         setOpenForm(newOpen);
     };
+
     const DrawerList = (
         <Box sx={{ width: 650, padding: '20px' }} role="presentation" onClick={toggleDrawer(false)}>
             <PatientForm cancelEdit={function (): void {
@@ -100,11 +101,11 @@ export default function Patients() {
 
             <Box sx={{ marginTop: '20px' }}>
                 <div className="patientList">
-                    {status === 'pendingFetchCardiologySurgeriesAsync' && (
-                        <Typography variant="h6">Loading Surgeries...</Typography>
+                    {status === 'pendingFetchPatientsAsync' && (
+                        <Typography variant="h6">Loading Patients...</Typography>
                     )}
                     {patientsLoaded && patients.length === 0 && (
-                        <Typography variant="h6">No Surgeries Found</Typography>
+                        <Typography variant="h6">No patient Found</Typography>
                     )}
                     {patientsLoaded && patients.length > 0 && (
                         <PatientList patients={patients} />

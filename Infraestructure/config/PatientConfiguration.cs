@@ -40,46 +40,60 @@ namespace Infraestructure.config
 
             // Relationship appointment
             builder.HasMany(p => p.Appointments).WithOne(a => a.Patient)
-            .HasForeignKey(a => a.PatientId);
+            .HasForeignKey(a => a.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship blood test
             builder.HasMany(p => p.BloodTests).WithOne(bt => bt.Patient)
-            .HasForeignKey(bt => bt.PatientId);
+            .HasForeignKey(bt => bt.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship cardiac catheterization study
             builder.HasMany(p => p.CardiacCatheterizationStudies).WithOne(ccs => ccs.Patient)
-            .HasForeignKey(ccs => ccs.PatientId);
+            .HasForeignKey(ccs => ccs.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship diagnostic
             builder.HasMany(p => p.Diagnostics).WithOne(d => d.Patient)
-            .HasForeignKey(d => d.PatientId);
+            .HasForeignKey(d => d.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship disease history
             builder.HasMany(p => p.DiseaseHistories).WithOne(dh => dh.Patient)
-            .HasForeignKey(dh => dh.PatientId);
+            .HasForeignKey(dh => dh.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship echocardiogram
             builder.HasMany(p => p.Echocardiograms).WithOne(e => e.Patient)
-            .HasForeignKey(e => e.PatientId);
+            .HasForeignKey(e => e.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship electrocardiogram
             builder.HasMany(p => p.Electrocardiograms).WithOne(e => e.Patient)
-            .HasForeignKey(e => e.PatientId);
+            .HasForeignKey(e => e.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship holter study
             builder.HasMany(p => p.HolterStudies).WithOne(hs => hs.Patient)
-            .HasForeignKey(hs => hs.PatientId);
+            .HasForeignKey(hs => hs.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship medical history
             builder.HasMany(p => p.MedicalHistories).WithOne(mh => mh.Patient)
-            .HasForeignKey(mh => mh.PatientId);
+            .HasForeignKey(mh => mh.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship physical examination
             builder.HasMany(p => p.PhysicalExaminations).WithOne(pe => pe.Patient)
-            .HasForeignKey(pe => pe.PatientId);
+            .HasForeignKey(pe => pe.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship stress test
             builder.HasMany(p => p.StressTests).WithOne(st => st.Patient)
-            .HasForeignKey(st => st.PatientId);
+            .HasForeignKey(st => st.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship treatment
             builder.HasMany(p => p.Treatments).WithOne(t => t.Patient)
-            .HasForeignKey(t => t.PatientId);
+            .HasForeignKey(t => t.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship cardiology surgery
             builder.HasMany(p => p.CardiologySurgery).WithOne(t => t.Patient)
-            .HasForeignKey(cs => cs.PatientId);
+            .HasForeignKey(cs => cs.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
             // Relationship prescription
             builder.HasMany(p => p.Prescription).WithOne(t => t.Patient)
-            .HasForeignKey(cs => cs.PatientId);
+            .HasForeignKey(cs => cs.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
