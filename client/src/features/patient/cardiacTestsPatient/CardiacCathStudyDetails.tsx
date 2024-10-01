@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore'
 import { useParams } from 'react-router-dom';
 import { cardiacCathStudySelectors, fetchCardiacCathStudyByPatientAsync } from './cardiacCathStudySlice';
 import { Box, Card, CardContent, Typography, CardActions, Button } from '@mui/material';
-import { format } from 'date-fns';
 import Breadcrumb from '../../../app/components/Breadcrumb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -75,7 +74,7 @@ export default function CardiacCathStudyDetails() {
                                         Blood Pressure (Aorta)
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.bloodPressureAorta}
+                                        {/* {cardiacCathStudyByPatient?.bloodPressureAorta} */}
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -139,7 +138,7 @@ export default function CardiacCathStudyDetails() {
                                         Blood Pressure (Pulmonary Arteries)
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.bloodPressurePulmonaryArteries}
+                                        {/* {cardiacCathStudyByPatient?.bloodPressurePulmonaryArteries} */}
                                     </Typography>
                                 </Box>
                                 <Box>

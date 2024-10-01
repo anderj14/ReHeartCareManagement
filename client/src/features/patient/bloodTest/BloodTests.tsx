@@ -1,107 +1,98 @@
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/configureStore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import BloodTestList from "./BloodTestList";
-import { Box, Button, Card, CardContent, Drawer, Typography } from "@mui/material";
+import { Box, Card, CardContent, FormControl, InputLabel, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
 import Breadcrumb from "../../../app/components/Breadcrumb";
 import { bloodTestSelectors, fetchBloodTestsByPatientAsync, setBloodTestParams } from "./bloodTestSlice";
 import { patientSelectors } from "../patientSlice";
-import RadioButtonGroup from "../../../app/components/RadioButtonGroup";
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import PaginationItem from "../../../app/components/PaginationItem";
+import CustomButton from "../../../app/components/CustomButton";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import Title from "../../../app/components/Title";
 
 const sortOptions = [
-    {value: 'PatientName', label: 'Alphabetical'},
+    { value: 'PatientName', label: 'Alphabetical' },
     { value: 'dateAsc', label: 'Date - Asc to Desc' },
     { value: 'dateDesc', label: 'Date - Desc to Asc' },
 ];
 
 export default function BloodTests() {
-    
     const { id } = useParams<{ id: any }>();
     const dispatch = useAppDispatch();
     const bloodTestsByPatient = useAppSelector(bloodTestSelectors.selectAll);
     const { bloodTestByPatientLoaded, bloodTestParams, metaData, status } = useAppSelector(state => state.bloodTest);
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
-    const [open, setOpen] = useState(false);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    
+
     useEffect(() => {
-        if(!bloodTestByPatientLoaded) dispatch(fetchBloodTestsByPatientAsync(id));
-    }, [bloodTestByPatientLoaded, dispatch]);
-
-
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-        setOpen((previousOpen) => !previousOpen);
-    };
-
-//   const canBeOpen = open && Boolean(anchorEl);
-//   const id = canBeOpen ? 'spring-popper' : undefined;
-
-    // console.log(patient.id);
+        if (!bloodTestByPatientLoaded) dispatch(fetchBloodTestsByPatientAsync(id));
+    }, [bloodTestByPatientLoaded, dispatch, id]);
 
     return (
-        <div className="contentPatient">
+        <Box className="contentPatient">
             <Breadcrumb page="Blood Tests" />
-            <Box>
-                <Typography variant="h4">Blood Tests</Typography>
-            </Box>
-            <div className="line"></div>
-
-            <Card>
+            <Card sx={{ marginBottom: 3 }}>
                 <CardContent>
-                    <Box sx={{ marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Typography variant="h5" key={patient?.id}>
-                            list of blood tests for patient {patient?.patientName}
-                        </Typography>
+                    <Box display={"flex"} alignItems="center" justifyContent="space-between">
+                        <Box>
+                            <Title key={patient?.id} title={`Blood tests for patient ${patient?.patientName}`}></Title>
+                        </Box>
+                        <Box sx={{display: 'flex', alignItems: 'center'}}>
+                            <Box>
+                                <FormControl sx={{ m: 1, minWidth: 200, "& .MuiInputLabel-root.Mui-focused": { color: '#838384'},
+                                    "& .MuiOutlinedInput-root": {
+                                    "fieldset": {border: '1.5px solid #e4e4e7'},
+                                    "&:hover fieldset": {border: '1.5px solid #e4e4e7' },
+                                    "&.Mui-focused fieldset": {border: '1.5px solid #e4e4e7'}
+                                    }}}
+                                >
+                                    <InputLabel>Filter</InputLabel>
+                                    <Select
+                                    value={bloodTestParams.sort}
+                                    label="Filter"
+                                    input={<OutlinedInput label="Filter" />}
+                                    onChange={(e) => dispatch(setBloodTestParams({sort: e.target.value}))}
+                                    sx={{height: '36px', textAlign: 'left'}}
+                                    >
+                                        {sortOptions.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
 
-                        <div className="addButton">
-                            <Button className="button" startIcon={<AddRoundedIcon />}>Add Blood Test</Button>
-                        </div>
+                            <CustomButton icon={AddCircleOutlineIcon} color="#3396ff" hoverColor="#f3f3f3" hoverTextColor="#2f7fd4" >
+                                Add Blood Test
+                            </CustomButton>
+                        </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '-35px' }}>
 
-                        <div className="addFilterButton">
-                            <Button className="button" startIcon={<SortRoundedIcon />} onClick={handleClick}>Filter</Button>
-                            <RadioButtonGroup
-                                selectedValue={bloodTestParams.sort}
-                                options={sortOptions}
-                                onChange={(e) => dispatch(setBloodTestParams({ sort: e.target.value }))}
-                                id={id}
-                                open={open}
-                                anchorEl={anchorEl}
+                    <Box sx={{marginTop: '15px'}}>
+                        {status === 'pendingFetchBloodTestsByPatient' ? (
+                            <Typography variant="h6" align="center">Loading Blood Tests...</Typography>
+                        ) : (
+                            bloodTestByPatientLoaded && bloodTestsByPatient.length === 0 ? (
+                                <Typography variant="h6" align="center">No Blood Tests Found</Typography>
+                            ) : (
+                                <BloodTestList bloodTests={bloodTestsByPatient} />
+                            )
+                        )}
+                    </Box>
+
+                    {bloodTestByPatientLoaded && metaData && (
+                        <Box sx={{ marginTop: 4 }}>
+                            <PaginationItem
+                                metaData={metaData}
+                                onPageChange={(page: number) => dispatch(setBloodTestParams({ pageIndex: page }))}
+                                name='bloodtest'
                             />
-                        </div>
-                    </Box>
+                        </Box>
+                    )}
                 </CardContent>
             </Card>
-
-            <Box sx={{marginTop: '20px'}}>
-                <div className="bloodTestList">
-                    {status === 'pendingFetchBloodTestsByPatient' && (
-                        <Typography variant="h6">Loading Patients...</Typography>
-                    )}
-                    {bloodTestByPatientLoaded && bloodTestsByPatient.length === 0 && (
-                        <Typography variant="h6">No Blood Tets Found</Typography>
-                    )}
-                    {bloodTestByPatientLoaded && bloodTestsByPatient.length > 0 &&(
-                        <BloodTestList bloodTests={bloodTestsByPatient} />
-                    )}
-                </div>
-            </Box>
-            {bloodTestByPatientLoaded && (
-                <Box marginTop={'30px'}>
-                {/* <h2>pagination</h2> */}
-                {metaData && (
-                    <PaginationItem
-                        metaData={metaData}
-                        onPageChange={(page: number) => dispatch(setBloodTestParams({ pageIndex: page }))}
-                    />
-                )}
-                </Box>
-            )}
-        </div>
-    )
+           
+        </Box>
+    );
 }

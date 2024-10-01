@@ -32,12 +32,12 @@ export default function BloodTestList({ bloodTests }: Props) {
                         {bloodTests.map((bloodTest) => (
                             <TableRow key={bloodTest.id} component={Link} to={`/bloodtests/patient/${patient?.id}/bloodtests/${bloodTest.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(bloodTest.date)}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.hemoglobin}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.hematocrit}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.whiteBloodCell}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.platelets}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.glucose}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.triglycerides}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.hemoglobin}g/dL</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.hematocrit}%</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.whiteBloodCell?.toLocaleString()} cells/µL</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.platelets}cells/µL</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.glucose}mg/dL</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{bloodTest.triglycerides}mg/dL</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

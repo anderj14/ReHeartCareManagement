@@ -6,58 +6,35 @@ namespace Core.Dtos.CreateDto
     {
         [Required]
         public DateTime Date { get; set; }
-        [Required]
-        public string Hemoglobin { get; set; }
-        [Required]
-        public string Hematocrit { get; set; }
-        [Required]
-        public string WhiteBloodCell { get; set; }
-        [Required]
-        public string Platelets { get; set; }
-        [Required]
-        public string Glucose { get; set; }
-        [Required]
-        public string CholesterolHDL { get; set; }
-        [Required]
-        public string CholesterolLDL { get; set; }
-        [Required]
-        public string Triglycerides { get; set; }
-        [Required]
-        public string RedBloodCell { get; set; }
-        [Required]
-        public string MeanCorpuscularVolume { get; set; }
-        [Required]
-        public string MeanCorpuscularHemoglobin { get; set; }
-        [Required]
-        public string MeanCorpuscularHemoglobinConcentration { get; set; }
-        [Required]
-        public string RedCellDistributionWidth { get; set; }
-        [Required]
-        public string BloodUreaNitrogen { get; set; }
-        [Required]
-        public string Creatinine { get; set; }
-        [Required]
-        public string Sodium { get; set; }
-        [Required]
-        public string Potassium { get; set; }
-        [Required]
-        public string Chloride { get; set; }
-        [Required]
-        public string Bicarbonate { get; set; }
-        [Required]
-        public string Calcium { get; set; }
-        [Required]
-        public string Magnesium { get; set; }
-        [Required]
-        public string Neutrophils { get; set; }
-        [Required]
-        public string Lymphocytes { get; set; }
-        [Required]
-        public string Monocytes { get; set; }
-        [Required]
-        public string Eosinophils { get; set; }
-        [Required]
-        public string Basophils { get; set; }
+
+        public decimal? Hemoglobin { get; set; }
+        public decimal? Hematocrit { get; set; }
+        public int? WhiteBloodCell { get; set; }
+        public int? Platelets { get; set; }
+        public decimal? Glucose { get; set; }
+        public decimal? CholesterolHDL { get; set; }
+        public decimal? CholesterolLDL { get; set; }
+        public decimal? Triglycerides { get; set; }
+        public decimal? RedBloodCell { get; set; }
+        public decimal? MeanCorpuscularVolume { get; set; }
+        public decimal? MeanCorpuscularHemoglobin { get; set; }
+        public decimal? MeanCorpuscularHemoglobinConcentration { get; set; }
+        public decimal? RedCellDistributionWidth { get; set; }
+        public decimal? BloodUreaNitrogen { get; set; }
+        public decimal? Creatinine { get; set; }
+        public decimal? Sodium { get; set; }
+        public decimal? Potassium { get; set; }
+        public decimal? Chloride { get; set; }
+        public decimal? Bicarbonate { get; set; }
+        public decimal? Calcium { get; set; }
+        public decimal? Magnesium { get; set; }
+
+        public decimal? Neutrophils { get; set; }
+        public decimal? Lymphocytes { get; set; }
+        public decimal? Monocytes { get; set; }
+        public decimal? Eosinophils { get; set; }
+        public decimal? Basophils { get; set; }
+
         [Required]
         public int PatientId { get; set; }
     }

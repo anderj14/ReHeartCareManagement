@@ -2,32 +2,32 @@
 export interface BloodTest {
     id: number
     date: string
-    hemoglobin: string
-    hematocrit: string
-    whiteBloodCell: string
-    platelets: string
-    glucose: string
-    cholesterolHDL: string
-    cholesterolLDL: string
-    triglycerides: string
-    redBloodCell: string
-    meanCorpuscularVolume: string
-    meanCorpuscularHemoglobin: string
-    meanCorpuscularHemoglobinConcentration: string
-    redCellDistributionWidth: string
-    bloodUreaNitrogen: string
-    creatinine: string
-    sodium: string
-    potassium: string
-    chloride: string
-    bicarbonate: string
-    calcium: string
-    magnesium: string
-    neutrophils: string
-    lymphocytes: string
-    monocytes: string
-    eosinophils: string
-    basophils: string
+    hemoglobin: number
+    hematocrit: number
+    whiteBloodCell: number
+    platelets: number
+    glucose: number
+    cholesterolHDL: number
+    cholesterolLDL: number
+    triglycerides: number
+    redBloodCell: number
+    meanCorpuscularVolume: number
+    meanCorpuscularHemoglobin: number
+    meanCorpuscularHemoglobinConcentration: number
+    redCellDistributionWidth: number
+    bloodUreaNitrogen: number
+    creatinine: number
+    sodium: number
+    potassium: number
+    chloride: number
+    bicarbonate: number
+    calcium: number
+    magnesium: number
+    neutrophils: number
+    lymphocytes: number
+    monocytes: number
+    eosinophils: number
+    basophils: number
     patient: string
 }
 

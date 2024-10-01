@@ -97,6 +97,7 @@ export default function Appointments() {
             <PaginationItem
               metaData={metaData}
               onPageChange={(page: number) => dispatch(setCardiologySurgeryParams({ pageIndex: page }))}
+              name='Appointments'
             />
           )}
         </Box>

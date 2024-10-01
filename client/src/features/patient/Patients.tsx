@@ -117,6 +117,7 @@ export default function Patients() {
                     <PaginationItem
                         metaData={metaData}
                         onPageChange={(page: number) => dispatch(setPatientParams({ pageIndex: page }))}
+                        name='Patients'
                     />
                 )}
             </Box>

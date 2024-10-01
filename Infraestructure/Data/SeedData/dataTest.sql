@@ -69,8 +69,7 @@ INSERT INTO Appointments (AppUserId, StartDate, EndDate, Time, Description, Loca
 ('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-15 11:00:00', '2024-10-15 11:30:00', '11:00', 'Consultation for asthma.', 'Clinic C', 1, 3, 9),
 ('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-16 12:00:00', '2024-10-16 12:30:00', '12:00', 'Follow-up visit for allergy treatment.', 'Clinic C', 2, 2, 12),
 ('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-17 14:00:00', '2024-10-17 14:30:00', '14:00', 'Emergency appointment for headache.', 'Hospital C', 3, 4, 15),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-18 15:00:00', '2024-10-18 15:30:00', '15:00', 'Routine checkup for eye exam.', 'Clinic C', 1, 6, 18),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-19 16:00:00', '2024-10-19 16:30:00', '16:00', 'Consultation for heartburn.', 'Clinic C', 1, 3, 19);
+('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-18 15:00:00', '2024-10-18 15:30:00', '15:00', 'Routine checkup for eye exam.', 'Clinic C', 1, 6, 18);
 
 INSERT INTO DiseaseHistories (StartDate, Description, Treatment, Diagnosis, Severity, Notes, IsChronic, DoctorName, PatientId)
 VALUES

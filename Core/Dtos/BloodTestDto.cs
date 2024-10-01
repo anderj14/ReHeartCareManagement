@@ -1,35 +1,35 @@
-namespace Core.Dtos
+namespace Core.DTOs
 {
     public class BloodTestDto
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public string Hemoglobin { get; set; }
-        public string Hematocrit { get; set; }
-        public string WhiteBloodCell { get; set; }
-        public string Platelets { get; set; }
-        public string Glucose { get; set; }
-        public string CholesterolHDL { get; set; }
-        public string CholesterolLDL { get; set; }
-        public string Triglycerides { get; set; }
-        public string RedBloodCell { get; set; }
-        public string MeanCorpuscularVolume { get; set; }
-        public string MeanCorpuscularHemoglobin { get; set; }
-        public string MeanCorpuscularHemoglobinConcentration { get; set; }
-        public string RedCellDistributionWidth { get; set; }
-        public string BloodUreaNitrogen { get; set; }
-        public string Creatinine { get; set; }
-        public string Sodium { get; set; }
-        public string Potassium { get; set; }
-        public string Chloride { get; set; }
-        public string Bicarbonate { get; set; }
-        public string Calcium { get; set; }
-        public string Magnesium { get; set; }
-        public string Neutrophils { get; set; }
-        public string Lymphocytes { get; set; }
-        public string Monocytes { get; set; }
-        public string Eosinophils { get; set; }
-        public string Basophils { get; set; }
+        public decimal Hemoglobin { get; set; }
+        public decimal Hematocrit { get; set; }
+        public int WhiteBloodCell { get; set; }
+        public int Platelets { get; set; }
+        public decimal Glucose { get; set; }
+        public decimal CholesterolHDL { get; set; }
+        public decimal CholesterolLDL { get; set; }
+        public decimal Triglycerides { get; set; }
+        public decimal RedBloodCell { get; set; }
+        public decimal MeanCorpuscularVolume { get; set; }
+        public decimal MeanCorpuscularHemoglobin { get; set; }
+        public decimal MeanCorpuscularHemoglobinConcentration { get; set; }
+        public decimal RedCellDistributionWidth { get; set; }
+        public decimal BloodUreaNitrogen { get; set; }
+        public decimal Creatinine { get; set; }
+        public decimal Sodium { get; set; }
+        public decimal Potassium { get; set; }
+        public decimal Chloride { get; set; }
+        public decimal Bicarbonate { get; set; }
+        public decimal Calcium { get; set; }
+        public decimal Magnesium { get; set; }
+        public decimal Neutrophils { get; set; }
+        public decimal Lymphocytes { get; set; }
+        public decimal Monocytes { get; set; }
+        public decimal Eosinophils { get; set; }
+        public decimal Basophils { get; set; }
         public string Patient { get; set; }
     }
 }

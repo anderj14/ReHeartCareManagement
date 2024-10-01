@@ -42,7 +42,7 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                                 </Box>
                                 <Box className="details">
                                     <strong>Blood Pressure in Aorta: </strong>
-                                    <span>{latestCardiacCathStudyPatient.bloodPressureAorta}</span>
+                                    {/* <span>{latestCardiacCathStudyPatient.bloodPressureAorta}</span> */}
                                 </Box>
                                 <Box className="details">
                                     <strong>Left Atrium Chambers: </strong>
@@ -76,7 +76,7 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                                 </Box>
                                 <Box className="details">
                                     <strong>Blood Pressure in Pulmonary Arteries: </strong>
-                                    <span>{latestCardiacCathStudyPatient.bloodPressurePulmonaryArteries}</span>
+                                    {/* <span>{latestCardiacCathStudyPatient.bloodPressurePulmonaryArteries}</span> */}
                                 </Box>
                                 <Box className="details">
                                     <strong>Valvular Insufficiency in Aortic Valve: </strong>

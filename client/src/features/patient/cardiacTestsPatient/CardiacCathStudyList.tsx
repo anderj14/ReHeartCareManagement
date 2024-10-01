@@ -42,7 +42,7 @@ export default function CardiacCathStudyList({ cardiacCathStudies }: Props) {
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{formatDateTime(cardiacCathStudy.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{cardiacCathStudy.time}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{cardiacCathStudy.blockageEachCoronaryArtery}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{cardiacCathStudy.bloodPressureAorta}</TableCell>
+                                {/* <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{cardiacCathStudy.bloodPressureAorta}</TableCell> */}
                                 <TableCell sx={{ fontSize: '18px', fontWeight: 300 }} align="right">{cardiacCathStudy.leftVentricularEjectionFraction}</TableCell>
                             </TableRow>
                         ))}
