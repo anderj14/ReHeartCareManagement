@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infraestructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDecimalPrecisionAndCascadeDeleteToBloodTest : Migration
+    public partial class updateEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -93,7 +93,7 @@ namespace Infraestructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientStatuses",
+                name: "PatientStatus",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -102,7 +102,7 @@ namespace Infraestructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientStatuses", x => x.Id);
+                    table.PrimaryKey("PK_PatientStatus", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -277,9 +277,9 @@ namespace Infraestructure.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Patients_PatientStatuses_StatusId",
+                        name: "FK_Patients_PatientStatus_StatusId",
                         column: x => x.StatusId,
-                        principalTable: "PatientStatuses",
+                        principalTable: "PatientStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -384,22 +384,24 @@ namespace Infraestructure.Data.Migrations
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Time = table.Column<TimeSpan>(type: "TEXT", nullable: false),
                     LocationMainCoronaryArteries = table.Column<string>(type: "TEXT", nullable: true),
-                    BlockageEachCoronaryArtery = table.Column<string>(type: "TEXT", nullable: true),
+                    BlockageEachCoronaryArtery = table.Column<double>(type: "REAL", nullable: false),
                     DescriptionAbnormalities = table.Column<string>(type: "TEXT", nullable: true),
-                    BloodPressureAorta = table.Column<string>(type: "TEXT", nullable: true),
+                    SystolicPressureAorta = table.Column<int>(type: "INTEGER", nullable: false),
+                    DiastolicPressureAorta = table.Column<int>(type: "INTEGER", nullable: false),
                     ChambersLeftAtrium = table.Column<string>(type: "TEXT", nullable: true),
                     ChambersLeftVentricle = table.Column<string>(type: "TEXT", nullable: true),
                     ChambersRightAtrium = table.Column<string>(type: "TEXT", nullable: true),
                     ChambersRightVentricle = table.Column<string>(type: "TEXT", nullable: true),
-                    BloodFlowCoronaryArteries = table.Column<string>(type: "TEXT", nullable: true),
-                    VelocityBloodFlow = table.Column<string>(type: "TEXT", nullable: true),
-                    LeftVentricularEjectionFraction = table.Column<string>(type: "TEXT", nullable: true),
-                    BloodPressurePulmonaryArteries = table.Column<string>(type: "TEXT", nullable: true),
+                    BloodFlowCoronaryArteries = table.Column<double>(type: "REAL", nullable: false),
+                    VelocityBloodFlow = table.Column<double>(type: "REAL", nullable: false),
+                    LeftVentricularEjectionFraction = table.Column<double>(type: "REAL", nullable: false),
+                    SystolicPressurePulmonaryArteries = table.Column<int>(type: "INTEGER", nullable: false),
+                    DiastolicPressurePulmonaryArteries = table.Column<int>(type: "INTEGER", nullable: false),
                     ValvularInsufficiencyAortic = table.Column<string>(type: "TEXT", nullable: true),
                     ValvularInsufficiencyMitral = table.Column<string>(type: "TEXT", nullable: true),
                     ValvularInsufficiencyPulmonary = table.Column<string>(type: "TEXT", nullable: true),
                     ValvularInsufficiencyTricuspid = table.Column<string>(type: "TEXT", nullable: true),
-                    PressureGradientValves = table.Column<string>(type: "TEXT", nullable: true),
+                    PressureGradientValves = table.Column<double>(type: "REAL", nullable: false),
                     StructuralAbnormalities = table.Column<string>(type: "TEXT", nullable: true),
                     CardiacChamberFunctions = table.Column<string>(type: "TEXT", nullable: true),
                     DescriptionComplications = table.Column<string>(type: "TEXT", nullable: true),
@@ -996,8 +998,8 @@ namespace Infraestructure.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "12b117a9-8dbb-483b-aee7-c3fe55eb0a5f", null, "User", "USER" },
-                    { "d28ce0c9-eb6b-4af2-a39d-b45b10aad8eb", null, "Admin", "ADMIN" }
+                    { "cfa24b27-e6b6-4926-b0ef-f5a3c47b0cac", null, "Admin", "ADMIN" },
+                    { "cfcbc2ae-134b-4163-84f9-a3da8a1ad5f0", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1333,7 +1335,7 @@ namespace Infraestructure.Data.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "PatientStatuses");
+                name: "PatientStatus");
         }
     }
 }

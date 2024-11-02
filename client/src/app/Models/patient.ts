@@ -26,4 +26,5 @@ export interface PatientParams {
     search?: string;
     pageIndex: number;
     pageSize: number;
+    statusId: number;
 }

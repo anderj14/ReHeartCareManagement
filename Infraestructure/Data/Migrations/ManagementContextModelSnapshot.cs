@@ -1330,13 +1330,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bb5e8f1b-e6ef-476e-b27d-36dfb2baf9ff",
+                            Id = "a2c3e044-7424-4426-ac7e-4ae20c34bcf4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "637bdd2d-51aa-4141-b69a-9181bb725a6b",
+                            Id = "cfc4f80e-85a6-431c-81b4-bb31c92187c8",
                             Name = "User",
                             NormalizedName = "USER"
                         });

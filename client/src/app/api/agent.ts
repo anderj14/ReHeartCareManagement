@@ -1,176 +1,265 @@
 // agent.js
-import axios, { AxiosResponse } from 'axios';
-import { toast } from 'react-toastify';
-import { store } from '../store/configureStore';
-import { PaginatedResponse } from '../Models/pagination';
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
+import { store } from "../store/configureStore";
+import { PaginatedResponse } from "../Models/pagination";
+import { router } from "../router/Routes";
 
-axios.defaults.baseURL = 'https://localhost:5001/api/v1/';
+axios.defaults.baseURL = "https://localhost:5001/api/v1/";
 
 const responseBody = (response: AxiosResponse) => response.data;
 
 axios.interceptors.request.use((config) => {
-    const token = store.getState().account.user?.token;
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
+  const token = store.getState().account.user?.token;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
 axios.interceptors.response.use(
-    async (response) => {
-        const pagination = response.headers['pagination'];
-        if (pagination) {
-            response.data = new PaginatedResponse(response.data, JSON.parse(pagination));
-            return response;
-        }
-        return response;
-    },
-    (error) => {
-        const { status, data } = error.response;
-        switch (status) {
-            case 400:
-                if (data.errors) {
-                    const modelStateErrors: string[] = [];
-                    for (const key in data.errors) {
-                        if (data.errors[key]) {
-                            modelStateErrors.push(data.errors[key]);
-                        }
-                    }
-                    throw modelStateErrors.flat();
-                }
-                toast.error(data.message);
-                break;
-            case 401:
-                toast.error('Unauthorized. Please log in again.');
-                store.dispatch({ type: 'account/signOut' });
-                break;
-            case 404:
-                toast.error(data.message);
-                break;
-            case 500:
-                toast.error(data.message);
-                break;
-            default:
-                break;
-        }
-        return Promise.reject(error);
+  async (response) => {
+    const pagination = response.headers["pagination"];
+    if (pagination) {
+      response.data = new PaginatedResponse(
+        response.data,
+        JSON.parse(pagination)
+      );
+      return response;
     }
+    return response;
+  },
+  (error: AxiosError) => {
+    const { status, data } = error.response as AxiosResponse;
+    switch (status) {
+      case 400:
+        if (data.errors) {
+          const modelStateErrors: string[] = [];
+          for (const key in data.errors) {
+            if (data.errors[key]) {
+              modelStateErrors.push(data.errors[key]);
+            }
+          }
+          throw modelStateErrors.flat();
+        }
+        toast.error(data.title);
+        break;
+      case 401:
+        toast.error(data.title);
+        break;
+      case 403:
+        toast.error("You are not allowed to do that!");
+        break;
+      case 404:
+        toast.error(data.title);
+        break;
+      case 500:
+        router.navigate("/server-error", { state: { error: data } });
+        break;
+      default:
+        break;
+    }
+    return Promise.reject(error);
+  }
 );
 
 const requests = {
-    get: (url: string, params?: URLSearchParams) => axios.get(url, { params }).then(responseBody),
-    post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
-    put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
-    delete: (url: string) => axios.delete(url).then(responseBody),
+  get: (url: string, params?: URLSearchParams) =>
+    axios.get(url, { params }).then(responseBody),
+  post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
+  put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
+  delete: (url: string) => axios.delete(url).then(responseBody),
+  postForm: (url: string, data: FormData) =>
+    axios.post(url, data, {
+      headers: { "Content-type": "application/json" },
+    }).then(responseBody),
+  putForm: (url: string, data: FormData) =>
+    axios.put(url, data, {
+      headers: { "Content-type": "application/json" },
+    }).then(responseBody),
+};
+
+// function createFormData(item: any) {
+//   let formData = new FormData();
+//   for (const key in item) {
+//     if (item[key] !== null && item[key] !== undefined) {
+//       formData.append(key, item[key]);
+//     }
+//   }
+//   return formData;
+// }
+
+function createFormData(item: any) {
+  const formData = new FormData();
+  for (const key in item) {
+      formData.append(key, item[key])
+  }
+  return formData;
+}
+
+
+const Admin = {
+  createPatient: (patient: any) => requests.postForm('patients', createFormData(patient)),
+  updatePatient: (id: number, patient: any) => requests.putForm(`patients/${id}`, createFormData(patient)),
+  deletePatient: (id: number) => requests.delete(`patients/${id}`)
 };
 
 const Patient = {
-    list: (params: URLSearchParams) => requests.get('patients', params),
-    details: (id: number) => requests.get(`patients/${id}`),
+  list: (params: URLSearchParams) => requests.get("patients", params),
+  details: (id: number) => requests.get(`patients/${id}`),
+  Statuslist: () => requests.get("patientstatuses"),
 };
 
 const CardiologySurgery = {
-    list: (params: URLSearchParams) => requests.get('cardiologysurgeries', params),
-    details: (id: number) => requests.get(`cardiologysurgeries/${id}`),
-    listByPatientId: (patientId: number) => requests.get(`cardiologysurgeries/patient/${patientId}/cardiologysurgeries`),
-    detailsPatientId: (patientId: number, cardiologySurgeryId: number) => requests.get(`cardiologysurgery/patient/${patientId}/cardiologysurgeries/${cardiologySurgeryId}`)
+  list: (params: URLSearchParams) =>
+    requests.get("cardiologysurgeries", params),
+  details: (id: number) => requests.get(`cardiologysurgeries/${id}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(
+      `cardiologysurgeries/patient/${patientId}/cardiologysurgeries`
+    ),
+  detailsPatientId: (patientId: number, cardiologySurgeryId: number) =>
+    requests.get(
+      `cardiologysurgery/patient/${patientId}/cardiologysurgeries/${cardiologySurgeryId}`
+    ),
 };
 
 const Note = {
-    list: (params: URLSearchParams) => requests.get('notes', params),
-    details: (id: number) => requests.get(`notes/${id}`),
+  list: (params: URLSearchParams) => requests.get("notes", params),
+  details: (id: number) => requests.get(`notes/${id}`),
 };
 
 const BloodTest = {
-    listByPatientId: (params: URLSearchParams, patientId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests`, params),
-    detailsByPatientId: (patientId: number, bloodTestId: number) => requests.get(`bloodtest/patient/${patientId}/bloodtests/${bloodTestId}`),
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
+    requests.get(`bloodtest/patient/${patientId}/bloodtests`, params),
+  detailsByPatientId: (patientId: number, bloodTestId: number) =>
+    requests.get(`bloodtest/patient/${patientId}/bloodtests/${bloodTestId}`),
 };
 
 const CardiacCathStudy = {
-    listByPatientId: (patientId: number) => requests.get(`cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`),
-    detailsByPatientId: (patientId: number, cardiacCathStudyId: number) => requests.get(`cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies/${cardiacCathStudyId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(
+      `cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`
+    ),
+  detailsByPatientId: (patientId: number, cardiacCathStudyId: number) =>
+    requests.get(
+      `cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies/${cardiacCathStudyId}`
+    ),
 };
 
 const Electrocardiogram = {
-    listByPatientId: (patientId: number) => requests.get(`electrocardiogram/patient/${patientId}/electrocardiograms`),
-    detailsByPatientId: (patientId: number, electrocardiogramId: number) => requests.get(`electrocardiogram/patient/${patientId}/electrocardiograms/${electrocardiogramId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(`electrocardiogram/patient/${patientId}/electrocardiograms`),
+  detailsByPatientId: (patientId: number, electrocardiogramId: number) =>
+    requests.get(
+      `electrocardiogram/patient/${patientId}/electrocardiograms/${electrocardiogramId}`
+    ),
 };
 
 const Echocardiogram = {
-    listByPatientId: (patientId: number) => requests.get(`echocardiogram/patient/${patientId}/echocardiograms`),
-    detailsByPatientId: (patientId: number, echocardiogramId: number) => requests.get(`echocardiogram/patient/${patientId}/echocardiograms/${echocardiogramId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(`echocardiogram/patient/${patientId}/echocardiograms`),
+  detailsByPatientId: (patientId: number, echocardiogramId: number) =>
+    requests.get(
+      `echocardiogram/patient/${patientId}/echocardiograms/${echocardiogramId}`
+    ),
 };
 
 const HolterStudy = {
-    listByPatientId: (patientId: number) => requests.get(`holterstudy/patient/${patientId}/holterstudies`),
-    detailsByPatientId: (patientId: number, holterStudyId: number) => requests.get(`HolterStudy/patient/${patientId}/holterStudies/${holterStudyId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(`holterstudy/patient/${patientId}/holterstudies`),
+  detailsByPatientId: (patientId: number, holterStudyId: number) =>
+    requests.get(
+      `HolterStudy/patient/${patientId}/holterStudies/${holterStudyId}`
+    ),
 };
 
 const PhysicalExamination = {
-    listByPatientId: (patientId: number) => requests.get(`physicalexamination/patient/${patientId}/physicalexaminations`),
-    detailsByPatientId: (patientId: number, physicalExaminationId: number) => requests.get(`physicalexamination/patient/${patientId}/physicalexaminations/${physicalExaminationId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(
+      `physicalexamination/patient/${patientId}/physicalexaminations`
+    ),
+  detailsByPatientId: (patientId: number, physicalExaminationId: number) =>
+    requests.get(
+      `physicalexamination/patient/${patientId}/physicalexaminations/${physicalExaminationId}`
+    ),
 };
 
 const DiseaseHistory = {
-    listByPatientId: (patientId: number) => requests.get(`diseasehistory/patient/${patientId}/diseaseshistories`),
-    detailsByPatientId: (patientId: number, diseaseHistoryId: number) => requests.get(`diseasehistory/patient/${patientId}/diseaseshistories/${diseaseHistoryId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(`diseasehistory/patient/${patientId}/diseaseshistories`),
+  detailsByPatientId: (patientId: number, diseaseHistoryId: number) =>
+    requests.get(
+      `diseasehistory/patient/${patientId}/diseaseshistories/${diseaseHistoryId}`
+    ),
 };
 
 const MedicalHistory = {
-    listByPatientId: (patientId: number) => requests.get(`medicalhistory/patient/${patientId}/medicalhistories`),
-    detailsByPatientId: (patientId: number, medicalHistoryId: number) => requests.get(`medicalhistory/patient/${patientId}/medicalhistories/${medicalHistoryId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(`medicalhistory/patient/${patientId}/medicalhistories`),
+  detailsByPatientId: (patientId: number, medicalHistoryId: number) =>
+    requests.get(
+      `medicalhistory/patient/${patientId}/medicalhistories/${medicalHistoryId}`
+    ),
 };
 
 const Diagnostic = {
-    listByPatientId: (patientId: number) => requests.get(`diagnostic/patient/${patientId}/diagnostics`),
-    detailsByPatientId: (patientId: number, diagnosticId: number) => requests.get(`diagnostic/patient/${patientId}/diagnostics/${diagnosticId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(`diagnostic/patient/${patientId}/diagnostics`),
+  detailsByPatientId: (patientId: number, diagnosticId: number) =>
+    requests.get(`diagnostic/patient/${patientId}/diagnostics/${diagnosticId}`),
 };
 
 const Treatment = {
-    listByPatientId: (patientId: number) => requests.get(`treatment/patient/${patientId}/treatments`),
-    detailsByPatientId: (patientId: number, treatmentId: number) => requests.get(`treatment/patient/${patientId}/treatments/${treatmentId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(`treatment/patient/${patientId}/treatments`),
+  detailsByPatientId: (patientId: number, treatmentId: number) =>
+    requests.get(`treatment/patient/${patientId}/treatments/${treatmentId}`),
 };
 
 const Appointment = {
-    list: (params: URLSearchParams) => requests.get('appointment', params),
-    listCalendar: () => requests.get('appointment/calendar'),
-    details: (id: number) => requests.get(`appointment/${id}`),
+  list: (params: URLSearchParams) => requests.get("appointment", params),
+  listCalendar: () => requests.get("appointment/calendar"),
+  details: (id: number) => requests.get(`appointment/${id}`),
 };
 
 const StressTest = {
-    listByPatientId: (patientId: number) => requests.get(`stresstest/patient/${patientId}/stresstests`),
-    detailsByPatientId: (patientId: number, treatmentId: number) => requests.get(`stresstest/patient/${patientId}/stresstests/${treatmentId}`),
+  listByPatientId: (patientId: number) =>
+    requests.get(`stresstest/patient/${patientId}/stresstests`),
+  detailsByPatientId: (patientId: number, treatmentId: number) =>
+    requests.get(`stresstest/patient/${patientId}/stresstests/${treatmentId}`),
 };
 
 const TestErrors = {
-    get400Error: () => requests.get('buggy/badrequest'),
-    get401Error: () => requests.get('buggy/unauthorized'),
-    get404Error: () => requests.get('buggy/notfound'),
-    get500Error: () => requests.get('buggy/servererror'),
+  get400Error: () => requests.get("buggy/badrequest"),
+  get401Error: () => requests.get("buggy/unauthorized"),
+  get404Error: () => requests.get("buggy/notfound"),
+  get500Error: () => requests.get("buggy/servererror"),
 };
 
 const Account = {
-    login: (values: any) => requests.post('account/login', values),
-    register: (values: any) => requests.post('account/register', values),
-    currentUser: () => requests.get('account/currentUser'),
+  login: (values: any) => requests.post("account/login", values),
+  register: (values: any) => requests.post("account/register", values),
+  currentUser: () => requests.get("account/currentUser"),
 };
 
 const agent = {
-    Patient,
-    CardiologySurgery,
-    Note,
-    TestErrors,
-    Account,
-    BloodTest,
-    CardiacCathStudy,
-    Electrocardiogram,
-    Echocardiogram,
-    HolterStudy,
-    PhysicalExamination,
-    DiseaseHistory,
-    MedicalHistory,
-    Diagnostic,
-    Treatment,
-    Appointment,
-    StressTest,
+  Patient,
+  CardiologySurgery,
+  Note,
+  TestErrors,
+  Account,
+  BloodTest,
+  CardiacCathStudy,
+  Electrocardiogram,
+  Echocardiogram,
+  HolterStudy,
+  PhysicalExamination,
+  DiseaseHistory,
+  MedicalHistory,
+  Diagnostic,
+  Treatment,
+  Appointment,
+  StressTest,
+  Admin,
 };
 
 export default agent;

@@ -227,10 +227,10 @@ export default function BloodTestDetails() {
             
           </CardContent>
           <CardActions sx={{ marginLeft: '8px' }}>
-          <CustomButton icon={ModeEditIcon} color="#000" hoverColor="#f3f3f3">
+          <CustomButton icon={ModeEditIcon} color="#000" hoverColor="#f3f3f3" width='180px'>
             Update Test Result
           </CustomButton>
-          <CustomButton icon={DeleteIcon} color="#EF4444" hoverColor="#f3f3f3" hoverTextColor="#c93b3b">
+          <CustomButton icon={DeleteIcon} color="#EF4444" hoverColor="#f3f3f3" hoverTextColor="#c93b3b"  width='180px'>
             Delete Test Result
           </CustomButton>
           </CardActions>

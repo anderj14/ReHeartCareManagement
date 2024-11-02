@@ -37,7 +37,6 @@ namespace Infraestructure.config
             builder.HasOne(p => p.PatientStatus).WithMany()
             .HasForeignKey(p => p.StatusId);
 
-
             // Relationship appointment
             builder.HasMany(p => p.Appointments).WithOne(a => a.Patient)
             .HasForeignKey(a => a.PatientId)

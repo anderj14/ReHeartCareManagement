@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Data.Migrations
 {
     [DbContext(typeof(ManagementContext))]
-    [Migration("20240928164833_cardiacCathStudyTypeData")]
-    partial class cardiacCathStudyTypeData
+    [Migration("20241101002732_updateEntities")]
+    partial class updateEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1037,7 +1037,7 @@ namespace Infraestructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PatientStatuses");
+                    b.ToTable("PatientStatus");
                 });
 
             modelBuilder.Entity("Core.Entities.Photo", b =>
@@ -1333,13 +1333,13 @@ namespace Infraestructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bb5e8f1b-e6ef-476e-b27d-36dfb2baf9ff",
+                            Id = "cfa24b27-e6b6-4926-b0ef-f5a3c47b0cac",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "637bdd2d-51aa-4141-b69a-9181bb725a6b",
+                            Id = "cfcbc2ae-134b-4163-84f9-a3da8a1ad5f0",
                             Name = "User",
                             NormalizedName = "USER"
                         });

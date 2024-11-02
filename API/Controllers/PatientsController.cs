@@ -112,9 +112,9 @@ namespace API.Controllers
             return _mapper.Map<Patient, PatientDto>(patient);
         }
 
-        [HttpPost]
         [Authorize]
-        public async Task<ActionResult> AddPatientByUser([FromBody] PatientCreateDto patientCreateDto)
+        [HttpPost]
+        public async Task<ActionResult<Patient>> AddPatientByUser([FromBody] PatientCreateDto patientCreateDto)
         {
             try
             {
@@ -149,9 +149,9 @@ namespace API.Controllers
                 return BadRequest(ex.Message); // Return 400 for exceptions
             }
         }
-
-        [HttpPut("{id}")]
+        
         [Authorize]
+        [HttpPut("{id}")]
         public async Task<ActionResult<Patient>> UpdatePatient(int id, PatientCreateDto patientToUpdate)
         {
             if (!ModelState.IsValid)
@@ -159,7 +159,7 @@ namespace API.Controllers
                 return BadRequest(new ApiResponse(400, "Invalid data")); // Return 400 for invalid data
             }
 
-            var user = GetAuthenticatedUserAsync();
+            var user = await GetAuthenticatedUserAsync();
 
             if (user == null)
             {

@@ -12,24 +12,24 @@ VALUES
 ('On Hold');
 
 INSERT INTO Patients (AppUserId, PatientName, CarnetIdentification, DOB, Gender, Address, Phone, Email, SocialSecurity, PolicyNumber, Fax, ReferringDoctor, AssignedDoctor, FamilyDoctor, EmergencyContactName, EmergencyContactNumber, EmergencyContactRelation, MaritalStatus, Occupation, StatusId) VALUES
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Alice Smith', '123456', '1985-05-15', 'Female', '123 Main St', 1234567890, 'alice.smith@example.com', '987-65-4320', 'POL123', '123-456-7890', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Bob Smith', '0987654321', 'Husband', 'Married', 'Engineer', 1),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Bob Johnson', '654321', '1978-12-22', 'Male', '456 Elm St', 2345678901, 'bob.johnson@example.com', '987-65-4321', 'POL456', '234-567-8901', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Sara Johnson', '1234567890', 'Wife', 'Married', 'Teacher', 2),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Charlie Brown', '789012', '1990-02-28', 'Male', '789 Oak St', 3456789012, 'charlie.brown@example.com', '987-65-4322', 'POL789', '345-678-9012', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Alice Brown', '2345678901', 'Sister', 'Single', 'Artist', 1),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Diana Prince', '345678', '1980-08-17', 'Female', '321 Maple St', 4567890123, 'diana.prince@example.com', '987-65-4323', 'POL012', '456-789-0123', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Steve Trevor', '3456789012', 'Partner', 'In a Relationship', 'Pilot', 2),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Edward Elric', '456789', '1995-06-13', 'Male', '654 Pine St', 5678901234, 'edward.elric@example.com', '987-65-4324', 'POL345', '567-890-1234', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Winry Rockbell', '4567890123', 'Fiancée', 'Engaged', 'Alchemist', 3),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Fiona Gallagher', '567890', '1982-10-31', 'Female', '987 Birch St', 6789012345, 'fiona.gallagher@example.com', '987-65-4325', 'POL678', '678-901-2345', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Lip Gallagher', '5678901234', 'Brother', 'Single', 'Waitress', 1),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'George Costanza', '678901', '1970-09-17', 'Male', '159 Cedar St', 7890123456, 'george.costanza@example.com', '987-65-4326', 'POL901', '789-012-3456', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Susan Ross', '6789012345', 'Girlfriend', 'Engaged', 'Telemarketer', 2),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Hannah Baker', '789012', '1997-04-15', 'Female', '753 Spruce St', 8901234567, 'hannah.baker@example.com', '987-65-4327', 'POL234', '890-123-4567', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Clay Jensen', '7890123456', 'Boyfriend', 'Single', 'Student', 3),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Ian Gallagher', '890123', '1996-03-28', 'Male', '147 Fir St', 9012345678, 'ian.gallagher@example.com', '987-65-4328', 'POL567', '901-234-5678', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Mickey Milkovich', '8901234567', 'Partner', 'In a Relationship', 'Bartender', 2),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Jenna Marbles', '901234', '1988-11-15', 'Female', '258 Willow St', 1234567891, 'jenna.marbles@example.com', '987-65-4329', 'POL890', '123-456-7891', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Julien Solomita', '9012345678', 'Fiancé', 'Engaged', 'YouTuber', 1),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Kylie Jenner', '234567', '1997-08-10', 'Female', '963 Oak St', 2345678912, 'kylie.jenner@example.com', '987-65-4330', 'POL123', '234-567-8912', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Travis Scott', '2345678913', 'Boyfriend', 'In a Relationship', 'Entrepreneur', 2),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Leonardo DiCaprio', '345678', '1974-11-11', 'Male', '357 Maple St', 3456789123, 'leonardo.dicaprio@example.com', '987-65-4331', 'POL456', '345-678-9123', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Gisele Bündchen', '3456789124', 'Ex-Wife', 'Married', 'Actor', 3),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Monica Geller', '456789', '1970-04-22', 'Female', '456 Elm St', 4567891234, 'monica.geller@example.com', '987-65-4332', 'POL789', '456-789-1234', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Chandler Bing', '4567891235', 'Husband', 'Married', 'Chef', 1),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Nina Williams', '567890', '1985-03-16', 'Female', '579 Pine St', 5678902345, 'nina.williams@example.com', '987-65-4333', 'POL012', '579-890-2345', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Kazumi', '5678902346', 'Sister', 'Single', 'Martial Artist', 2),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Oliver Queen', '678901', '1981-05-21', 'Male', '135 Cherry St', 6789013456, 'oliver.queen@example.com', '987-65-4334', 'POL345', '135-678-9012', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Felicity Smoak', '6789013457', 'Fiancée', 'Engaged', 'Businessman', 3),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Pam Beesly', '789012', '1984-01-25', 'Female', '246 Birch St', 7890124567, 'pam.beesly@example.com', '987-65-4335', 'POL678', '246-789-0123', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Jim Halpert', '7890124568', 'Husband', 'Married', 'Receptionist', 1),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Quinn Fabray', '890123', '1994-07-15', 'Female', '369 Cedar St', 8901235678, 'quinn.fabray@example.com', '987-65-4336', 'POL901', '369-890-1234', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Finn Hudson', '8901235679', 'Boyfriend', 'In a Relationship', 'Student', 2),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Ryan Gosling', '901234', '1980-11-12', 'Male', '852 Oak St', 9012346789, 'ryan.gosling@example.com', '987-65-4337', 'POL234', '852-901-2345', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Eva Mendes', '9012346780', 'Partner', 'In a Relationship', 'Actor', 3);
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Alice Smith', '123456', '1985-05-15', 'Female', '123 Main St', 1234567890, 'alice.smith@example.com', '987-65-4320', 'POL123', '123-456-7890', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Bob Smith', '0987654321', 'Husband', 'Married', 'Engineer', 1),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Bob Johnson', '654321', '1978-12-22', 'Male', '456 Elm St', 2345678901, 'bob.johnson@example.com', '987-65-4321', 'POL456', '234-567-8901', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Sara Johnson', '1234567890', 'Wife', 'Married', 'Teacher', 2),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Charlie Brown', '789012', '1990-02-28', 'Male', '789 Oak St', 3456789012, 'charlie.brown@example.com', '987-65-4322', 'POL789', '345-678-9012', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Alice Brown', '2345678901', 'Sister', 'Single', 'Artist', 1),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Diana Prince', '345678', '1980-08-17', 'Female', '321 Maple St', 4567890123, 'diana.prince@example.com', '987-65-4323', 'POL012', '456-789-0123', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Steve Trevor', '3456789012', 'Partner', 'In a Relationship', 'Pilot', 2),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Edward Elric', '456789', '1995-06-13', 'Male', '654 Pine St', 5678901234, 'edward.elric@example.com', '987-65-4324', 'POL345', '567-890-1234', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Winry Rockbell', '4567890123', 'Fiancée', 'Engaged', 'Alchemist', 3),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Fiona Gallagher', '567890', '1982-10-31', 'Female', '987 Birch St', 6789012345, 'fiona.gallagher@example.com', '987-65-4325', 'POL678', '678-901-2345', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Lip Gallagher', '5678901234', 'Brother', 'Single', 'Waitress', 1),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'George Costanza', '678901', '1970-09-17', 'Male', '159 Cedar St', 7890123456, 'george.costanza@example.com', '987-65-4326', 'POL901', '789-012-3456', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Susan Ross', '6789012345', 'Girlfriend', 'Engaged', 'Telemarketer', 2),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Hannah Baker', '789012', '1997-04-15', 'Female', '753 Spruce St', 8901234567, 'hannah.baker@example.com', '987-65-4327', 'POL234', '890-123-4567', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Clay Jensen', '7890123456', 'Boyfriend', 'Single', 'Student', 3),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Ian Gallagher', '890123', '1996-03-28', 'Male', '147 Fir St', 9012345678, 'ian.gallagher@example.com', '987-65-4328', 'POL567', '901-234-5678', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Mickey Milkovich', '8901234567', 'Partner', 'In a Relationship', 'Bartender', 2),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Jenna Marbles', '901234', '1988-11-15', 'Female', '258 Willow St', 1234567891, 'jenna.marbles@example.com', '987-65-4329', 'POL890', '123-456-7891', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Julien Solomita', '9012345678', 'Fiancé', 'Engaged', 'YouTuber', 1),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Kylie Jenner', '234567', '1997-08-10', 'Female', '963 Oak St', 2345678912, 'kylie.jenner@example.com', '987-65-4330', 'POL123', '234-567-8912', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Travis Scott', '2345678913', 'Boyfriend', 'In a Relationship', 'Entrepreneur', 2),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Leonardo DiCaprio', '345678', '1974-11-11', 'Male', '357 Maple St', 3456789123, 'leonardo.dicaprio@example.com', '987-65-4331', 'POL456', '345-678-9123', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Gisele Bündchen', '3456789124', 'Ex-Wife', 'Married', 'Actor', 3),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Monica Geller', '456789', '1970-04-22', 'Female', '456 Elm St', 4567891234, 'monica.geller@example.com', '987-65-4332', 'POL789', '456-789-1234', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Chandler Bing', '4567891235', 'Husband', 'Married', 'Chef', 1),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Nina Williams', '567890', '1985-03-16', 'Female', '579 Pine St', 5678902345, 'nina.williams@example.com', '987-65-4333', 'POL012', '579-890-2345', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Kazumi', '5678902346', 'Sister', 'Single', 'Martial Artist', 2),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Oliver Queen', '678901', '1981-05-21', 'Male', '135 Cherry St', 6789013456, 'oliver.queen@example.com', '987-65-4334', 'POL345', '135-678-9012', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Felicity Smoak', '6789013457', 'Fiancée', 'Engaged', 'Businessman', 3),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Pam Beesly', '789012', '1984-01-25', 'Female', '246 Birch St', 7890124567, 'pam.beesly@example.com', '987-65-4335', 'POL678', '246-789-0123', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Jim Halpert', '7890124568', 'Husband', 'Married', 'Receptionist', 1),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Quinn Fabray', '890123', '1994-07-15', 'Female', '369 Cedar St', 8901235678, 'quinn.fabray@example.com', '987-65-4336', 'POL901', '369-890-1234', 'Dr. Jane Doe', 'Dr. Jane Doe', 'Dr. Emily White', 'Finn Hudson', '8901235679', 'Boyfriend', 'In a Relationship', 'Student', 2),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Ryan Gosling', '901234', '1980-11-12', 'Male', '852 Oak St', 9012346789, 'ryan.gosling@example.com', '987-65-4337', 'POL234', '852-901-2345', 'Dr. John Doe', 'Dr. John Doe', 'Dr. Emily White', 'Eva Mendes', '9012346780', 'Partner', 'In a Relationship', 'Actor', 3);
 
 INSERT INTO AppointmentStatuses (AppointmentStatusName) VALUES
 ('Scheduled'),
@@ -52,24 +52,24 @@ INSERT INTO AppointmentTypes (Name, Description) VALUES
 
 
 INSERT INTO Appointments (AppUserId, StartDate, EndDate, Time, Description, Location, AppointmentStatusId, AppointmentTypeId, PatientId) VALUES
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', '2024-10-01 09:00:00', '2024-10-01 09:30:00', '09:00', 'Routine checkup for hypertension.', 'Clinic A', 1, 1, 1),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', '2024-10-03 10:00:00', '2024-10-03 10:30:00', '10:00', 'Follow-up visit for medication review.', 'Clinic A', 2, 2, 4),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', '2024-10-05 11:00:00', '2024-10-05 11:30:00', '11:00', 'Consultation regarding chest pain.', 'Clinic A', 1, 3, 7),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', '2024-10-07 12:00:00', '2024-10-07 12:30:00', '12:00', 'Preoperative assessment for surgery.', 'Hospital A', 1, 4, 10),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', '2024-10-09 14:00:00', '2024-10-09 14:30:00', '14:00', 'Annual physical exam.', 'Clinic A', 1, 5, 13),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', '2024-10-11 15:00:00', '2024-10-11 15:30:00', '15:00', 'Vaccination appointment.', 'Clinic A', 1, 6, 16),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', '2024-10-02 09:00:00', '2024-10-02 09:30:00', '09:00', 'Follow-up visit for diabetes management.', 'Clinic B', 2, 1, 2),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', '2024-10-04 10:00:00', '2024-10-04 10:30:00', '10:00', 'Consultation for skin rash.', 'Clinic B', 1, 3, 5),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', '2024-10-06 11:00:00', '2024-10-06 11:30:00', '11:00', 'Routine checkup for cholesterol.', 'Clinic B', 1, 1, 8),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', '2024-10-08 12:00:00', '2024-10-08 12:30:00', '12:00', 'Emergency appointment for injury.', 'Hospital B', 3, 4, 11),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', '2024-10-10 14:00:00', '2024-10-10 14:30:00', '14:00', 'Postoperative follow-up.', 'Hospital B', 1, 5, 14),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', '2024-10-12 15:00:00', '2024-10-12 15:30:00', '15:00', 'Consultation for blood test results.', 'Clinic B', 1, 2, 17),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-13 09:00:00', '2024-10-13 09:30:00', '09:00', 'Routine checkup for back pain.', 'Clinic C', 1, 1, 3),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-14 10:00:00', '2024-10-14 10:30:00', '10:00', 'Annual physical exam.', 'Clinic C', 1, 5, 6),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-15 11:00:00', '2024-10-15 11:30:00', '11:00', 'Consultation for asthma.', 'Clinic C', 1, 3, 9),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-16 12:00:00', '2024-10-16 12:30:00', '12:00', 'Follow-up visit for allergy treatment.', 'Clinic C', 2, 2, 12),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-17 14:00:00', '2024-10-17 14:30:00', '14:00', 'Emergency appointment for headache.', 'Hospital C', 3, 4, 15),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', '2024-10-18 15:00:00', '2024-10-18 15:30:00', '15:00', 'Routine checkup for eye exam.', 'Clinic C', 1, 6, 18);
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-01 09:00:00', '2024-10-01 09:30:00', '09:00', 'Routine checkup for hypertension.', 'Clinic A', 1, 1, 1),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-03 10:00:00', '2024-10-03 10:30:00', '10:00', 'Follow-up visit for medication review.', 'Clinic A', 2, 2, 4),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-05 11:00:00', '2024-10-05 11:30:00', '11:00', 'Consultation regarding chest pain.', 'Clinic A', 1, 3, 7),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-07 12:00:00', '2024-10-07 12:30:00', '12:00', 'Preoperative assessment for surgery.', 'Hospital A', 1, 4, 10),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-09 14:00:00', '2024-10-09 14:30:00', '14:00', 'Annual physical exam.', 'Clinic A', 1, 5, 13),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-11 15:00:00', '2024-10-11 15:30:00', '15:00', 'Vaccination appointment.', 'Clinic A', 1, 6, 16),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', '2024-10-02 09:00:00', '2024-10-02 09:30:00', '09:00', 'Follow-up visit for diabetes management.', 'Clinic B', 2, 1, 2),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', '2024-10-04 10:00:00', '2024-10-04 10:30:00', '10:00', 'Consultation for skin rash.', 'Clinic B', 1, 3, 5),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', '2024-10-06 11:00:00', '2024-10-06 11:30:00', '11:00', 'Routine checkup for cholesterol.', 'Clinic B', 1, 1, 8),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', '2024-10-08 12:00:00', '2024-10-08 12:30:00', '12:00', 'Emergency appointment for injury.', 'Hospital B', 3, 4, 11),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', '2024-10-10 14:00:00', '2024-10-10 14:30:00', '14:00', 'Postoperative follow-up.', 'Hospital B', 1, 5, 14),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', '2024-10-12 15:00:00', '2024-10-12 15:30:00', '15:00', 'Consultation for blood test results.', 'Clinic B', 1, 2, 17),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', '2024-10-13 09:00:00', '2024-10-13 09:30:00', '09:00', 'Routine checkup for back pain.', 'Clinic C', 1, 1, 3),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', '2024-10-14 10:00:00', '2024-10-14 10:30:00', '10:00', 'Annual physical exam.', 'Clinic C', 1, 5, 6),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', '2024-10-15 11:00:00', '2024-10-15 11:30:00', '11:00', 'Consultation for asthma.', 'Clinic C', 1, 3, 9),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', '2024-10-16 12:00:00', '2024-10-16 12:30:00', '12:00', 'Follow-up visit for allergy treatment.', 'Clinic C', 2, 2, 12),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', '2024-10-17 14:00:00', '2024-10-17 14:30:00', '14:00', 'Emergency appointment for headache.', 'Hospital C', 3, 4, 15),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', '2024-10-18 15:00:00', '2024-10-18 15:30:00', '15:00', 'Routine checkup for eye exam.', 'Clinic C', 1, 6, 18);
 
 INSERT INTO DiseaseHistories (StartDate, Description, Treatment, Diagnosis, Severity, Notes, IsChronic, DoctorName, PatientId)
 VALUES
@@ -413,11 +413,11 @@ VALUES
 INSERT INTO CardiologySurgeries (AppUserId, SurgeryName, Date, Time, ProcedureDescription, Notes, IsEmergency, IsElective, OperationRoom, PreOpDiagnosis, PostOpDiagnosis, IsSuccessful, Duration, CardiacCondition, IsMinimallyInvasive, Complications, PostOperativeStatus, AnesthesiaType, SurgicalTeam, IntraoperativeFindings, PostOperativeInstructions, PatientId)
 VALUES
 -- Cardiology surgery records with corresponding AppUserId and PatientId
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Coronary Artery Bypass Grafting', '2024-09-01', '09:00:00', 'Surgical procedure to bypass blocked coronary arteries.', 'Monitor for bleeding.', true, false, 'OR 101', 'Coronary artery disease', 'Improved blood flow', true, 4.5, 'Coronary artery disease', false, 'None', 'Stable', 'General anesthesia', 'Dr. Smith, Dr. Lee', 'Blocked artery successfully bypassed.', 'Follow up in 2 weeks', 1),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Aortic Valve Replacement', '2024-09-02', '11:00:00', 'Replacement of the aortic valve due to stenosis.', 'Post-operative pain management required.', false, true, 'OR 102', 'Aortic stenosis', 'Normal valve function', true, 3.0, 'Aortic stenosis', false, 'None', 'Stable', 'General anesthesia', 'Dr. Johnson, Dr. Brown', 'Valve replacement successful.', 'Follow up in 3 weeks', 2),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Angioplasty', '2024-09-03', '14:00:00', 'Minimally invasive procedure to open narrowed arteries.', 'Patient education on lifestyle changes.', false, false, 'OR 103', 'Coronary artery disease', 'Opened arteries', true, 2.0, 'Coronary artery disease', true, 'None', 'Stable', 'Local anesthesia', 'Dr. Wilson, Dr. Taylor', 'Arteries successfully opened.', 'Follow up in 1 month', 3),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Mitral Valve Repair', '2024-09-04', '10:00:00', 'Repair of the mitral valve to correct regurgitation.', 'Close monitoring required post-op.', true, false, 'OR 104', 'Mitral regurgitation', 'Normal valve function', true, 4.0, 'Mitral regurgitation', false, 'None', 'Stable', 'General anesthesia', 'Dr. White, Dr. Green', 'Mitral valve successfully repaired.', 'Follow up in 2 weeks', 4),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Pacemaker Implantation', '2024-09-05', '08:30:00', 'Implantation of a pacemaker to regulate heart rhythm.', 'Monitor heart rate post-op.', false, true, 'OR 105', 'Bradycardia', 'Normal heart rhythm', true, 2.5, 'Bradycardia', true, 'Infection risk', 'Stable', 'Local anesthesia', 'Dr. Black, Dr. Blue', 'Pacemaker functioning properly.', 'Follow up in 1 month', 5);
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Coronary Artery Bypass Grafting', '2024-09-01', '09:00:00', 'Surgical procedure to bypass blocked coronary arteries.', 'Monitor for bleeding.', true, false, 'OR 101', 'Coronary artery disease', 'Improved blood flow', true, 4.5, 'Coronary artery disease', false, 'None', 'Stable', 'General anesthesia', 'Dr. Smith, Dr. Lee', 'Blocked artery successfully bypassed.', 'Follow up in 2 weeks', 1),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Aortic Valve Replacement', '2024-09-02', '11:00:00', 'Replacement of the aortic valve due to stenosis.', 'Post-operative pain management required.', false, true, 'OR 102', 'Aortic stenosis', 'Normal valve function', true, 3.0, 'Aortic stenosis', false, 'None', 'Stable', 'General anesthesia', 'Dr. Johnson, Dr. Brown', 'Valve replacement successful.', 'Follow up in 3 weeks', 2),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Angioplasty', '2024-09-03', '14:00:00', 'Minimally invasive procedure to open narrowed arteries.', 'Patient education on lifestyle changes.', false, false, 'OR 103', 'Coronary artery disease', 'Opened arteries', true, 2.0, 'Coronary artery disease', true, 'None', 'Stable', 'Local anesthesia', 'Dr. Wilson, Dr. Taylor', 'Arteries successfully opened.', 'Follow up in 1 month', 3),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Mitral Valve Repair', '2024-09-04', '10:00:00', 'Repair of the mitral valve to correct regurgitation.', 'Close monitoring required post-op.', true, false, 'OR 104', 'Mitral regurgitation', 'Normal valve function', true, 4.0, 'Mitral regurgitation', false, 'None', 'Stable', 'General anesthesia', 'Dr. White, Dr. Green', 'Mitral valve successfully repaired.', 'Follow up in 2 weeks', 4),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Pacemaker Implantation', '2024-09-05', '08:30:00', 'Implantation of a pacemaker to regulate heart rhythm.', 'Monitor heart rate post-op.', false, true, 'OR 105', 'Bradycardia', 'Normal heart rhythm', true, 2.5, 'Bradycardia', true, 'Infection risk', 'Stable', 'Local anesthesia', 'Dr. Black, Dr. Blue', 'Pacemaker functioning properly.', 'Follow up in 1 month', 5);
 
 
 INSERT INTO SurgeryFollowUps (FollowUpDate, FollowUpNotes, Complications, Recommendations, FunctionalAssessment, IsFollowUpComplete, CardiologySurgeryId)
@@ -501,33 +501,33 @@ VALUES
 
 INSERT INTO Notes (AppUserId, Title, Content, Date, NoteStatusId)
 VALUES
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Meeting with the Dev Team', 'Discussed the sprint planning and task assignments.', '2024-09-01', 1),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'UI Design Review', 'Reviewed the new wireframes for the dashboard.', '2024-09-02', 2),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Code Refactoring', 'Refactored the authentication module.', '2024-09-03', 3),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Product Feedback', 'Collected feedback from beta testers.', '2024-09-04', 4),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Project Deadlines', 'Updated deadlines for the next sprint cycle.', '2024-09-05', 1),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Marketing Strategy', 'Brainstormed ideas for the next campaign.', '2024-09-06', 2),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'Client Feedback Meeting', 'Reviewed client feedback for feature requests.', '2024-09-07', 3),
-('5a5bf5bf-85ff-448c-8f31-c604f80c090f', 'API Performance Improvements', 'Worked on optimizing API calls.', '2024-09-08', 4);
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Meeting with the Dev Team', 'Discussed the sprint planning and task assignments.', '2024-09-01', 1),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'UI Design Review', 'Reviewed the new wireframes for the dashboard.', '2024-09-02', 2),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Code Refactoring', 'Refactored the authentication module.', '2024-09-03', 3),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Product Feedback', 'Collected feedback from beta testers.', '2024-09-04', 4),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Project Deadlines', 'Updated deadlines for the next sprint cycle.', '2024-09-05', 1),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Marketing Strategy', 'Brainstormed ideas for the next campaign.', '2024-09-06', 2),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'Client Feedback Meeting', 'Reviewed client feedback for feature requests.', '2024-09-07', 3),
+('73ef92c8-6811-4953-83c1-e32379839b2e', 'API Performance Improvements', 'Worked on optimizing API calls.', '2024-09-08', 4);
 
 INSERT INTO Notes (AppUserId, Title, Content, Date, NoteStatusId)
 VALUES
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Diet Plan', 'Set up a new diet plan for the week.', '2024-09-01', 1),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Grocery Shopping List', 'Created a list for this week’s groceries.', '2024-09-02', 2),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Gym Routine', 'Outlined a new workout routine.', '2024-09-03', 3),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Running Goals', 'Set personal running goals for the next month.', '2024-09-04', 4),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Vacation Planning', 'Researched vacation destinations.', '2024-09-05', 1),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Personal Development', 'Listed books and courses for self-development.', '2024-09-06', 2),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Meditation Techniques', 'Collected resources for meditation practices.', '2024-09-07', 3),
-('e6eb15e5-286a-4836-8a73-c81a5e84fb83', 'Weekend Activities', 'Planned outdoor activities for the weekend.', '2024-09-08', 4);
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Diet Plan', 'Set up a new diet plan for the week.', '2024-09-01', 1),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Grocery Shopping List', 'Created a list for this week’s groceries.', '2024-09-02', 2),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Gym Routine', 'Outlined a new workout routine.', '2024-09-03', 3),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Running Goals', 'Set personal running goals for the next month.', '2024-09-04', 4),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Vacation Planning', 'Researched vacation destinations.', '2024-09-05', 1),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Personal Development', 'Listed books and courses for self-development.', '2024-09-06', 2),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Meditation Techniques', 'Collected resources for meditation practices.', '2024-09-07', 3),
+('5dc76f07-b5b3-4428-b2e7-c387da6a75ed', 'Weekend Activities', 'Planned outdoor activities for the weekend.', '2024-09-08', 4);
 
 INSERT INTO Notes (AppUserId, Title, Content, Date, NoteStatusId)
 VALUES
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Book List', 'Compiled a list of books to read this year.', '2024-09-01', 1),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Cooking Recipe Ideas', 'Tried new recipes for healthy meals.', '2024-09-02', 2),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Travel Bucket List', 'Noted down places to visit.', '2024-09-03', 3),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Photography Projects', 'Brainstormed ideas for photography projects.', '2024-09-04', 4),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Music Playlist', 'Created a new playlist for work.', '2024-09-05', 1),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Game Night', 'Planned a game night with friends.', '2024-09-06', 2),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Personal Budget', 'Updated personal finance budget.', '2024-09-07', 3),
-('fa4302cc-1796-4926-bc65-b2e528ffa62b', 'Weekend Trip', 'Researched destinations for a quick weekend trip.', '2024-09-08', 4);
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Book List', 'Compiled a list of books to read this year.', '2024-09-01', 1),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Cooking Recipe Ideas', 'Tried new recipes for healthy meals.', '2024-09-02', 2),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Travel Bucket List', 'Noted down places to visit.', '2024-09-03', 3),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Photography Projects', 'Brainstormed ideas for photography projects.', '2024-09-04', 4),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Music Playlist', 'Created a new playlist for work.', '2024-09-05', 1),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Game Night', 'Planned a game night with friends.', '2024-09-06', 2),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Personal Budget', 'Updated personal finance budget.', '2024-09-07', 3),
+('15b22b08-ee3a-40ac-96d2-011a707d60b9', 'Weekend Trip', 'Researched destinations for a quick weekend trip.', '2024-09-08', 4);

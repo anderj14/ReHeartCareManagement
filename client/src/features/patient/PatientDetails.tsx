@@ -1,7 +1,7 @@
 
 import { Box, Button, Card, CardContent, Drawer, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ApiService from "../../services/ApiService";
 import { Appointment } from "../../app/Models/appointment";
 import AppointmentsPatient from "./components/AppointmentsPatient";
@@ -20,7 +20,7 @@ import DiagnosticPatient from "./components/DiagnosticPatient";
 import TreatmentPatient from "./components/TreatmentPatient";
 import NotFound from "../../app/errors/NotFound";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { fetchPatientAsync, patientSelectors } from "./patientSlice";
+import { fetchPatientAsync, patientSelectors, removePatient } from "./patientSlice";
 import { bloodTestSelectors, fetchBloodTestsByPatientAsync } from "./bloodTest/bloodTestSlice";
 import { cardiacCathStudySelectors, fetchCardiacCathStudiesByPatientAsync } from "./cardiacTestsPatient/cardiacCathStudySlice";
 import { echocardiogramSelectors, fetchEchocardiogramsByPatientAsync } from "./echocardiogram/echocardiogramSlice";
@@ -31,7 +31,7 @@ import { diseaseHistorySelectors, fetchDiseaseHistoriesByPatientAsync } from "./
 import { fetchMedicalHistoriesByPatientAsync, medicalHistorySelectors } from "./medicalHistory/medicalHistorySlice";
 import { diagnosticSelectors, fetchDiagnosticsByPatientAsync } from "./diagnostic/diagnosticSlice";
 import { fetchTreatmentsByPatientAsync, treatmentSelectors } from "./treatment/treatmentSlice";
-import { Edit } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { Patient } from "../../app/Models/patient";
 import PatientForm from "./admin-patient/PatientForm";
 import calculateAge from "../../app/components/calculateAge";
@@ -39,6 +39,8 @@ import { fetchCardiologySurgeriesByPatientAsync, surgerySelectors } from "../sur
 import CardiologySurgeryPatient from "./components/CardiolodySurgeryPatient";
 import { fetchStressTestsByPatientAsync, stressTestSelectors } from "./stressTest/stressTest";
 import StressTestPatient from "./components/StressTestPatient";
+import agent from "../../app/api/agent";
+import { LoadingButton } from "@mui/lab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -105,9 +107,24 @@ export default function PatientDetail() {
     const surgeryByPatient = useAppSelector(surgerySelectors.selectAll);
     const { stressTestByPatientLoaded } = useAppSelector(state => state.stressTest);
     const stressTestByPatient = useAppSelector(stressTestSelectors.selectAll);
-
     const [editMode, setEditMode] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined);
+    const [target, setTarget] = useState(0);
+    const navigate = useNavigate();
+
+
+    function handleDeletePatient(id: number) {
+        setLoading(true);
+        setTarget(id);
+        agent.Admin.deletePatient(id)
+            .then(() => {
+                dispatch(removePatient(id));
+                navigate('/patients')
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false));
+    }
+
 
     useEffect(() => {
         const fetchPatient = async () => {
@@ -296,10 +313,17 @@ export default function PatientDetail() {
                             </div>
                         </Box>
 
-                        {/* <Button onClick={() => handleSelectPatient(patient)} startIcon={<Edit />} /> */}
-                        <Button onClick={handleEditClick} startIcon={<Edit />}>
+                        <Button onClick={(handleEditClick)} startIcon={<Edit />}>
                             Edit
                         </Button>
+                        <LoadingButton 
+                        loading={loading && target === patient.id} 
+                        startIcon={<Delete />} 
+                        color="error"
+                        onClick={() => handleDeletePatient(patient.id)}
+                        >
+                            Delete
+                        </LoadingButton>
                     </CardContent>
                 </Card>
                 <Drawer
@@ -308,7 +332,7 @@ export default function PatientDetail() {
                     onClose={toggleDrawer}
                 >
                     <Box sx={{ width: 600, p: 2 }}>
-                        <PatientForm patient={selectedPatient} cancelEdit={toggleDrawer} />
+                        <PatientForm patient={selectedPatient} cancelEdit={toggleDrawer} title={`Editing Patient ${patient.patientName}`}/>
                     </Box>
                 </Drawer>
 
