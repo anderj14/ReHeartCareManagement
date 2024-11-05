@@ -1,4 +1,4 @@
-import { CardiacCathStudy } from '../../../app/Models/cardiacCathStudy'
+import { CardiacCathStudy } from '../../../app/Models/cardiacCathStudy';
 import { Card, CardContent, Box } from '@mui/material';
 import formatDateTime from '../../../app/components/formatDateTime';
 
@@ -7,7 +7,6 @@ interface Props {
 }
 
 export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
-
     const latestCardiacCathStudyPatient = cardiacCathStudy?.slice(-1)[0];
 
     return (
@@ -34,15 +33,19 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                                 </Box>
                                 <Box className="details">
                                     <strong>Blockage in Each Coronary Artery: </strong>
-                                    <span>{latestCardiacCathStudyPatient.blockageEachCoronaryArtery}</span>
+                                    <span>{latestCardiacCathStudyPatient.blockageEachCoronaryArtery} %</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Description of Abnormalities: </strong>
                                     <span>{latestCardiacCathStudyPatient.descriptionAbnormalities}</span>
                                 </Box>
                                 <Box className="details">
-                                    <strong>Blood Pressure in Aorta: </strong>
-                                    {/* <span>{latestCardiacCathStudyPatient.bloodPressureAorta}</span> */}
+                                    <strong>Systolic Blood Pressure in Aorta: </strong>
+                                    <span>{latestCardiacCathStudyPatient.systolicPressureAorta} mmHg</span>
+                                </Box>
+                                <Box className="details">
+                                    <strong>Diastolic Blood Pressure in Aorta: </strong>
+                                    <span>{latestCardiacCathStudyPatient.diastolicPressureAorta} mmHg</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Left Atrium Chambers: </strong>
@@ -62,21 +65,25 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                                 </Box>
                                 <Box className="details">
                                     <strong>Blood Flow in Coronary Arteries: </strong>
-                                    <span>{latestCardiacCathStudyPatient.bloodFlowCoronaryArteries}</span>
+                                    <span>{latestCardiacCathStudyPatient.bloodFlowCoronaryArteries} mL/min</span>
                                 </Box>
                             </section>
                             <section>
                                 <Box className="details">
                                     <strong>Velocity of Blood Flow: </strong>
-                                    <span>{latestCardiacCathStudyPatient.velocityBloodFlow}</span>
+                                    <span>{latestCardiacCathStudyPatient.velocityBloodFlow} cm/s</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Left Ventricular Ejection Fraction: </strong>
-                                    <span>{latestCardiacCathStudyPatient.leftVentricularEjectionFraction}</span>
+                                    <span>{latestCardiacCathStudyPatient.leftVentricularEjectionFraction} %</span>
                                 </Box>
                                 <Box className="details">
-                                    <strong>Blood Pressure in Pulmonary Arteries: </strong>
-                                    {/* <span>{latestCardiacCathStudyPatient.bloodPressurePulmonaryArteries}</span> */}
+                                    <strong>Systolic Blood Pressure in Pulmonary Arteries: </strong>
+                                    <span>{latestCardiacCathStudyPatient.systolicPressurePulmonaryArteries} mmHg</span>
+                                </Box>
+                                <Box className="details">
+                                    <strong>Diastolic Blood Pressure in Pulmonary Arteries: </strong>
+                                    <span>{latestCardiacCathStudyPatient.diastolicPressurePulmonaryArteries} mmHg</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Valvular Insufficiency in Aortic Valve: </strong>
@@ -96,7 +103,7 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                                 </Box>
                                 <Box className="details">
                                     <strong>Pressure Gradient in Valves: </strong>
-                                    <span>{latestCardiacCathStudyPatient.pressureGradientValves}</span>
+                                    <span>{latestCardiacCathStudyPatient.pressureGradientValves} mmHg</span>
                                 </Box>
                                 <Box className="details">
                                     <strong>Structural Abnormalities: </strong>
@@ -120,5 +127,5 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }

@@ -37,7 +37,7 @@ export default function ElectrocardiogramPatient({ electrocardiogram }: Props) {
                             </Box>
                             <Box className="details">
                                 <strong>Heart Rate: </strong>
-                                <span>{latestElectrocardiogram.heartRate}</span>
+                                <span>{latestElectrocardiogram.heartRate} Bpm</span>
                             </Box>
                             <Box className="details">
                                 <strong>Abnomalities: </strong>

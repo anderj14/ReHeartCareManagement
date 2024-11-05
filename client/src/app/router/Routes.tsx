@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
             { path: '/holterstudy/patient/:id/holterstudies', element: <HolterStudies /> },
             { path: '/holterstudy/patient/:id/holterstudies/:holterStudyId', element: <HolterStudyDetails /> },
             { path: '/physicalexamination/patient/:id/physicalexaminations', element: <PhysicalExaminations /> },
-            { path: '/physicalexamination/patient/:id/physicalexaminations/:physicalExaminationId', element: <PhysicalExaminationDetails /> },
+            { path: '/physicalexamination/patient/:id/physical-examinations/:physicalExaminationId', element: <PhysicalExaminationDetails /> },
             { path: '/diseasehistory/patient/:id/diseaseshistories', element: <DiseaseHistories /> },
             { path: '/diseasehistory/patient/:id/diseaseshistories/:diseaseHistoryId', element: <DiseaseHistoryDetails /> },
             { path: '/medicalhistory/patient/:id/medicalhistories', element: <MedicalHistories /> },

@@ -1,5 +1,5 @@
 import { Electrocardiogram } from '../../../app/Models/electrocardiogram';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
@@ -12,6 +12,11 @@ interface Props {
 export default function ElectrocardiogramList({ electrocardiograms }: Props) {
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+    const navigate = useNavigate();
+
+    const handleRowClick = (electrocardiogramId: string) => {
+        navigate(`/electrocardiogram/patient/${patient?.id}/electrocardiograms/${electrocardiogramId}`);
+    };
 
     return (
         <Box>
@@ -32,9 +37,8 @@ export default function ElectrocardiogramList({ electrocardiograms }: Props) {
                         {electrocardiograms.map((ecg) => (
                             <TableRow
                                 key={ecg.id}
-                                component={Link}
-                                to={`/electrocardiogram/patient/${patient?.id}/electrocardiograms/${ecg.id}`}
-                                style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
+                                onClick={() => handleRowClick(ecg.id.toString())}
+                                style={{ cursor: 'pointer' }}
                             >
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">
                                     {formatDateTime(ecg.date)}

@@ -11,3 +11,9 @@ export interface Diagnostics {
     followUpPlan: string
     patient: string
 }
+
+export interface DiagnosticParams {
+    sort: string;
+    pageIndex: number;
+    pageSize: number;
+}

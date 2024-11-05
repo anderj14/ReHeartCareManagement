@@ -93,14 +93,14 @@ export default function HolterStudyDetails() {
                                     {holterStudyByPatient?.physicalActivity}
                                 </Typography>
                             </Box>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Conclusion
-                                </Typography>
-                                <Typography>
-                                    {holterStudyByPatient?.conclusion}
-                                </Typography>
-                            </Box>
+                        </Box>
+                        <Box>
+                            <Typography variant="body1" color="text.secondary">
+                                Conclusion
+                            </Typography>
+                            <Typography>
+                                {holterStudyByPatient?.conclusion}
+                            </Typography>
                         </Box>
                     </Box>
                 </CardContent>

@@ -6,12 +6,12 @@ interface Props {
     appointments: Appointment[];
 }
 
-const formatDate = (dateString: any) => {
-    const date = new Date(dateString);
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-}
+// const formatDate = (dateString: any) => {
+//     const date = new Date(dateString);
+//     const hours = date.getHours().toString().padStart(2, '0');
+//     const minutes = date.getMinutes().toString().padStart(2, '0');
+//     return `${hours}:${minutes}`;
+// }
 
 export default function AppointmentsPatient({ appointments }: Props) {
     const latestAppointment = appointments?.slice(-1)[0];
@@ -32,7 +32,7 @@ export default function AppointmentsPatient({ appointments }: Props) {
                             </Box>
                             <Box className="details">
                                 <strong>Appointment time: </strong>
-                                <span>{formatDate(latestAppointment.startDate)} - {formatDate(latestAppointment.endDate)}</span>
+                                <span>{latestAppointment.startDate} - {latestAppointment.endDate}</span>
                             </Box>
                             <Box className="details">
                                 <strong>Description: </strong>

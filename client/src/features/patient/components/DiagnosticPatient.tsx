@@ -44,8 +44,8 @@ export default function DiagnosticPatient({ diagnostic }: Props) {
                                 <span>{latestDiagnostic.riskAssessment}</span>
                             </Box>
                             <Box className="details">
-                                <strong>Recomndations: </strong>
-                                <span>{latestDiagnostic.riskAssessment}</span>
+                                <strong>Recommendations: </strong>
+                                <span>{latestDiagnostic.recommendations}</span>
                             </Box>
                             <Box className="details">
                                 <strong>Follow Up Plan: </strong>

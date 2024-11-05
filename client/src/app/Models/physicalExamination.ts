@@ -10,3 +10,9 @@ export interface PhysicalExamination {
     conclusion: string
     patient: string
 }
+
+export interface PhysicalExaminationParams {
+    sort: string;
+    pageIndex: number;
+    pageSize: number;
+  }

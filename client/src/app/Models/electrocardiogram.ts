@@ -15,3 +15,9 @@ export interface Electrocardiogram {
     clinicalNotes: string
     patient: number
 }
+
+export interface ElectrocardiogramParams {
+    sort: string;
+    pageIndex: number;
+    pageSize: number;
+  }

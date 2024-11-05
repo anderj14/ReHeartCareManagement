@@ -79,7 +79,7 @@ export default function ElectrocardiogramDetails() {
                                     Heart Rate
                                 </Typography>
                                 <Typography>
-                                    {electrocardiogramByPatient?.heartRate}
+                                    {electrocardiogramByPatient?.heartRate} Bpm
                                 </Typography>
                             </Box>
                             <Box>

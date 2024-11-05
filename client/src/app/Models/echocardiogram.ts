@@ -14,3 +14,10 @@ export interface Echocardiogram {
     technicalDetails: string
     patient: string
 }
+
+
+export interface EchocardiogramParams {
+    sort: string;
+    pageIndex: number;
+    pageSize: number;
+  }

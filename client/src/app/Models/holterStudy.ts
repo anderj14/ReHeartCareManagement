@@ -1,3 +1,8 @@
+import { AdditionalTestResult } from "./additionalTestResult"
+import { ArrhythmiaEvent } from "./arrhythmiaEvent"
+import { ClinicalEvaluation } from "./clinicalEvaluation"
+import { MedicationAdministration } from "./medicationAdministration"
+import { PatientSymptom } from "./patientSymptom"
 
 export interface HolterStudy {
   id: number
@@ -17,38 +22,8 @@ export interface HolterStudy {
   additionalTestResults: AdditionalTestResult[]
 }
 
-export interface ArrhythmiaEvent {
-  id: number
-  type: string
-  duration: string
-  heartRateDuringEvent: number
-  description: string
-}
-
-export interface MedicationAdministration {
-  id: number
-  medicationName: string
-  administrationDateTime: string
-  dosage: string
-}
-
-export interface PatientSymptom {
-  id: number
-  symptomName: string
-  symptomDateTime: string
-  description: string
-}
-
-export interface ClinicalEvaluation {
-  id: number
-  evaluationDateTime: string
-  findings: string
-  recommendations: string
-}
-
-export interface AdditionalTestResult {
-  id: number
-  testName: string
-  testDateTime: string
-  results: string
+export interface HolterStudyParams {
+  sort: string;
+  pageIndex: number;
+  pageSize: number;
 }

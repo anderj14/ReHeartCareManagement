@@ -14,3 +14,9 @@ export interface MedicalHistory {
   otherDetails: string
   patient: string
 }
+
+export interface MedicalHistoryParams {
+  sort: string;
+  pageIndex: number;
+  pageSize: number;
+}

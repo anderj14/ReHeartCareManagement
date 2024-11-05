@@ -39,7 +39,7 @@ export default function PhysicalExaminationPatient({ physicalExamination }: Prop
                                 <section>
                                     <Box className="details">
                                         <strong>Peak Pressure: </strong>
-                                        <span>{latestPhysicalExaminationPatient.peakPressure}</span>
+                                        <span>{latestPhysicalExaminationPatient.peakPressure} bpm</span>
                                     </Box>
                                     <Box className="details">
                                         <strong>Exercise-induced Symptoms: </strong>

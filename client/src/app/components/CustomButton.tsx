@@ -18,7 +18,7 @@ const CustomButton: React.FC<Props> = ({
   color = "#000",
   hoverColor = "#f3f3f3",
   borderColor = "#e4e4e7",
-  width = "40px",
+  width = "180px",
   hoverTextColor,
   type,
   ...props

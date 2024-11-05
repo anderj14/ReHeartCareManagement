@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { StressTest } from "../../../app/Models/stressTest";
 import { useAppSelector } from "../../../app/store/configureStore";
 import { patientSelectors } from "../patientSlice";
@@ -13,7 +13,12 @@ export default function StressTestList({ stressTest }: Props) {
 
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+    const navigate = useNavigate();
 
+    const handleRowClick = (bloodTestId: string) => {
+        navigate(`/stresstest/patient/${patient?.id}/stresstests/${bloodTestId}`);
+    };
+    
     return (
         <Box>
             <TableContainer component={Paper} className="table">
@@ -32,9 +37,8 @@ export default function StressTestList({ stressTest }: Props) {
                         {stressTest.map((stressTest) => (
                             <TableRow
                                 key={stressTest.id}
-                                component={Link}
-                                to={`/stresstest/patient/${patient?.id}/stresstests/${stressTest.id}`}
-                                style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
+                                onClick={() => handleRowClick(stressTest.id.toString())}
+                                style={{ cursor: 'pointer' }}
                             >
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(stressTest.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{stressTest.time}</TableCell>

@@ -5,7 +5,6 @@ import { patientSlice } from "../../features/patient/patientSlice";
 import { surgerySlice } from "../../features/surgery/surgerySlice";
 import { noteSlice } from "../../features/notes/noteSlice";
 import { bloodTestSlice } from "../../features/patient/bloodTest/bloodTestSlice";
-import { cardiaccathstudySlice } from "../../features/patient/cardiacTestsPatient/cardiacCathStudySlice";
 import { electrocardiogramSlice } from "../../features/patient/electrocardiogram/electrocardiogramSlice";
 import { echocardiogramSlice } from "../../features/patient/echocardiogram/echocardiogramSlice";
 import { holterStudySlice } from "../../features/patient/holterStudy/holterStudySlice";
@@ -15,7 +14,8 @@ import { medicalHistorySlice } from "../../features/patient/medicalHistory/medic
 import { diagnosticSlice } from "../../features/patient/diagnostic/diagnosticSlice";
 import { treatmentSlice } from "../../features/patient/treatment/treatmentSlice";
 import { appointmentSlice } from "../../features/appointment/appointmentSlice";
-import { stressTestSlice } from "../../features/patient/stressTest/stressTest";
+import { stressTestSlice } from "../../features/patient/stressTest/stressTestSlice";
+import { cardiaccathstudySlice } from "../../features/patient/cardiacTestsPatient/cardiacCathStudySlice";
 
 export const store = configureStore({
     reducer: {

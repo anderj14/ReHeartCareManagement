@@ -17,3 +17,9 @@ export interface Attachment {
     fileName: string
     diseaseHistoryId: number
 }
+
+export interface DiseaseHistoryParams {
+    sort: string;
+    pageIndex: number;
+    pageSize: number;
+}

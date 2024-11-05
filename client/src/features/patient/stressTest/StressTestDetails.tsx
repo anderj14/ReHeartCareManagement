@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardActions, CardContent, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../app/store/configureStore";
 import { useParams } from "react-router-dom";
-import { fetchStressTestByPatientAsync, stressTestSelectors } from "./stressTest";
+import { fetchStressTestByPatientAsync, stressTestSelectors } from "./stressTestSlice";
 import { useEffect } from "react";
 import NotFound from "../../../app/errors/NotFound";
 import Breadcrumb from "../../../app/components/Breadcrumb";

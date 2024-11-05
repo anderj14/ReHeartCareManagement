@@ -1,5 +1,5 @@
 import { Echocardiogram } from '../../../app/Models/echocardiogram';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
@@ -13,7 +13,11 @@ export default function EchocardiogramList({ echocardiograms }: Props) {
 
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+    const navigate = useNavigate();
 
+    const handleRowClick = (echocardiogramId: string) => {
+        navigate(`/echocardiogram/patient/${patient?.id}/echocardiograms/${echocardiogramId}`);
+    };
     return (
         <div>
             <Box>
@@ -32,7 +36,10 @@ export default function EchocardiogramList({ echocardiograms }: Props) {
                         </TableHead>
                         <TableBody className="body">
                             {echocardiograms.map((echocardiogram) => (
-                                <TableRow key={echocardiogram.id} component={Link} to={`/echocardiogram/patient/${patient?.id}/echocardiograms/${echocardiogram.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                                <TableRow 
+                                key={echocardiogram.id} 
+                                onClick={() => handleRowClick(echocardiogram.id.toString())}
+                                style={{ cursor: 'pointer' }}>
                                     <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(echocardiogram.date)}</TableCell>
                                     <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{echocardiogram.cardiacDimensions}</TableCell>
                                     <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{echocardiogram.ejectionFraction}</TableCell>

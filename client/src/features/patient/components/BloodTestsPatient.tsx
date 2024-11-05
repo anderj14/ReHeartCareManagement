@@ -6,130 +6,61 @@ interface Props {
     bloodTests: BloodTest[];
 }
 
+// Define las propiedades que se mostrarán junto con sus unidades
+const bloodTestProperties: { label: string; key: keyof BloodTest; formatter?: (value: any) => any; unit?: string }[] = [
+    { label: 'Date', key: 'date', formatter: formatDateTime },
+    { label: 'Hemoglobin', key: 'hemoglobin', unit: 'g/dL' },
+    { label: 'Hematocrit', key: 'hematocrit', unit: '%' },
+    { label: 'White Blood Cell', key: 'whiteBloodCell', unit: 'x10^3/µL' },
+    { label: 'Platelets', key: 'platelets', unit: 'x10^3/µL' },
+    { label: 'Glucose', key: 'glucose', unit: 'mg/dL' },
+    { label: 'Cholesterol HDL', key: 'cholesterolHDL', unit: 'mg/dL' },
+    { label: 'Cholesterol LDL', key: 'cholesterolLDL', unit: 'mg/dL' },
+    { label: 'Triglycerides', key: 'triglycerides', unit: 'mg/dL' },
+    { label: 'Red Blood Cell', key: 'redBloodCell', unit: 'x10^6/µL' },
+    { label: 'Mean Corpuscular Volume', key: 'meanCorpuscularVolume', unit: 'fL' },
+    { label: 'Mean Corpuscular Hemoglobin', key: 'meanCorpuscularHemoglobin', unit: 'pg' },
+    { label: 'Mean Corpuscular Hemoglobin Concentration', key: 'meanCorpuscularHemoglobinConcentration', unit: 'g/dL' },
+    { label: 'Red Cell Distribution Width', key: 'redCellDistributionWidth', unit: '%' },
+    { label: 'Blood Urea Nitrogen', key: 'bloodUreaNitrogen', unit: 'mg/dL' },
+    { label: 'Creatinine', key: 'creatinine', unit: 'mg/dL' },
+    { label: 'Sodium', key: 'sodium', unit: 'mEq/L' },
+    { label: 'Potassium', key: 'potassium', unit: 'mEq/L' },
+    { label: 'Chloride', key: 'chloride', unit: 'mEq/L' },
+    { label: 'Bicarbonate', key: 'bicarbonate', unit: 'mEq/L' },
+    { label: 'Calcium', key: 'calcium', unit: 'mg/dL' },
+    { label: 'Magnesium', key: 'magnesium', unit: 'mg/dL' },
+    { label: 'Neutrophils', key: 'neutrophils', unit: '%' },
+    { label: 'Lymphocytes', key: 'lymphocytes', unit: '%' },
+    { label: 'Monocytes', key: 'monocytes', unit: '%' },
+    { label: 'Eosinophils', key: 'eosinophils', unit: '%' },
+    { label: 'Basophils', key: 'basophils', unit: '%' },
+];
+
 export default function BloodTestPatient({ bloodTests }: Props) {
     const latestBloodTest = bloodTests.slice(-1)[0];
 
     return (
-        <Card className="detailsContainer" >
+        <Card className="detailsContainer">
             <CardContent className='contentsContainer'>
-                <h2>
-                    Last Blood Test
-                </h2>
+                <h2>Last Blood Test</h2>
                 <div className="bloodTestsDetails">
-                    {latestBloodTest && (
+                    {latestBloodTest ? (
                         <div key={latestBloodTest.id}>
-                            <Box className="details">
-                                <strong>Date: </strong>
-                                <span>{formatDateTime(latestBloodTest.date)}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Hemoglobin: </strong>
-                                <span>{latestBloodTest.hemoglobin}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Hematocrit: </strong>
-                                <span>{latestBloodTest.hematocrit}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>White Blood Cell: </strong>
-                                <span>{latestBloodTest.whiteBloodCell}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Platelets: </strong>
-                                <span>{latestBloodTest.platelets}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Glucose: </strong>
-                                <span>{latestBloodTest.glucose}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Cholesterol HDL: </strong>
-                                <span>{latestBloodTest.cholesterolHDL}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Cholesterol LDL: </strong>
-                                <span>{latestBloodTest.cholesterolLDL}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Tryglycerides: </strong>
-                                <span>{latestBloodTest.triglycerides}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Red Blood Cell: </strong>
-                                <span>{latestBloodTest.redBloodCell}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Mean Corpuscular Volume: </strong>
-                                <span>{latestBloodTest.meanCorpuscularVolume}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Mean Corpuscular Hemoglobin: </strong>
-                                <span>{latestBloodTest.meanCorpuscularHemoglobin}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Mean Corpuscular Hemoglobin Concentration: </strong>
-                                <span>{latestBloodTest.meanCorpuscularHemoglobinConcentration}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Red Cell Distribution Width: </strong>
-                                <span>{latestBloodTest.redCellDistributionWidth}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Blood Urea Nitrogen: </strong>
-                                <span>{latestBloodTest.bloodUreaNitrogen}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Creatinine: </strong>
-                                <span>{latestBloodTest.creatinine}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Sodium: </strong>
-                                <span>{latestBloodTest.sodium}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Potassium: </strong>
-                                <span>{latestBloodTest.potassium}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Chloride: </strong>
-                                <span>{latestBloodTest.chloride}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Bicarbonate: </strong>
-                                <span>{latestBloodTest.bicarbonate}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Calcium: </strong>
-                                <span>{latestBloodTest.calcium}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Magnesium: </strong>
-                                <span>{latestBloodTest.magnesium}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Neutrophils: </strong>
-                                <span>{latestBloodTest.neutrophils}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Lymphocytes: </strong>
-                                <span>{latestBloodTest.lymphocytes}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Monocytes: </strong>
-                                <span>{latestBloodTest.monocytes}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Eosinophils: </strong>
-                                <span>{latestBloodTest.eosinophils}</span>
-                            </Box>
-                            <Box className="details">
-                                <strong>Basophils: </strong>
-                                <span>{latestBloodTest.basophils}</span>
-                            </Box>
+                            {bloodTestProperties.map(({ label, key, formatter, unit }) => (
+                                <Box className="details" key={key}>
+                                    <strong>{label}: </strong>
+                                    <span>
+                                        {formatter ? formatter(latestBloodTest[key]) : latestBloodTest[key]} {unit}
+                                    </span>
+                                </Box>
+                            ))}
                         </div>
+                    ) : (
+                        <p>No blood test data available.</p>
                     )}
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }

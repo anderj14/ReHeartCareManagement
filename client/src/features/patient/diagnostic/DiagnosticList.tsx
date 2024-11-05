@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
@@ -13,7 +13,11 @@ export default function DiagnosticList({ diagnostics }: Props) {
 
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+    const navigate = useNavigate();
 
+    const handleRowClick = (diagnosticId: string) => {
+        navigate(`/diagnostic/patient/${patient?.id}/diagnostics/${diagnosticId}`);
+    };
     return (
         <Box>
             <TableContainer component={Paper} className="table">
@@ -29,7 +33,10 @@ export default function DiagnosticList({ diagnostics }: Props) {
                     </TableHead>
                     <TableBody className="body">
                         {diagnostics.map((diagnostic) => (
-                            <TableRow key={diagnostic.id} component={Link} to={`/diagnostic/patient/${patient?.id}/diagnostics/${diagnostic.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                            <TableRow 
+                            key={diagnostic.id} 
+                            onClick={() => handleRowClick(diagnostic.id.toString())}
+                            style={{ cursor: 'pointer' }}>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(diagnostic.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{diagnostic.conditionName}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{diagnostic.classificationCondition}</TableCell>

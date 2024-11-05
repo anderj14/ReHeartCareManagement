@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { HolterStudy } from "../../../app/Models/holterStudy";
 import { useAppSelector } from "../../../app/store/configureStore";
 import { patientSelectors } from "../patientSlice";
@@ -13,6 +13,11 @@ export default function HolterStudyList({ holterStudies }: Props) {
 
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+    const navigate = useNavigate();
+
+    const handleRowClick = (bloodTestId: string) => {
+        navigate(`/holterstudy/patient/${patient?.id}/holterstudies/${bloodTestId}`);
+    };
 
     return (
         <Box>
@@ -30,12 +35,16 @@ export default function HolterStudyList({ holterStudies }: Props) {
                     </TableHead>
                     <TableBody className="body">
                         {holterStudies.map((holterStudy) => (
-                            <TableRow key={holterStudy.id} component={Link} to={`/holterstudy/patient/${patient?.id}/holterStudies/${holterStudy.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                            <TableRow 
+                            key={holterStudy.id}  
+                            onClick={() => handleRowClick(holterStudy.id.toString())}
+                            style={{cursor: 'pointer' }}
+                            >
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(holterStudy.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.time}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.studyDuration}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.averageHeartRate}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.maximumHeartRate}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.averageHeartRate} BPM</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.maximumHeartRate} BPM</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{holterStudy.typeHeartRhythm}</TableCell>
                             </TableRow>
                         ))}

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CardiologySurgery } from "../../../app/Models/cardiologySurgery";
 import { useAppSelector } from "../../../app/store/configureStore";
 import { patientSelectors } from "../patientSlice";
@@ -14,6 +14,11 @@ export default function CardiologySurgeryList({ cardiologySurgeries }: Props) {
 
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+    const navigate = useNavigate();
+
+    const handleRowClick = (bloodTestId: string) => {
+        navigate(`/cardiologysurgery/patient/${patient?.id}/cardiologysurgeries/${bloodTestId}`);
+    };
 
     return (
         <Box>
@@ -35,9 +40,8 @@ export default function CardiologySurgeryList({ cardiologySurgeries }: Props) {
                         {cardiologySurgeries.map((cardiologySurgery) => (
                             <TableRow
                                 key={cardiologySurgery.id}
-                                component={Link}
-                                to={`/cardiologysurgery/patient/${patient?.id}/cardiologysurgeries/${cardiologySurgery.id}`}
-                                style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
+                                onClick={() => handleRowClick(cardiologySurgery.id.toString())}
+                                style={{ cursor: 'pointer' }}
                             >
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }}>
                                     {formatDateTime(cardiologySurgery.date)}

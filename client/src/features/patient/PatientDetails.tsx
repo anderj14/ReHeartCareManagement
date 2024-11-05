@@ -2,7 +2,6 @@
 import { Box, Button, Card, CardContent, Drawer, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import ApiService from "../../services/ApiService";
 import { Appointment } from "../../app/Models/appointment";
 import AppointmentsPatient from "./components/AppointmentsPatient";
 import React from "react";
@@ -37,7 +36,7 @@ import PatientForm from "./admin-patient/PatientForm";
 import calculateAge from "../../app/components/calculateAge";
 import { fetchCardiologySurgeriesByPatientAsync, surgerySelectors } from "../surgery/surgerySlice";
 import CardiologySurgeryPatient from "./components/CardiolodySurgeryPatient";
-import { fetchStressTestsByPatientAsync, stressTestSelectors } from "./stressTest/stressTest";
+import { fetchStressTestsByPatientAsync, stressTestSelectors } from "./stressTest/stressTestSlice";
 import StressTestPatient from "./components/StressTestPatient";
 import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
@@ -131,14 +130,16 @@ export default function PatientDetail() {
             if (!patient) dispatch(fetchPatientAsync(id));
         };
         const fetchAppointments = async () => {
-            try {
-                const appointmentsData = await ApiService.getAppointmentsByPatientId(id);
-                setAppointments(appointmentsData);
-            } catch (error) {
-                console.error('Error fetching appointments:', error);
-            } finally {
-                setLoading(false);
-            }
+            // try {
+            //     const appointmentsData = await ApiService.getAppointmentsByPatientId(id);
+            //     setAppointments(appointmentsData);
+            // } catch (error) {
+            //     console.error('Error fetching appointments:', error);
+            // } finally {
+            //     setLoading(false);
+            // }
+            // if (!bloodTestByPatientLoaded) dispatch(fetchAppointmentByPatientAsync(id));
+
         };
         const fetchBloodTest = async () => {
             if (!bloodTestByPatientLoaded) dispatch(fetchBloodTestsByPatientAsync(id));

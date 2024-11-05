@@ -7,6 +7,7 @@ import { BloodTest, BloodTestParams } from "../../../app/Models/bloodTest";
 import agent from "../../../app/api/agent";
 import { RootState } from "../../../app/store/configureStore";
 import { Metadata } from "../../../app/Models/pagination";
+import { getAxiosParams } from "../utils/axiosParamsUtils";
 
 interface BloodTestState {
   bloodTestByPatientLoaded: boolean;
@@ -22,14 +23,6 @@ type ThunkArg = {
   bloodTestId?: number;
 };
 
-function getAxiosParams(bloodTestParams: BloodTestParams) {
-  const params = new URLSearchParams();
-  params.append("pageIndex", bloodTestParams.pageIndex.toString());
-  params.append("pageSize", bloodTestParams.pageSize.toString());
-  params.append("sort", bloodTestParams.sort.toString());
-  return params;
-}
-
 export const fetchBloodTestsByPatientAsync = createAsyncThunk<
   BloodTest[],
   number,
@@ -43,6 +36,9 @@ export const fetchBloodTestsByPatientAsync = createAsyncThunk<
     try {
       const response = await agent.BloodTest.listByPatientId(params, patientId);
       thunkAPI.dispatch(setMetaData(response.metadata));
+      if (response.length === 0) {
+        return response;
+      }
       return response.items;
     } catch (error: any) {
       console.error("Failed to fetch blood tests:", error);
@@ -51,7 +47,10 @@ export const fetchBloodTestsByPatientAsync = createAsyncThunk<
   }
 );
 
-const fetchBloodTestByPatientAsync = createAsyncThunk<BloodTest, ThunkArg>(
+export const fetchBloodTestByPatientAsync = createAsyncThunk<
+  BloodTest,
+  ThunkArg
+>(
   "bloodTestByPatient/fetchBloodTestByPatient",
   async ({ patientId, bloodTestId }, thunkAPI) => {
     try {
@@ -65,13 +64,12 @@ const fetchBloodTestByPatientAsync = createAsyncThunk<BloodTest, ThunkArg>(
     }
   }
 );
-export default fetchBloodTestByPatientAsync;
 
 function initParams() {
   return {
     pageIndex: 1,
     pageSize: 8,
-    sort: "patientName",
+    sort: "PatientName",
   };
 }
 
@@ -111,7 +109,6 @@ export const bloodTestSlice = createSlice({
         bloodTestsAdapter.setAll(state, action.payload);
         state.status = "idle";
         state.bloodTestByPatientLoaded = true;
-        // state.metaData = action.payload.metadata; // Asegúrate de que los metaData se asignen
       }
     );
     builder.addCase(fetchBloodTestsByPatientAsync.rejected, (state, action) => {

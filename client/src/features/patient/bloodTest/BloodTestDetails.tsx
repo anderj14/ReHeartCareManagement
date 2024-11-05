@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import Breadcrumb from '../../../app/components/Breadcrumb';
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
-import fetchBloodTestByPatientAsync, { bloodTestSelectors } from './bloodTestSlice';
+import { bloodTestSelectors, fetchBloodTestByPatientAsync } from './bloodTestSlice';
 import NotFound from '../../../app/errors/NotFound';
 import { patientSelectors } from '../patientSlice';
 import formatDateTime from '../../../app/components/formatDateTime';
@@ -36,8 +36,8 @@ export default function BloodTestDetails() {
     if (!bloodTestByPatient) return <NotFound />;
 
     const getStatus = (result: number, min: number, max: number) => {
-      if(result < min) return 'Low';
-      if(result > max) return 'High';
+      if(result <= min) return 'Low';
+      if(result >= max) return 'High';
       return 'Normal';
     }
 

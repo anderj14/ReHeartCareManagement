@@ -27,7 +27,6 @@ export default function CardiacCathStudyDetails() {
         fetchCardiacCathStudyIdByPatientId();
     }, [dispatch, patientIdNumber, cardiacCathStudyIdNumber, cardiacCathStudyByPatient]);
 
-
     return (
         <div>
             <Box sx={{ margin: '30px 0px 30px 30px' }}>
@@ -58,7 +57,7 @@ export default function CardiacCathStudyDetails() {
                                         Blockage (Each Coronary Artery)
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.blockageEachCoronaryArtery}
+                                        {cardiacCathStudyByPatient?.blockageEachCoronaryArtery} %
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -74,7 +73,7 @@ export default function CardiacCathStudyDetails() {
                                         Blood Pressure (Aorta)
                                     </Typography>
                                     <Typography>
-                                        {/* {cardiacCathStudyByPatient?.bloodPressureAorta} */}
+                                        {cardiacCathStudyByPatient?.systolicPressureAorta} / {cardiacCathStudyByPatient?.diastolicPressureAorta} mmHg
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -114,7 +113,7 @@ export default function CardiacCathStudyDetails() {
                                         Blood Flow (Coronary Arteries)
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.bloodFlowCoronaryArteries}
+                                        {cardiacCathStudyByPatient?.bloodFlowCoronaryArteries} mL/min
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -122,7 +121,7 @@ export default function CardiacCathStudyDetails() {
                                         Velocity of Blood Flow
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.velocityBloodFlow}
+                                        {cardiacCathStudyByPatient?.velocityBloodFlow} cm/s
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -130,7 +129,7 @@ export default function CardiacCathStudyDetails() {
                                         Left Ventricular Ejection Fraction
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.leftVentricularEjectionFraction}
+                                        {cardiacCathStudyByPatient?.leftVentricularEjectionFraction} %
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -138,7 +137,7 @@ export default function CardiacCathStudyDetails() {
                                         Blood Pressure (Pulmonary Arteries)
                                     </Typography>
                                     <Typography>
-                                        {/* {cardiacCathStudyByPatient?.bloodPressurePulmonaryArteries} */}
+                                        {cardiacCathStudyByPatient?.systolicPressurePulmonaryArteries} / {cardiacCathStudyByPatient?.diastolicPressurePulmonaryArteries} mmHg
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -178,7 +177,7 @@ export default function CardiacCathStudyDetails() {
                                         Pressure Gradient (Valves)
                                     </Typography>
                                     <Typography>
-                                        {cardiacCathStudyByPatient?.pressureGradientValves}
+                                        {cardiacCathStudyByPatient?.pressureGradientValves} mmHg
                                     </Typography>
                                 </Box>
                                 <Box>

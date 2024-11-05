@@ -68,13 +68,17 @@ const requests = {
   put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
   delete: (url: string) => axios.delete(url).then(responseBody),
   postForm: (url: string, data: FormData) =>
-    axios.post(url, data, {
-      headers: { "Content-type": "application/json" },
-    }).then(responseBody),
+    axios
+      .post(url, data, {
+        headers: { "Content-type": "application/json" },
+      })
+      .then(responseBody),
   putForm: (url: string, data: FormData) =>
-    axios.put(url, data, {
-      headers: { "Content-type": "application/json" },
-    }).then(responseBody),
+    axios
+      .put(url, data, {
+        headers: { "Content-type": "application/json" },
+      })
+      .then(responseBody),
 };
 
 // function createFormData(item: any) {
@@ -90,16 +94,17 @@ const requests = {
 function createFormData(item: any) {
   const formData = new FormData();
   for (const key in item) {
-      formData.append(key, item[key])
+    formData.append(key, item[key]);
   }
   return formData;
 }
 
-
 const Admin = {
-  createPatient: (patient: any) => requests.postForm('patients', createFormData(patient)),
-  updatePatient: (id: number, patient: any) => requests.putForm(`patients/${id}`, createFormData(patient)),
-  deletePatient: (id: number) => requests.delete(`patients/${id}`)
+  createPatient: (patient: any) =>
+    requests.postForm("patients", createFormData(patient)),
+  updatePatient: (id: number, patient: any) =>
+    requests.putForm(`patients/${id}`, createFormData(patient)),
+  deletePatient: (id: number) => requests.delete(`patients/${id}`),
 };
 
 const Patient = {
@@ -135,9 +140,10 @@ const BloodTest = {
 };
 
 const CardiacCathStudy = {
-  listByPatientId: (patientId: number) =>
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
     requests.get(
-      `cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`
+      `cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`,
+      params
     ),
   detailsByPatientId: (patientId: number, cardiacCathStudyId: number) =>
     requests.get(
@@ -146,8 +152,11 @@ const CardiacCathStudy = {
 };
 
 const Electrocardiogram = {
-  listByPatientId: (patientId: number) =>
-    requests.get(`electrocardiogram/patient/${patientId}/electrocardiograms`),
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
+    requests.get(
+      `electrocardiogram/patient/${patientId}/electrocardiograms`,
+      params
+    ),
   detailsByPatientId: (patientId: number, electrocardiogramId: number) =>
     requests.get(
       `electrocardiogram/patient/${patientId}/electrocardiograms/${electrocardiogramId}`
@@ -155,7 +164,7 @@ const Electrocardiogram = {
 };
 
 const Echocardiogram = {
-  listByPatientId: (patientId: number) =>
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
     requests.get(`echocardiogram/patient/${patientId}/echocardiograms`),
   detailsByPatientId: (patientId: number, echocardiogramId: number) =>
     requests.get(
@@ -164,7 +173,7 @@ const Echocardiogram = {
 };
 
 const HolterStudy = {
-  listByPatientId: (patientId: number) =>
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
     requests.get(`holterstudy/patient/${patientId}/holterstudies`),
   detailsByPatientId: (patientId: number, holterStudyId: number) =>
     requests.get(
@@ -173,19 +182,23 @@ const HolterStudy = {
 };
 
 const PhysicalExamination = {
-  listByPatientId: (patientId: number) =>
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
     requests.get(
-      `physicalexamination/patient/${patientId}/physicalexaminations`
+      `physicalexamination/patient/${patientId}/physical-examinations`,
+      params
     ),
   detailsByPatientId: (patientId: number, physicalExaminationId: number) =>
     requests.get(
-      `physicalexamination/patient/${patientId}/physicalexaminations/${physicalExaminationId}`
+      `physicalexamination/patient/${patientId}/physical-examinations/${physicalExaminationId}`
     ),
 };
 
 const DiseaseHistory = {
-  listByPatientId: (patientId: number) =>
-    requests.get(`diseasehistory/patient/${patientId}/diseaseshistories`),
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
+    requests.get(
+      `diseasehistory/patient/${patientId}/diseaseshistories`,
+      params
+    ),
   detailsByPatientId: (patientId: number, diseaseHistoryId: number) =>
     requests.get(
       `diseasehistory/patient/${patientId}/diseaseshistories/${diseaseHistoryId}`
@@ -193,8 +206,11 @@ const DiseaseHistory = {
 };
 
 const MedicalHistory = {
-  listByPatientId: (patientId: number) =>
-    requests.get(`medicalhistory/patient/${patientId}/medicalhistories`),
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
+    requests.get(
+      `medicalhistory/patient/${patientId}/medicalhistories`,
+      params
+    ),
   detailsByPatientId: (patientId: number, medicalHistoryId: number) =>
     requests.get(
       `medicalhistory/patient/${patientId}/medicalhistories/${medicalHistoryId}`
@@ -202,15 +218,15 @@ const MedicalHistory = {
 };
 
 const Diagnostic = {
-  listByPatientId: (patientId: number) =>
-    requests.get(`diagnostic/patient/${patientId}/diagnostics`),
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
+    requests.get(`diagnostic/patient/${patientId}/diagnostics`, params),
   detailsByPatientId: (patientId: number, diagnosticId: number) =>
     requests.get(`diagnostic/patient/${patientId}/diagnostics/${diagnosticId}`),
 };
 
 const Treatment = {
-  listByPatientId: (patientId: number) =>
-    requests.get(`treatment/patient/${patientId}/treatments`),
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
+    requests.get(`treatment/patient/${patientId}/treatments`, params),
   detailsByPatientId: (patientId: number, treatmentId: number) =>
     requests.get(`treatment/patient/${patientId}/treatments/${treatmentId}`),
 };
@@ -222,8 +238,8 @@ const Appointment = {
 };
 
 const StressTest = {
-  listByPatientId: (patientId: number) =>
-    requests.get(`stresstest/patient/${patientId}/stresstests`),
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
+    requests.get(`stresstest/patient/${patientId}/stresstests`, params),
   detailsByPatientId: (patientId: number, treatmentId: number) =>
     requests.get(`stresstest/patient/${patientId}/stresstests/${treatmentId}`),
 };

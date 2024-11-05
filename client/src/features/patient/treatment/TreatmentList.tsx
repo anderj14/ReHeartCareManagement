@@ -1,6 +1,6 @@
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Box } from '@mui/material';
 import { Treatment } from '../../../app/Models/treatment';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import formatDateTime from '../../../app/components/formatDateTime';
@@ -12,7 +12,12 @@ interface Props {
 export default function TreatmentList({ treatments }: Props) {
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
-
+    const navigate = useNavigate();
+    
+    const handleRowClick = (treatmentId: string) => {
+        navigate(`/treatment/patient/${patient?.id}/treatments/${treatmentId}`);
+    };
+    
     return (
         <Box>
             <TableContainer component={Paper} className="table">
@@ -24,16 +29,23 @@ export default function TreatmentList({ treatments }: Props) {
                             <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Dosage</TableCell>
                             <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Side Effects</TableCell>
                             <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Treatment Monitoring</TableCell>
+                            <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Treatment Duration</TableCell>
+                            <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Treatment Outcome</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody className="body">
                         {treatments.map((treatment) => (
-                            <TableRow key={treatment.id} component={Link} to={`/treatment/patient/${patient?.id}/treatments/${treatment.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                            <TableRow 
+                            key={treatment.id} 
+                            onClick={() => handleRowClick(treatment.id.toString())}
+                            style={{ cursor: 'pointer' }}>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(treatment.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.medication}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.dosage}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.sideEffects}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.treatmentMonitoring}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.treatmentDuration}</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{treatment.treatmentOutcome}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

@@ -1,5 +1,5 @@
 import { MedicalHistory } from '../../../app/Models/MedicalHistory';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/configureStore';
 import { patientSelectors } from '../patientSlice';
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
@@ -12,6 +12,11 @@ interface Props {
 export default function MedicalHistoryList({ medicalHistories }: Props) {
     const { id } = useParams<{ id: any }>();
     const patient = useAppSelector(state => patientSelectors.selectById(state, id));
+    const navigate = useNavigate();
+
+    const handleRowClick = (cardiacCathStudyId: string) => {
+        navigate(`/medicalhistory/patient/${patient?.id}/medicalhistories/${cardiacCathStudyId}`);
+    };
 
     return (
         <Box>
@@ -30,7 +35,10 @@ export default function MedicalHistoryList({ medicalHistories }: Props) {
                     </TableHead>
                     <TableBody className="body">
                         {medicalHistories.map((medicalHistory) => (
-                            <TableRow key={medicalHistory.id} component={Link} to={`/medicalhistory/patient/${patient?.id}/medicalhistories/${medicalHistory.id}`} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                            <TableRow 
+                            key={medicalHistory.id} 
+                            onClick={() => handleRowClick(medicalHistory.id.toString())}
+                            style={{ cursor: 'pointer' }}>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} component="th" scope="row">{formatDateTime(medicalHistory.date)}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.previousHeartDisease ? 'YES' : 'NO'}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{medicalHistory.highBloodPressure ? 'YES' : 'NO'}</TableCell>

@@ -80,7 +80,7 @@ export default function PhysicalExaminationDetails() {
                                     Peak Pressure
                                 </Typography>
                                 <Typography>
-                                    {physicalExaminationByPatient?.peakPressure}
+                                    {physicalExaminationByPatient?.peakPressure} bpm
                                 </Typography>
                             </Box>
                             <Box>
