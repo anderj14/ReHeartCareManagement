@@ -13,14 +13,14 @@ namespace Core.Specification.NoteSpec
         /// <param name="notesParams">Parameters for filtering, sorting, and paging notes.</param>
         public NoteSpecification(NoteSpecParams notesParams)
             : base(x =>
-                string.IsNullOrEmpty(notesParams.Search) || x.Title.ToLower().Contains(notesParams.Search.ToLower())
+                (string.IsNullOrEmpty(notesParams.Search) || x.Title.ToLower().Contains(notesParams.Search.ToLower())) &&
+                (!notesParams.NoteStatusId.HasValue || x.NoteStatusId == notesParams.NoteStatusId)
             )
         {
             // Include related entities for eager loading
             AddInclude(n => n.NoteStatus);
 
             // Apply pagination based on provided page size and index
-            ApplyPaging(notesParams.PageSize * (notesParams.PageIndex - 1), notesParams.PageSize);
 
             // Apply sorting based on the provided Sort parameter
             if (!string.IsNullOrEmpty(notesParams.Sort))

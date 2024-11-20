@@ -24,7 +24,6 @@ namespace API.Controllers
         public PatientsController(
             IUnitOfWork unitOfwork,
             IMapper mapper,
-            IGenericRepository<Patient> patientRepo,
             UserManager<AppUser> userManager
         ): base(userManager)
         {

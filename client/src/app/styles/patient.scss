@@ -1,171 +1,165 @@
-@import './_variables';
-
+@import "./_variables";
 
 .contentPatient {
-    // width: 100v;
-    margin: 25px;
-    // background-color: red;
-    height: 100%;
+  margin: 25px;
+  height: 100%;
 
-    .filtersContainer {
-        background-color: #ffffff;
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 0 0 0;
+  .filtersContainer {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0 0 0;
 
-        .pager {
-            margin-top: 10px;
+    .pager {
+      margin-top: 10px;
 
-            p {
-                font-weight: 300;
-            }
-        }
-
-        .search {
-            display: flex;
-            align-items: center;
-        }
-
-        .button {
-            padding: 6px 15px;
-            text-transform: capitalize;
-            font-size: 16px;
-            font-weight: 400;
-        }
-
-        .addPatientButton .button {
-            background-color: $green;
-            color: $white;
-        }
-
-        .addFilterButton .button {
-            border: 1px solid $black;
-            color: $black;
-        }
+      p {
+        font-weight: 300;
+      }
     }
+
+    .search {
+      display: flex;
+      align-items: center;
+    }
+
+    .button {
+      padding: 6px 15px;
+      text-transform: capitalize;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .addPatientButton .button {
+      background-color: $green;
+      color: $white;
+    }
+
+    .addFilterButton .button {
+      border: 1px solid $black;
+      color: $black;
+    }
+  }
 }
 
 .line {
-    height: 2px;
-    background-color: rgba(160, 160, 160, 0.164);
-    margin: 8px 0 10px 0;
+  height: 2px;
+  background-color: rgba(160, 160, 160, 0.164);
+  margin: 8px 0 10px 0;
 }
 
 .container {
-    margin: 20px;
+  margin: 20px;
 
-    .sectionPatientDetails {
-        width: 100%;
+  .sectionPatientDetails {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+
+    .patientDetails {
+      width: 500px;
+
+      .contentInfo {
         display: flex;
-        gap: 10px;
+        font-size: 18px;
 
-        .patientDetails {
-            width: 500px;
-
-            .contentInfo {
-                display: flex;
-                // gap: 40px;
-                font-size: 18px;
-
-                p {
-                    width: 150px;
-                }
-
-                .patientInfoData {
-                    font-weight: 200;
-                }
-
-                .active {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-
-                    p {
-                        color: #00CB20;
-                    }
-
-                    .circleTrigger {
-                        background-color: #00CB20;
-                        height: 15px;
-                        width: 15px;
-                        border-radius: 15px;
-                    }
-                }
-            }
+        p {
+          width: 150px;
         }
+
+        .patientInfoData {
+          font-weight: 200;
+        }
+
+        .active {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          p {
+            color: #00cb20;
+          }
+
+          .circleTrigger {
+            background-color: #00cb20;
+            height: 15px;
+            width: 15px;
+            border-radius: 15px;
+          }
+        }
+      }
     }
+  }
 }
 
 .componentContainer {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  justify-content: space-between;
+
+  section {
     display: flex;
-    gap: 25px;
-    justify-content: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-    section {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+  .contentsContainer {
+    margin-right: 35px;
+
+    .cathStudy,
+    .holterStudy,
+    .physicalExam {
+      width: 100%;
+      display: flex;
+      gap: 35px;
+    }
+  }
+
+  .detailsContainer {
+    h2 {
+      margin: 0;
+      font-weight: 500;
     }
 
-    .contentsContainer {
-        margin-right: 35px;
+    .details {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
 
-        .cathStudy,
-        .holterStudy,
-        .physicalExam {
-            width: 100%;
-            display: flex;
-            gap: 35px;
-        }
+      strong {
+        font-weight: 400;
+        font-size: 18px;
+      }
+
+      span {
+        font-weight: 300;
+        font-size: 18px;
+      }
     }
-
-    .detailsContainer {
-        h2 {
-            margin: 0;
-            font-weight: 500;
-        }
-
-        .details {
-            display: flex;
-            flex-direction: column;
-            margin-top: 10px;
-
-            strong {
-                font-weight: 400;
-                font-size: 18px;
-            }
-
-            span {
-                font-weight: 300;
-                font-size: 18px;
-
-            }
-        }
-    }
+  }
 }
 
-
 .addButton .button {
-    padding: 6px 15px;
-    text-transform: capitalize;
-    font-size: 16px;
-    font-weight: 400;
-    background-color: $green;
+  padding: 6px 15px;
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: $green;
+  color: $white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: darken($green, 10%);
     color: $white;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  }
 
-    &:hover {
-        background-color: darken($green, 10%);
-        color: $white;
-    }
-
-    &:active {
-        background-color: darken($green, 15%);
-        color: $white;
-    }
+  &:active {
+    background-color: darken($green, 15%);
+    color: $white;
+  }
 }
 
 .css-1vwaa9k-MuiPaper-root-MuiCard-root {
-    max-width: 945px !important;
+  max-width: 945px !important;
 }

@@ -5,14 +5,14 @@ import { useCallback, useState } from 'react';
 import { setNoteParams } from './noteSlice';
 
 export default function NoteSearch() {
-    const { patientParams } = useAppSelector(state => state.patient);
-    const [search, setSearch] = useState(patientParams.search);
+    const { noteParams } = useAppSelector(state => state.note);
+    const [search, setSearch] = useState(noteParams.search);
     const dispatch = useAppDispatch();
 
     const debouncedSearch = useCallback(
         debounce((value) => {
             dispatch(setNoteParams({ search: value }));
-        }, 1500),
+        }, 1000),
         []
     );
     const handleSearchChange = (event: any) => {
@@ -26,10 +26,11 @@ export default function NoteSearch() {
                 sx={{ width: '300px' }}
                 id="search-bar"
                 className="textField"
-                // label="Search"
                 variant="outlined"
                 placeholder="Search Note..."
                 size="small"
+                value={search || ''}
+                onChange={handleSearchChange}
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
@@ -37,7 +38,6 @@ export default function NoteSearch() {
                         </InputAdornment>
                     ),
                 }}
-                onChange={handleSearchChange}
             />
         </>
     )

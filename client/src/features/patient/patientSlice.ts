@@ -27,7 +27,7 @@ function getAxiosParams(patientParams: PatientParams) {
   params.append("sort", patientParams.sort.toString());
 
   if (patientParams.search) params.append("search", patientParams.search);
-  if(patientParams.statusId && patientParams.statusId > 0) {
+  if (patientParams.statusId && patientParams.statusId > 0) {
     params.append("statusId", patientParams.statusId.toString());
   }
 
@@ -42,6 +42,9 @@ export const fetchPatientsAsync = createAsyncThunk<
   const params = getAxiosParams(thunkAPI.getState().patient.patientParams);
   try {
     const response = await agent.Patient.list(params);
+    if (response.length === 0) {
+      return response;
+    }
     thunkAPI.dispatch(setMetaData(response.metadata));
     return response.items;
   } catch (error: any) {
@@ -62,16 +65,18 @@ export const fetchPatientAsync = createAsyncThunk<Patient, number>(
   }
 );
 
-export const fetchPatientStatusAsync = createAsyncThunk<PatientStatus[], void, {state: RootState}>(
-  "patient/fetchPatientStatusAsync", async (_, thunkAPI) => {
-    try {
-      const response = await agent.Patient.Statuslist();
-      return response;
-    }catch (error: any) {
-      return thunkAPI.rejectWithValue({ error: error.data });
-    }
+export const fetchPatientStatusAsync = createAsyncThunk<
+  PatientStatus[],
+  void,
+  { state: RootState }
+>("patient/fetchPatientStatusAsync", async (_, thunkAPI) => {
+  try {
+    const response = await agent.Patient.Statuslist();
+    return response;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue({ error: error.data });
   }
-)
+});
 
 function initParams() {
   return {
@@ -116,7 +121,7 @@ export const patientSlice = createSlice({
     removePatient: (state, action) => {
       patientsAdapter.removeOne(state, action.payload);
       state.patientsLoaded = false;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPatientsAsync.pending, (state) => {
@@ -124,7 +129,7 @@ export const patientSlice = createSlice({
     });
     builder.addCase(fetchPatientsAsync.fulfilled, (state, action) => {
       patientsAdapter.setAll(state, action.payload);
-      state.status = "idle";
+      state.status = "idle",
       state.patientsLoaded = true;
     });
     builder.addCase(fetchPatientsAsync.rejected, (state, action) => {
@@ -142,17 +147,17 @@ export const patientSlice = createSlice({
       state.status = "idle";
       console.error("Fetch patient failed:", action.payload);
     });
-    builder.addCase(fetchPatientStatusAsync.pending, (state, action) => {
-      state.status = 'pendingFetchStatus';
+    builder.addCase(fetchPatientStatusAsync.pending, (state) => {
+      state.status = "pendingFetchStatus";
     });
-    builder.addCase(fetchPatientStatusAsync.fulfilled, (state,action) => {
+    builder.addCase(fetchPatientStatusAsync.fulfilled, (state, action) => {
       state.patientStatus = action.payload;
-      state.status = 'idle';
+      state.status = "idle";
       state.patientStatusLoaded = true;
     });
     builder.addCase(fetchPatientStatusAsync.rejected, (state) => {
-      state.status = 'idle';
-  });
+      state.status = "idle";
+    });
   },
 });
 

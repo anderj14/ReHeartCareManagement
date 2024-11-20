@@ -111,7 +111,6 @@ export default function PatientDetail() {
     const [target, setTarget] = useState(0);
     const navigate = useNavigate();
 
-
     function handleDeletePatient(id: number) {
         setLoading(true);
         setTarget(id);
@@ -123,7 +122,6 @@ export default function PatientDetail() {
             .catch(error => console.log(error))
             .finally(() => setLoading(false));
     }
-
 
     useEffect(() => {
         const fetchPatient = async () => {

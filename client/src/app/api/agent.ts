@@ -81,16 +81,6 @@ const requests = {
       .then(responseBody),
 };
 
-// function createFormData(item: any) {
-//   let formData = new FormData();
-//   for (const key in item) {
-//     if (item[key] !== null && item[key] !== undefined) {
-//       formData.append(key, item[key]);
-//     }
-//   }
-//   return formData;
-// }
-
 function createFormData(item: any) {
   const formData = new FormData();
   for (const key in item) {
@@ -130,6 +120,10 @@ const CardiologySurgery = {
 const Note = {
   list: (params: URLSearchParams) => requests.get("notes", params),
   details: (id: number) => requests.get(`notes/${id}`),
+  statuslist: () => requests.get("notestatus"),
+  createNote: (note: any) => requests.postForm("notes", createFormData(note)),
+  updateNote: (id: number, note: any) => requests.putForm(`notes/${id}`, createFormData(note)),
+  deleteNote: (id: number) => requests.delete(`notes/${id}`)
 };
 
 const BloodTest = {

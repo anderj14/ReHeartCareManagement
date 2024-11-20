@@ -12,9 +12,7 @@ namespace API.Controllers
     /// <summary>
     /// Controller to manage note statuses.
     /// </summary>
-    [ApiController]
-    [Route("api/[controller]")]
-    public class NoteStatusController : ControllerBase
+    public class NoteStatusController : BaseApiController
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;

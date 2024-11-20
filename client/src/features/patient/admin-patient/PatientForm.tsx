@@ -37,16 +37,15 @@ export default function PatientForm({ patient, cancelEdit, title }: Props) {
         
         reset(patientDataWithStatusId);
     }
-}, [patient, reset, isDirty, patientStatus]);
+  }, [patient, reset, isDirty, patientStatus]);
 
-async function handleSubmitData(data: FieldValues) {
+  async function handleSubmitData(data: FieldValues) {
     try {
         let response: Patient;
         
         if (patient) {
             response = await agent.Admin.updatePatient(patient.id, data);
         } else {
-            // Si no existe `patient`, es una creación
             response = await agent.Admin.createPatient(data);
         }
         
@@ -55,7 +54,7 @@ async function handleSubmitData(data: FieldValues) {
     } catch (error: any) {
         console.log("Error details:", error.response ? error.response.data : error.message);
     }
-}
+  }
 
   return (
     <form onSubmit={handleSubmit(handleSubmitData)}>
@@ -124,11 +123,12 @@ async function handleSubmitData(data: FieldValues) {
         <Typography variant="h6" sx={{ marginBottom: '15px', fontWeight: 400, fontSize: '17px' }}>Patient Status</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <AppSelectList 
-              control={control} 
-              items={patientStatus} 
-              name="statusId" 
-              label="Patient Status" 
+            <AppSelectList
+              control={control}
+              items={patientStatus}
+              name="statusId"
+              label="Patient Status"
+              displayField={(item) => item.patientStatusName}
             />
           </Grid>
 
@@ -151,7 +151,6 @@ async function handleSubmitData(data: FieldValues) {
       <Box sx={{display: 'flex', gap: '10px', marginTop: '40px'}}>
         <CustomButton onClick={cancelEdit} width='120px' color="#EF4444" hoverColor="#f3f3f3" hoverTextColor="#c93b3b">Cancel</CustomButton>
         <CustomButton loading={isSubmitting} type='submit' width='120px' color="#0ba723" hoverColor="#f3f3f3" hoverTextColor="#098b1d">Submit</CustomButton>
-        {/* <LoadingButton loading={isSubmitting} type='submit'>Submit</LoadingButton> */}
       </Box>
     </form>
   );

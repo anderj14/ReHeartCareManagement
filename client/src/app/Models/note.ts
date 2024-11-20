@@ -3,6 +3,11 @@ export interface Note {
   title: string
   content: string
   date: string
+  noteStatus: string
+}
+export interface NoteStatus {
+  id: number,
+  noteStatusName: string;
 }
 
 export interface NoteParams {
@@ -10,4 +15,5 @@ export interface NoteParams {
   search?: string;
   pageIndex: number;
   pageSize: number;
+  notestatusId: number;
 }

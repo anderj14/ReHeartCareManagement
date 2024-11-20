@@ -10,6 +10,7 @@ interface Props {
   [key: string]: any;
   width?: string;
   type?: "button" | "submit" | "reset";
+  loading?: boolean;
 }
 
 const CustomButton: React.FC<Props> = ({

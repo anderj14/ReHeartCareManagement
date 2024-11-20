@@ -85,7 +85,7 @@ namespace API.Helper
 
 
             CreateMap<Notes, NotesDto>()
-            .ForMember(d => d.NoteStatusName, o => o.MapFrom(s => s.NoteStatus.NoteStatusName));
+            .ForMember(d => d.NoteStatus, o => o.MapFrom(s => s.NoteStatus.NoteStatusName));
 
             CreateMap<NoteStatus, NoteStatusDto>();
 

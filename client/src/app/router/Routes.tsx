@@ -30,11 +30,11 @@ import Treatments from "../../features/patient/treatment/Treatments";
 import CardiologySurgery from "../../features/patient/cardiologySurgery/CardiologySurgery";
 import StressTestDetails from "../../features/patient/stressTest/StressTestDetails";
 import StressTest from "../../features/patient/stressTest/StressTests";
-import { Notes } from "@mui/icons-material";
 import NotFound from "../errors/NotFound";
 import ServerError from "../errors/ServerError";
 import Login from "../../features/account/Login";
 import Register from "../../features/account/Register";
+import UserNotes from "../../features/notes/UserNotes";
 
 export const router = createBrowserRouter([
     {
@@ -71,7 +71,7 @@ export const router = createBrowserRouter([
             { path: '/cardiologysurgery/patient/:id/cardiologysurgeries/:cardiologySurgeryId', element: <CardiologySurgeryDetails /> },
             { path: '/stresstest/patient/:id/stresstests', element: <StressTest /> },
             { path: '/stresstest/patient/:id/stresstests/:stressTestId', element: <StressTestDetails /> },
-            { path: 'notes', element: <Notes /> },
+            { path: 'notes', element: <UserNotes /> },
             { path: 'about', element: <AboutPage /> },
             { path: '/server-error', element: <ServerError /> },
             { path: '/not-found', element: <NotFound /> },
