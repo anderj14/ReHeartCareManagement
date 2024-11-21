@@ -8,11 +8,13 @@ namespace Core.Specification
         public PatientWithFiltersForCountSpecification(PatientSpecParams patientParams)
             : base(x =>
                 // Filter based on the Search parameter
-                string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower()
-                .Contains(patientParams.Search.ToLower())
-                && (!patientParams.StatusId.HasValue || x.StatusId == patientParams.StatusId) // Check if StatusId matches
+                (string.IsNullOrEmpty(patientParams.Search) || x.PatientName.ToLower()
+                .Contains(patientParams.Search.ToLower()))
+                && (!patientParams.StatusId.HasValue || x.StatusId == patientParams.StatusId)
+                 // Check if StatusId matches
             )
         {
         }
     }
 }
+

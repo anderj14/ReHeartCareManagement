@@ -62,20 +62,6 @@ export default function NoteCard({ notes }: Props) {
       .finally(() => setLoading(false));
   }
 
-  // const handleDeleteNote = async (noteId: string) => {
-  //   setLoading(true);
-  //   setTarget(noteId);
-  //   try {
-  //     await deleteNoteApi(noteId); // Lógica de eliminación
-  //     console.log("Note deleted");
-  //   } catch (error) {
-  //     console.error("Failed to delete note", error);
-  //   } finally {
-  //     setLoading(false);
-  //     setTarget(null);
-  //   }
-  // };
-
   return (
     <Box className="cards">
       {notes.map((note) => (

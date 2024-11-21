@@ -70,11 +70,6 @@ namespace API.Controllers
                 // Get the total number of notes matching the filter
                 var totalItems = await _unitOfWork.Repository<Notes>().CountByUserAsync(filter, countSpec);
 
-                if (totalItems == 0)
-                {
-                    // Return an empty paginated list if no notes are found
-                    return Ok(new PagedList<NotesDto>(new List<NotesDto>(), 0, noteSpecParams.PageIndex, noteSpecParams.PageSize));
-                }
 
                 // Retrieve the notes based on the filter and specification
                 var userNotes = await _unitOfWork.Repository<Notes>().ListAllByUserAsync(filter, spec, noteSpecParams.PageIndex, noteSpecParams.PageSize);

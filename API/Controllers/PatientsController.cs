@@ -52,12 +52,6 @@ namespace API.Controllers
                 // Get the total number of patients matching the filter
                 var totalItems = await _unitOfWork.Repository<Patient>().CountByUserAsync(filter, countSpec);
 
-                if (totalItems == 0)
-                {
-                    // Return an empty paginated list if no patients are found
-                    return Ok(new PagedList<PatientDto>(new List<PatientDto>(), 0, patientSpecParams.PageIndex, patientSpecParams.PageSize));
-                }
-
                 // Retrieve the patients based on the filter and specification
                 var userPatients = await _unitOfWork.Repository<Patient>().ListAllByUserAsync(filter, spec, patientSpecParams.PageIndex, patientSpecParams.PageSize);
 

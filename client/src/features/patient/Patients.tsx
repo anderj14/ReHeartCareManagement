@@ -5,7 +5,7 @@ import Breadcrumb from "../../app/components/Breadcrumb";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { setPatientParams } from "./patientSlice";
+import { setPageIndex, setPatientParams } from "./patientSlice";
 import PatientList from "./PatientList";
 import PatientSearch from "./PatientSearch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
@@ -29,7 +29,7 @@ export default function Patients() {
     const [openFilter, setOpenFilter] = useState(false);
     const [openForm, setOpenForm] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined);
+    const [selectedPatient] = useState<Patient | undefined>(undefined);
     const [selectedStatus, setSelectedStatus] = useState<number>(0);
 
     const canBeOpen = openFilter && Boolean(anchorEl);
@@ -69,7 +69,7 @@ export default function Patients() {
                         <Box>
                             <Typography variant="h6">Patient List</Typography>
                             <div className="pager">
-                                {metaData && (
+                                {metaData && metaData.count > 0  && (
                                     <Pager metaData={metaData} />
                                 )}
                             </div>
@@ -135,10 +135,10 @@ export default function Patients() {
                 </div>
             </Box>
             <Box marginTop='30px'>
-                {metaData && (
+                {metaData && metaData.count > 0  && (
                     <PaginationItem
                         metaData={metaData}
-                        onPageChange={(page: number) => dispatch(setPatientParams({ pageIndex: page }))}
+                        onPageChange={(page: number) => dispatch(setPageIndex({ pageIndex: page }))}
                         name='Patients'
                     />
                 )}

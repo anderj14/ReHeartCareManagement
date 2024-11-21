@@ -41,7 +41,6 @@ export const fetchNotesAsync = createAsyncThunk<
   const params = getAxiosParams(thunkAPI.getState().note.noteParams);
   try {
     const response = await agent.Note.list(params);
-    console.log("Response: ", agent.Note.list(params));
     if (response.length === 0) {
       return response;
     }

@@ -14,8 +14,8 @@ import NoteCard from "./NoteCard";
 import { useState } from "react";
 import Calendar from "../../Images/calendar.svg";
 import Thunder from "../../Images/thunder.svg";
-import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { setNoteParams } from "./noteSlice";
+import { useAppDispatch } from "../../app/store/configureStore";
+import { setNoteParams, setPageIndex } from "./noteSlice";
 import NoteSearch from "./NoteSearch";
 import useNote from "../../app/hooks/useNote";
 import PaginationItem from "../../app/components/PaginationItem";
@@ -26,7 +26,7 @@ export default function UserNotes() {
   const { notes, notesLoaded, noteStatus, metaData, status } = useNote();
   const [selectedStatus, setSelectedStatus] = useState<number>(0);
   const dispatch = useAppDispatch();
-  const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined);
+  const [selectedNote] = useState<Note | undefined>(undefined);
   const [openForm, setOpenForm] = useState(false);
 
   const handleStatusChange = (event: any) => {
@@ -109,7 +109,7 @@ export default function UserNotes() {
           <Typography variant="h6">Loading Notes...</Typography>
         )}
         {notesLoaded && notes.length === 0 && (
-          <Typography variant="h6">No Note Found</Typography>
+          <Typography variant="h6">Not Note Found</Typography>
         )}
         {notesLoaded && notes.length > 0 &&( 
           <NoteCard notes={notes} />
@@ -117,10 +117,10 @@ export default function UserNotes() {
       </Box>
 
       <Box marginTop='30px'>
-        {metaData && (
+        {metaData && metaData.count > 0 && (
             <PaginationItem
               metaData={metaData}
-              onPageChange={(page: number) => dispatch(setNoteParams({ pageIndex: page }))}
+              onPageChange={(page: number) => dispatch(setPageIndex({ pageIndex: page }))}
               name='Notes'
             />
         )}

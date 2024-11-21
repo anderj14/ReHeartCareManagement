@@ -30,7 +30,7 @@ export default function UserNoteForm({ note, cancelEdit, title }: Props) {
       );
       const noteDataWithStatusId = {
         ...note,
-        noteStatusId: statusMatch ? statusMatch.id : null
+        noteStatusId: statusMatch ? statusMatch.id : null,
       };
 
       reset(noteDataWithStatusId);
@@ -41,14 +41,12 @@ export default function UserNoteForm({ note, cancelEdit, title }: Props) {
     try {
       let response: Note;
       if (note) {
-        console.log(data);
         response = await agent.Note.updateNote(note.id, data);
       } else {
-        console.log("Data to send:", data);
         response = await agent.Note.createNote(data);
       }
 
-      dispatch(setNote(response));
+      dispatch(setNote({ ...response, id: note?.id || response.id }));
       cancelEdit();
     } catch (error: any) {
       if (error.response) {
@@ -94,7 +92,6 @@ export default function UserNoteForm({ note, cancelEdit, title }: Props) {
       <Box sx={{display: 'flex', gap: '10px', marginTop: '40px'}}>
         <CustomButton onClick={cancelEdit} width="120px" color="#EF4444" hoverColor="#f3f3f3" hoverTextColor="#c93b3b">Cancel</CustomButton>
         <CustomButton type='submit' width='120px' color="#0ba723" hoverColor="#f3f3f3" hoverTextColor="#098b1d">Submit</CustomButton>
-        {/* <button onClick={() => handleSubmitData(data)}>Create Note</button> */}
       </Box>
     </form>
   );

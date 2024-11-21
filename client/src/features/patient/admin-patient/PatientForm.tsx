@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default function PatientForm({ patient, cancelEdit, title }: Props) {
-  const { control, reset, handleSubmit, formState: {isDirty, isSubmitting} } = useForm({resolver: yupResolver<any>(validationSchema)});
+  const { control, reset, handleSubmit, formState: {isDirty} } = useForm({resolver: yupResolver<any>(validationSchema)});
   const {patientStatus} = usePatients();
   const dispatch = useDispatch();
 
@@ -49,7 +49,7 @@ export default function PatientForm({ patient, cancelEdit, title }: Props) {
             response = await agent.Admin.createPatient(data);
         }
         
-        dispatch(setPatient(response));
+        dispatch(setPatient({...response, id: patient?.id || response.id}));
         cancelEdit();
     } catch (error: any) {
         console.log("Error details:", error.response ? error.response.data : error.message);
@@ -150,7 +150,7 @@ export default function PatientForm({ patient, cancelEdit, title }: Props) {
       </Box>
       <Box sx={{display: 'flex', gap: '10px', marginTop: '40px'}}>
         <CustomButton onClick={cancelEdit} width='120px' color="#EF4444" hoverColor="#f3f3f3" hoverTextColor="#c93b3b">Cancel</CustomButton>
-        <CustomButton loading={isSubmitting} type='submit' width='120px' color="#0ba723" hoverColor="#f3f3f3" hoverTextColor="#098b1d">Submit</CustomButton>
+        <CustomButton type='submit' width='120px' color="#0ba723" hoverColor="#f3f3f3" hoverTextColor="#098b1d">Submit</CustomButton>
       </Box>
     </form>
   );
