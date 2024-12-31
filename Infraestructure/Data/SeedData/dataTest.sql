@@ -71,6 +71,19 @@ INSERT INTO Appointments (AppUserId, StartDate, EndDate, Time, Description, Loca
 ('15b22b08-ee3a-40ac-96d2-011a707d60b9', '2024-10-17 14:00:00', '2024-10-17 14:30:00', '14:00', 'Emergency appointment for headache.', 'Hospital C', 3, 4, 15),
 ('15b22b08-ee3a-40ac-96d2-011a707d60b9', '2024-10-18 15:00:00', '2024-10-18 15:30:00', '15:00', 'Routine checkup for eye exam.', 'Clinic C', 1, 6, 18);
 
+INSERT INTO Appointments (AppUserId, StartDate, EndDate, Time, Description, Location, AppointmentStatusId, AppointmentTypeId, PatientId) VALUES
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-13 08:30:00', '2024-10-13 09:00:00', '08:30', 'Routine checkup for diabetes.', 'Clinic A', 1, 1, 1),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-15 09:30:00', '2024-10-15 10:00:00', '09:30', 'Post-operative follow-up for heart surgery.', 'Hospital A', 2, 2, 4),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-17 10:30:00', '2024-10-17 11:00:00', '10:30', 'Consultation regarding chronic back pain.', 'Clinic A', 1, 3, 7),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-20 11:30:00', '2024-10-20 12:00:00', '11:30', 'Annual wellness checkup.', 'Clinic A', 1, 5, 13),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-22 13:00:00', '2024-10-22 13:30:00', '13:00', 'Immunization follow-up.', 'Clinic A', 1, 6, 16),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-25 08:00:00', '2024-10-25 08:30:00', '08:00', 'Blood pressure check for hypertension management.', 'Clinic A', 1, 1, 1),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-27 14:30:00', '2024-10-27 15:00:00', '14:30', 'Follow-up consultation for asthma treatment.', 'Clinic A', 2, 2, 4),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-10-29 15:30:00', '2024-10-29 16:00:00', '15:30', 'Cardiology consultation for arrhythmia.', 'Hospital A', 1, 3, 7),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-11-01 09:00:00', '2024-11-01 09:30:00', '09:00', 'Routine checkup for diabetes management.', 'Clinic A', 1, 1, 1),
+('73ef92c8-6811-4953-83c1-e32379839b2e', '2024-11-03 10:30:00', '2024-11-03 11:00:00', '10:30', 'Check-up for post-surgery recovery.', 'Hospital A', 1, 4, 10);
+
+
 INSERT INTO DiseaseHistories (StartDate, Description, Treatment, Diagnosis, Severity, Notes, IsChronic, DoctorName, PatientId)
 VALUES
     ('2022-01-15', 'Hypertension management', 'Lifestyle changes, Medication', 'Hypertension', 'Moderate', 'Patient is responding well to treatment', 1, 'Dr. Smith', 1),

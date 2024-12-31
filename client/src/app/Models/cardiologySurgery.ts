@@ -1,3 +1,4 @@
+
 export interface CardiologySurgery {
     id: number
     surgeryName: string
@@ -20,7 +21,8 @@ export interface CardiologySurgery {
     surgicalTeam: string
     intraoperativeFindings: string
     postOperativeInstructions: string
-    patient: number
+    patient: string
+    surgeryFollowUpId: number
 }
 
 export interface CardiologySurgeryParams {

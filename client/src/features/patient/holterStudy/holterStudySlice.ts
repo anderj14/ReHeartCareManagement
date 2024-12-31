@@ -33,9 +33,14 @@ export const fetchHolterStudiesByPatientAsync = createAsyncThunk<
 >(
   "holterStudyByPatient/fetchHolterStudiesByPatient",
   async (patientId, thunkAPI) => {
-    const params = getAxiosParams(thunkAPI.getState().holterStudy.holterStudyParams);
+    const params = getAxiosParams(
+      thunkAPI.getState().holterStudy.holterStudyParams
+    );
     try {
-      const response = await agent.HolterStudy.listByPatientId(params, patientId);
+      const response = await agent.HolterStudy.listByPatientId(
+        params,
+        patientId
+      );
       thunkAPI.dispatch(setMetadata(response.metadata));
       if (response.length === 0) {
         return response;

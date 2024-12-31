@@ -7,6 +7,7 @@ interface Props {
   hoverColor?: string;
   borderColor?: string;
   hoverTextColor?: string;
+  bg?: string;
   [key: string]: any;
   width?: string;
   type?: "button" | "submit" | "reset";
@@ -17,7 +18,8 @@ const CustomButton: React.FC<Props> = ({
   children,
   icon: Icon,
   color = "#000",
-  hoverColor = "#f3f3f3",
+  hoverColor = "#5c708d",
+  bg = "#4d7997",
   borderColor = "#e4e4e7",
   width = "180px",
   hoverTextColor,
@@ -29,9 +31,13 @@ const CustomButton: React.FC<Props> = ({
       variant="outlined"
       sx={{
         color,
+        cursor: "pointer",
         border: `1px solid ${borderColor}`,
         textTransform: "capitalize",
         width: `${width}`,
+        backgroundColor: `${bg}`,
+        display: 'flex',
+        gap: '8px',
         "&:hover": {
           backgroundColor: hoverColor,
           border: `1px solid ${borderColor}`,
@@ -41,7 +47,7 @@ const CustomButton: React.FC<Props> = ({
       type={type}
       {...props}
     >
-      {Icon && <Icon sx={{ fontSize: "16px", marginRight: "5px" }} />}
+      {Icon && <Icon size={20} sx={{ marginRight: "50px" }} />}
       {children}
     </Button>
   );

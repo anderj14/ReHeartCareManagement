@@ -15,9 +15,7 @@ namespace Core.Dtos.CreateDto
         public string ProcedureDescription { get; set; }
         [Required]
         public string Notes { get; set; }
-        [Required]
         public bool IsEmergency { get; set; }
-        [Required]
         public bool IsElective { get; set; }
         [Required]
         public string OperationRoom { get; set; }
@@ -25,13 +23,11 @@ namespace Core.Dtos.CreateDto
         public string PreOpDiagnosis { get; set; }
         [Required]
         public string PostOpDiagnosis { get; set; }
-        [Required]
         public bool IsSuccessful { get; set; }
         [Required]
         public int Duration { get; set; }
         [Required]
         public string CardiacCondition { get; set; }
-        [Required]
         public bool IsMinimallyInvasive { get; set; }
         [Required]
         public string Complications { get; set; }

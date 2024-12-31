@@ -59,6 +59,8 @@ namespace Core.Specification
         /// </summary>
         public bool IsPagingEnabled { get; private set; }
 
+        public List<Func<IQueryable<T>, IQueryable<T>>> ThenIncludes { get; } = new List<Func<IQueryable<T>, IQueryable<T>>>();
+
         /// <summary>
         /// Adds a new include expression to the list of navigation properties to include in the query.
         /// </summary>
@@ -66,6 +68,11 @@ namespace Core.Specification
         protected void AddInclude(Expression<Func<T, object>> includeExpression)
         {
             Includes.Add(includeExpression);
+        }
+
+        protected void AddThenInclude(Func<IQueryable<T>, IQueryable<T>> thenIncludeExpression)
+        {
+            ThenIncludes.Add(thenIncludeExpression);
         }
 
         /// <summary>

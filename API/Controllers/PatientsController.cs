@@ -25,7 +25,7 @@ namespace API.Controllers
             IUnitOfWork unitOfwork,
             IMapper mapper,
             UserManager<AppUser> userManager
-        ): base(userManager)
+        ) : base(userManager)
         {
             _mapper = mapper;
             _unitOfWork = unitOfwork;
@@ -70,6 +70,35 @@ namespace API.Controllers
                 Response.AddPaginationHeader(paginatedPatients.MetaData);
 
                 return Ok(paginatedPatients); // Return the paginated list of patients
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}"); // Return 500 for internal server errors
+            }
+        }
+
+        [HttpGet("all")]
+        [Authorize]
+        public async Task<ActionResult<PagedList<PatientDto>>> GetPatients()
+        {
+            try
+            {
+                var user = await GetAuthenticatedUserAsync();
+
+                if (user == null)
+                    return Unauthorized(new ApiResponse(401, "User not authenticated")); // Return 401 if user is not authenticated
+
+                // Define a filter expression to get only the patients associated with the authenticated user
+                Expression<Func<Patient, bool>> filter = patient => patient.AppUserId == user.Id;
+
+
+                // Retrieve the patients based on the filter and specification
+                var userPatients = await _unitOfWork.Repository<Patient>().ListAllAsync();
+
+                // Map the retrieved patients to the PatientDto
+                var data = _mapper.Map<IReadOnlyList<PatientDto>>(userPatients);
+
+                return Ok(data);
             }
             catch (Exception ex)
             {
@@ -142,7 +171,7 @@ namespace API.Controllers
                 return BadRequest(ex.Message); // Return 400 for exceptions
             }
         }
-        
+
         [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<Patient>> UpdatePatient(int id, PatientCreateDto patientToUpdate)

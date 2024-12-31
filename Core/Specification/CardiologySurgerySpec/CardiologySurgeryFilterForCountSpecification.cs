@@ -11,5 +11,12 @@ namespace Core.Specification.CardiologySurgerySpec
             )
         {
         }
+
+        public CardiologySurgeryFilterForCountSpecification(int id, CardiologySurgerySpecParams cardiologySurgeryParams)
+           : base(a => a.PatientId == id &&
+           string.IsNullOrEmpty(cardiologySurgeryParams.Search) || a.SurgeryName.ToLower().Contains(cardiologySurgeryParams.Search)
+           )
+        {
+        }
     }
 }

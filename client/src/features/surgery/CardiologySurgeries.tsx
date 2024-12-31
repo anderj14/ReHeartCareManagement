@@ -1,86 +1,123 @@
-import { useEffect, useState } from "react"
-import { Box, Typography, Card, CardContent, Button } from "@mui/material";
-import Breadcrumb from "../../app/components/Breadcrumb";
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import SortRoundedIcon from '@mui/icons-material/SortRounded';
-import '../../app/styles/surgery.scss'
-import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { fetchCardiologySurgeriesAsync, setCardiologySurgeryParams, surgerySelectors } from "./surgerySlice";
+import { useState } from "react";
+import { Box, Typography, Divider, Drawer } from "@mui/material";
+import "../../app/styles/surgery.scss";
+import { setCardiologySurgeryParams } from "./surgerySlice";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
-import CardiologySurgerySearch from "./CardiologySurgerySearch";
-import Pager from "../../app/components/Pager";
+import { CardiologySurgeryByPatientSearch } from "./CardiologySurgerySearch";
 import PaginationItem from "../../app/components/PaginationItem";
 import CardiologySurgeryList from "./CardiologySurgeryList";
+import Title from "../../app/components/Title";
+import CustomButton from "../../app/components/CustomButton";
+import { useSurgery } from "../../app/hooks/useSurgery";
+import CardiologySurgeryForm from "../patient/cardiologySurgery/admin-surgery/CardiologySurgeryForm";
+import { CardiologySurgery } from "../../app/Models/cardiologySurgery";
+import { LuPlus } from "react-icons/lu";
 
 const sortOptions = [
-  { value: 'patientName', label: 'Alphabetical' },
-  { value: 'dateAsc', label: 'Date - Asc to Desc' },
-  { value: 'dateDesc', label: 'Date - Desc to Asc' },
-]
+  { value: "patientName", label: "Alphabetical" },
+  { value: "dateAsc", label: "Date - Asc to Desc" },
+  { value: "dateDesc", label: "Date - Desc to Asc" },
+];
 
 export default function CardiologySurgeries() {
-
-  const cardiologySurgeries = useAppSelector(surgerySelectors.selectAll);
-  const { surgeriesLoaded, cardiologySurgeryParams, metaData, status } = useAppSelector(state => state.cardiologySurgery);
-  const dispatch = useAppDispatch();
+  const {
+    cardiologySurgeries,
+    cardiologySurgeryParams,
+    dispatch,
+    surgeriesLoaded,
+    metaData,
+    status,
+  } = useSurgery();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  useEffect(() => {
-    if (!surgeriesLoaded) dispatch(fetchCardiologySurgeriesAsync());
-  }, [surgeriesLoaded, dispatch]);
+  const [openForm, setOpenForm] = useState(false);
+  const [selectedSurgery] = useState<CardiologySurgery | undefined>(undefined);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     setOpen((previousOpen) => !previousOpen);
-  }
+  };
+
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpenForm(newOpen);
+  };
+
+  const DrawerList = (
+    <Box sx={{ width: 650, padding: "20px" }} role="presentation">
+      <CardiologySurgeryForm
+        surgery={selectedSurgery}
+        cancelEdit={() => setOpenForm(false)}
+        title={"Creating New Surgery History"}
+      />
+    </Box>
+  );
 
   const canBeOpen = open && Boolean(anchorEl);
-  const id = canBeOpen ? 'spring-popper' : undefined;
+  const id = canBeOpen ? "spring-popper" : undefined;
 
   return (
-    <div className="contentSurgery">
-      <Breadcrumb page="surgeries" />
-      <Box>
-        <Typography variant="h4">Surgeries</Typography>
+    <Box className="contentSurgery">
+      <Box
+        sx={{
+          margin: "40px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Title title="surgeries" weight="500" />
+        <Box>
+          <CustomButton
+            open={openForm}
+            onClick={toggleDrawer(true)}
+            icon={LuPlus}
+            color="#fff"
+            width="180px"
+            borderColor="transparent"
+          >
+            Add Surgery
+          </CustomButton>
+          <Drawer open={openForm} onClose={toggleDrawer(false)} anchor="right">
+            {DrawerList}
+          </Drawer>
+        </Box>
       </Box>
-      <div className="line"></div>
-      <Card>
-        <CardContent>
-          <div className="filtersContainer">
-            <Box>
-              <Typography variant="h6">Surgery List</Typography>
-              <div className="pager">
-                {metaData && (
-                  <Pager metaData={metaData} />
-                )}
-              </div>
-            </Box>
-            <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '-35px' }}>
-              <div className="search">
-                <CardiologySurgerySearch />
-              </div>
-              <div className="addPatientButton">
-                <Button className="button" startIcon={<AddRoundedIcon />}>Add Surgery</Button>
-              </div>
-              <div className="addFilterButton">
-                <Button className="button" startIcon={<SortRoundedIcon />} onClick={handleClick}>Filter</Button>
-                <RadioButtonGroup
-                  selectedValue={cardiologySurgeryParams.sort}
-                  options={sortOptions}
-                  onChange={(e) => dispatch(setCardiologySurgeryParams({ sort: e.target.value }))}
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                />
-              </div>
-            </Box>
-          </div>
-        </CardContent>
-      </Card>
+      <Box sx={{ margin: "40px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "10px",
+            alignItems: "center",
+          }}
+        >
+          <CardiologySurgeryByPatientSearch />
+          <Box className="addFilterButton">
+            <CustomButton
+              onClick={handleClick}
+              color="#000"
+              hoverColor="#f3f3f3"
+              width="100px"
+              bg="#fff"
+            >
+              Add Filter
+            </CustomButton>
+            <RadioButtonGroup
+              selectedValue={cardiologySurgeryParams.sort}
+              options={sortOptions}
+              onChange={(e) =>
+                dispatch(setCardiologySurgeryParams({ sort: e.target.value }))
+              }
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+            />
+          </Box>
+        </Box>
+      </Box>
 
-      <Box sx={{ marginTop: '20px' }}>
-        {status === 'pendingFetchCardiologySurgeriesAsync' && (
+      <Divider sx={{ width: "100%" }} />
+
+      <Box sx={{ margin: "40px" }}>
+        {status === "pendingFetchCardiologySurgeriesAsync" && (
           <Typography variant="h6">Loading Surgeries...</Typography>
         )}
         {surgeriesLoaded && cardiologySurgeries.length === 0 && (
@@ -93,16 +130,18 @@ export default function CardiologySurgeries() {
         )}
       </Box>
       {surgeriesLoaded && (
-        <Box marginTop={'30px'}>
+        <Box sx={{ margin: "40px" }}>
           {metaData && (
             <PaginationItem
               metaData={metaData}
-              onPageChange={(page: number) => dispatch(setCardiologySurgeryParams({ pageIndex: page }))}
-              name='Surgeries'
+              onPageChange={(page: number) =>
+                dispatch(setCardiologySurgeryParams({ pageIndex: page }))
+              }
+              name="Surgeries"
             />
           )}
         </Box>
       )}
-    </div>
-  )
+    </Box>
+  );
 }

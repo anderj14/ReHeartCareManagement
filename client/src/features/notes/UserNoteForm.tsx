@@ -1,9 +1,9 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Alert, Box, Grid, Typography } from "@mui/material";
 import { Note } from "../../app/Models/note";
 import AppTextInput from "../../app/components/AppTextInput";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { validationSchema } from "../admin/noteValidation";
+import { validationSchema } from "../validation-schema/noteValidation";
 import AppSelectList from "../../app/components/AppSelectList";
 import useNote from "../../app/hooks/useNote";
 import CustomButton from "../../app/components/CustomButton";
@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import agent from "../../app/api/agent";
 import { setNote } from "./noteSlice";
 import { useEffect } from "react";
+import { setNotification } from "../../app/store/notificationReducer";
 
 interface Props {
   note?: Note;
@@ -42,14 +43,17 @@ export default function UserNoteForm({ note, cancelEdit, title }: Props) {
       let response: Note;
       if (note) {
         response = await agent.Note.updateNote(note.id, data);
+        dispatch(setNotification({ message: "Note created successfully!", type: "success" }));
       } else {
         response = await agent.Note.createNote(data);
+        dispatch(setNotification({ message: "Note created successfully!", type: "success" }));
       }
 
       dispatch(setNote({ ...response, id: note?.id || response.id }));
       cancelEdit();
     } catch (error: any) {
       if (error.response) {
+        dispatch(setNotification({ message: "Failed to create note", type: "error" }));
         console.log("Response error:", error.response.data);
       } else {
         console.log("Error message:", error.message);

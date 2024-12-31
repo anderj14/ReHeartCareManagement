@@ -27,7 +27,7 @@ import Diagnostics from "../../features/patient/diagnostic/Diagnostics";
 import DiagnosticDetails from "../../features/patient/diagnostic/DiagnosticDetails";
 import TreatmentDetails from "../../features/patient/treatment/TreatmentDetails";
 import Treatments from "../../features/patient/treatment/Treatments";
-import CardiologySurgery from "../../features/patient/cardiologySurgery/CardiologySurgery";
+import CardiologySurgery from "../../features/patient/cardiologySurgery/CardiologySurgeriesByPatient";
 import StressTestDetails from "../../features/patient/stressTest/StressTestDetails";
 import StressTest from "../../features/patient/stressTest/StressTests";
 import NotFound from "../errors/NotFound";
@@ -67,8 +67,7 @@ export const router = createBrowserRouter([
             { path: 'diagnostic/patient/:id/diagnostics/:diagnosticId', element: <DiagnosticDetails /> },
             { path: '/treatment/patient/:id/treatments', element: <Treatments /> },
             { path: '/treatment/patient/:id/treatments/:treatmentId', element: <TreatmentDetails /> },
-            { path: '/cardiologysurgery/patient/:id/cardiologysurgeries', element: <CardiologySurgery /> },
-            { path: '/cardiologysurgery/patient/:id/cardiologysurgeries/:cardiologySurgeryId', element: <CardiologySurgeryDetails /> },
+            { path: '/cardiologysurgeries/patient/:id/cardiologysurgeries', element: <CardiologySurgery /> },
             { path: '/stresstest/patient/:id/stresstests', element: <StressTest /> },
             { path: '/stresstest/patient/:id/stresstests/:stressTestId', element: <StressTestDetails /> },
             { path: 'notes', element: <UserNotes /> },

@@ -1,6 +1,6 @@
 
 import { CardiologySurgery } from '../../app/Models/cardiologySurgery'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Box } from '@mui/material';
 import convertToHoursAndMinutes from '../../app/components/convertToHoursAndMinutes';
 import formatDateTime from '../../app/components/formatDateTime';
@@ -11,6 +11,11 @@ interface Props {
 
 export default function CardiologySurgeryList({ cardiologySurgeries }: Props) {
 
+    const navigate = useNavigate();
+    const handleRowClick = (cardiologySurgeryId: number) => {
+        navigate(`/cardiologysurgeries/${cardiologySurgeryId}`);
+    };
+    
     return (
         <Box>
             <TableContainer component={Paper} className="table">
@@ -31,8 +36,7 @@ export default function CardiologySurgeryList({ cardiologySurgeries }: Props) {
                         {cardiologySurgeries.map((cardiologySurgery) => (
                             <TableRow
                                 key={cardiologySurgery.id}
-                                component={Link}
-                                to={`/cardiologysurgeries/${cardiologySurgery.id}`}
+                                onClick={() => handleRowClick(cardiologySurgery.id)}
                                 style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
                             >
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }}>

@@ -11,6 +11,7 @@ namespace Core.Dtos
         public string FunctionalAssessment { get; set; }
         public bool IsFollowUpComplete { get; set; }
         public int CardiologySurgeryId { get; set; }
-        public ICollection<MedicationDto> MedicationsPrescribed { get; set; } = new List<MedicationDto>();
+        public ICollection<MedicationDto> Medications { get; set; }
+
     }
 }

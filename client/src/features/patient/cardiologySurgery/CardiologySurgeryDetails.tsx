@@ -1,203 +1,421 @@
-import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { Card, CardContent, Box, Typography, CardActions, Button } from '@mui/material';
-import Breadcrumb from '../../../app/components/Breadcrumb';
-import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
-import { fetchCardiologySurgeryAsync, surgerySelectors } from '../../surgery/surgerySlice';
-import NotFound from '../../../app/errors/NotFound';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import formatDateTime from '../../../app/components/formatDateTime';
-import convertToHoursAndMinutes from '../../../app/components/convertToHoursAndMinutes';
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Card, CardContent, Box, Typography, Drawer, CardActions } from "@mui/material";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../app/store/configureStore";
+import {
+  fetchCardiologySurgeryAsync,
+  removeSurgery,
+  surgerySelectors,
+} from "../../surgery/surgerySlice";
+import NotFound from "../../../app/errors/NotFound";
+import formatDateTime from "../../../app/components/formatDateTime";
+import convertToHoursAndMinutes from "../../../app/components/convertToHoursAndMinutes";
+import Title from "../../../app/components/Title";
+import Subtitle from "../../../app/components/Subtitle";
+import { timeDisplay } from "../../../app/components/timeDisplay";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { LuActivity, LuPenLine } from "react-icons/lu";
+import { CiCalendar } from "react-icons/ci";
+import { LuStethoscope } from "react-icons/lu";
+import { LuUser } from "react-icons/lu";
+import { LuFileText } from "react-icons/lu";
+import { LuClipboard } from "react-icons/lu";
+import { LuHeartPulse } from "react-icons/lu";
+import {
+  fetchSugeryFollowUpsBySurgeryAsync,
+  surgeryFollowUpSelector,
+} from "../../surgery/surgeryfollowups/sugeryFollowUpsSlice";
+import SurgeryFollowUps from "../../surgery/surgeryfollowups/SurgeryFollowUps";
+import { CardiologySurgery } from "../../../app/Models/cardiologySurgery";
+import CardiologySurgeryForm from "./admin-surgery/CardiologySurgeryForm";
+import CustomButton from "../../../app/components/CustomButton";
+import { MdOutlineDelete } from "react-icons/md";
+import agent from "../../../app/api/agent";
 
 export default function CardiologySurgeryDetails() {
-    const { id } = useParams<{ id: any }>();
-    const cardiologySurgery = useAppSelector(state => surgerySelectors.selectById(state, id));
-    const { status: cardiologySurgeryStatus } = useAppSelector(state => state.cardiologySurgery);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedSurgery, setSelectedSurgery] = useState<CardiologySurgery | undefined>(undefined);
+  const { id } = useParams<{ id: any }>();
+  const [loading, setLoading] = useState(true);
+  const [target, setTarget] = useState(0);
+  const navigate = useNavigate();
 
-    const dispatch = useAppDispatch();
+  const cardiologySurgery = useAppSelector((state) =>
+    surgerySelectors.selectById(state, id)
+  );
+  const { status: cardiologySurgeryStatus } = useAppSelector(
+    (state) => state.cardiologySurgery
+  );
 
-    useEffect(() => {
-        const fetchCardiologySurgery = async () => {
-            if (!cardiologySurgery) dispatch(fetchCardiologySurgeryAsync(id));
-        }
+  const { surgeryFollowUpByCardiologySurgeryLodaded } = useAppSelector(
+    (state) => state.surgeryFollowUp
+  );
+  const surgeryFollowUpBySurgery = useAppSelector(
+    surgeryFollowUpSelector.selectAll
+  );
 
-        fetchCardiologySurgery();
-    }, [id, dispatch, cardiologySurgery]);
+  const dispatch = useAppDispatch();
 
-    if (cardiologySurgeryStatus.includes('pending')) return <h3>Loading...</h3>;
+  useEffect(() => {
+    if (!cardiologySurgery) {
+      dispatch(fetchCardiologySurgeryAsync(id));
+    }
 
-    if (!cardiologySurgery) return <NotFound />;
+    const fetchFollowUp = async () => {
+      if (!surgeryFollowUpByCardiologySurgeryLodaded && cardiologySurgery) {
+        dispatch(fetchSugeryFollowUpsBySurgeryAsync(id));
+      }
+    };
 
-    return (
-        <div>
-            <Box sx={{ padding: '0px 30px 30px 30px' }}>
-                <Breadcrumb page='surgery / surgery name' />
-                <Card sx={{ maxWidth: '1300px', padding: '20px' }}>
-                    <CardContent className="surgeryDetails">
-                        <Box>
-                            <Typography gutterBottom variant="h5" >{cardiologySurgery?.patient}</Typography>
-                            <Typography gutterBottom variant='body1' color="text.secondary">
-                                Cardiology Surgery | {formatDateTime(cardiologySurgery.date)} - {cardiologySurgery.time}
-                            </Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '15px' }}>
-                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Procedure Description
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.procedureDescription}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Note
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.notes}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Is Emergency
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.isEmergency ? 'YES' : 'NO'}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Is Elective
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.isElective ? 'YES' : 'NO'}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Operation Room
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.operationRoom}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Pre Operation Diagnostic
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.preOpDiagnosis}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Post Operation Diagnostic
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.postOpDiagnosis}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Is Successful
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.isSuccessful ? 'YES' : 'NO'}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Duration
-                                    </Typography>
-                                    <Typography>
-                                        {convertToHoursAndMinutes(cardiologySurgery?.duration)}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Cardiac Condition
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.cardiacCondition}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Post Operation Diagnostic
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.postOpDiagnosis}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Is Minimally Invasive
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.isMinimallyInvasive ? 'YES' : 'NO'}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Complications
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.complications}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Post Operative Status
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.postOperativeStatus}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Anesthesia Type
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.anesthesiaType}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Surgical Team
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.surgicalTeam}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Intraoperative Findings
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.intraoperativeFindings}
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Post Operative Instructions
-                                    </Typography>
-                                    <Typography>
-                                        {cardiologySurgery?.postOperativeInstructions}
-                                    </Typography>
-                                </Box>
-                            </Box>
-                        </Box>
+    fetchFollowUp();
+  }, [
+    dispatch,
+    id,
+    cardiologySurgery,
+    surgeryFollowUpByCardiologySurgeryLodaded,
+  ]);
 
-                    </CardContent>
-                    <CardActions sx={{ padding: '0px', marginTop: '10px' }}>
-                        <Button startIcon={<ModeEditIcon sx={{ marginRight: '5px' }} />} size="small" color="info">Edit</Button>
-                        <Button startIcon={<DeleteIcon sx={{ marginRight: '5px' }} />} size="small" color="error">Delete</Button>
-                    </CardActions>
-                </Card>
+  const handleEditClick = () => {
+    if (cardiologySurgery) {
+      setSelectedSurgery(cardiologySurgery);
+      setEditMode(true);
+    }
+  };
+
+  function handleDeleteSurgery(id: number) {
+    setLoading(true);
+    setTarget(id);
+    agent.CardiologySurgery.deleteCardiologySurgery(id)
+      .then(() => {
+        dispatch(removeSurgery(id));
+        navigate("/cardiologysurgeries");
+      })
+      .catch(error => console.log(error))
+      .finally(() => setLoading(false));
+  }
+
+  const toggleDrawer = () => {
+    setEditMode(false);
+  };
+
+  if (cardiologySurgeryStatus.includes("pending")) return <h3>Loading...</h3>;
+
+  if (!cardiologySurgery) return <NotFound />;
+
+  return (
+    <Box className="section-surgery">
+      <Title title="Cardiology Surgery Details" weight="800" />
+      <Box className="surgery-details" sx={{ marginTop: "30px" }}>
+        <Box className="info" sx={{ width: "100%" }}>
+          <Card sx={{ width: "100%" }}>
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Subtitle
+                  subtitle={cardiologySurgery.surgeryName}
+                  weight="600"
+                />
+
+                <Typography variant="h6" color="text.info">
+                  {cardiologySurgery.patient}
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  alignItems: "center",
+                  marginTop: "-10px",
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ display: "flex", alignItems: "center", gap: "5px" }}
+                >
+                  <CiCalendar style={{ fontSize: "18px", strokeWidth: "1" }} />
+                  {formatDateTime(cardiologySurgery.date)}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {timeDisplay(cardiologySurgery.date)}
+                </Typography>
+                {cardiologySurgery.isElective ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      backgroundColor: "#eee",
+                      padding: "3px 15px",
+                      borderRadius: "15px",
+                    }}
+                  >
+                    <FaRegCircleCheck />
+                    <Typography variant="body2">Elective</Typography>
+                  </Box>
+                ) : null}
+                {cardiologySurgery.isEmergency ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      backgroundColor: "#eee",
+                      padding: "3px 15px",
+                      borderRadius: "15px",
+                    }}
+                  >
+                    <FaRegCircleCheck />
+                    <Typography variant="body2">Emergency</Typography>
+                  </Box>
+                ) : null}
+              </Box>
+            </CardContent>
+            <CardContent sx={{ marginTop: "-10px" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <LuActivity style={{ fontSize: "25px" }} />
+                <Subtitle
+                  subtitle="Procedure Details"
+                  weight="600"
+                  size="18px"
+                />
+              </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "15px" }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Description</strong>{" "}
+                  {cardiologySurgery.procedureDescription}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Duration</strong>{" "}
+                  {convertToHoursAndMinutes(cardiologySurgery.duration)}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Operation Room</strong>{" "}
+                  {cardiologySurgery.operationRoom}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Minimally Invasive</strong>{" "}
+                  {cardiologySurgery.isMinimallyInvasive ? "Si" : "No"}
+                </Typography>
+              </Box>
+            </CardContent>
+            <CardContent sx={{ marginTop: "-10px" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <LuStethoscope style={{ fontSize: "25px" }} />
+                <Subtitle subtitle="Diagnostic" weight="600" size="18px" />
+              </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "15px" }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Pre-Op Diagnosis</strong>{" "}
+                  {cardiologySurgery.preOpDiagnosis}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Post-Op Diagnosis</strong>{" "}
+                  {cardiologySurgery.postOpDiagnosis}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Heart Condition</strong>{" "}
+                  {cardiologySurgery.cardiacCondition}
+                </Typography>
+              </Box>
+            </CardContent>
+            <CardContent sx={{ marginTop: "-10px" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <LuUser style={{ fontSize: "25px" }} />
+                <Subtitle
+                  subtitle="Equipment and Anesthesia"
+                  weight="600"
+                  size="18px"
+                />
+              </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "15px" }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Surgical Equipment</strong>{" "}
+                  {cardiologySurgery.surgicalTeam}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Anesthesia Type</strong>{" "}
+                  {cardiologySurgery.anesthesiaType}
+                </Typography>
+              </Box>
+            </CardContent>
+            <CardContent sx={{ marginTop: "-10px" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <LuFileText style={{ fontSize: "25px" }} />
+                <Subtitle
+                  subtitle="Findings and Instructions"
+                  weight="600"
+                  size="18px"
+                />
+              </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "15px" }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Intraoperative Findings</strong>{" "}
+                  {cardiologySurgery.intraoperativeFindings}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Post-Operative Instructions</strong>{" "}
+                  {cardiologySurgery.postOperativeInstructions}
+                </Typography>
+              </Box>
+            </CardContent>
+            <CardContent sx={{ marginTop: "-10px" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <LuClipboard style={{ fontSize: "25px" }} />
+                <Subtitle subtitle="Result" weight="600" size="18px" />
+              </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "15px" }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Successfull</strong>{" "}
+                  {cardiologySurgery.isSuccessful ? "Si" : "No"}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Complications</strong>{" "}
+                  {cardiologySurgery.complications}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  <strong>Post-Operative Status</strong>{" "}
+                  {cardiologySurgery.postOperativeStatus}
+                </Typography>
+              </Box>
+            </CardContent>
+            <CardContent sx={{ marginTop: "-10px" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <LuHeartPulse style={{ fontSize: "25px" }} />
+                <Subtitle
+                  subtitle="Additional Notes"
+                  weight="600"
+                  size="18px"
+                />
+              </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "15px" }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  color="text.secondary"
+                >
+                  {cardiologySurgery.notes}
+                </Typography>
+              </Box>
+            </CardContent>
+            <CardActions sx={{display: 'flex', gap: '10px'}}>
+              <CustomButton
+                icon={LuPenLine}
+                color="#fff"
+                width="130px"
+                bg="#2377cb"
+                borderColor="transparent"
+                hoverColor="#1261a2"
+                onClick={handleEditClick}
+              >
+                Update
+              </CustomButton>
+              <CustomButton
+                icon={MdOutlineDelete}
+                color="#dc3737"
+                width="130px"
+                bg="transparent"
+                borderColor="#dc3737"
+                hoverColor="transparent"
+                onClick={() => handleDeleteSurgery(cardiologySurgery.id)}
+                disabled={loading && target === cardiologySurgery.id}
+              >
+                {loading && target === cardiologySurgery.id ? "Deleting..." : "Delete"}
+              </CustomButton>
+            </CardActions>
+
+            
+          </Card>
+          <Drawer anchor="right" open={editMode} onClose={toggleDrawer}>
+            <Box sx={{ width: 600, p: 2 }}>
+              <CardiologySurgeryForm
+                surgery={selectedSurgery}
+                cancelEdit={toggleDrawer}
+                title={`Editing ${selectedSurgery?.surgeryName}`}
+              />
             </Box>
-
-        </div>
-    )
+          </Drawer>
+        </Box>
+        <Box sx={{ width: "70%" }}>
+          <SurgeryFollowUps surgeryFollowUp={surgeryFollowUpBySurgery} />
+        </Box>
+      </Box>
+    </Box>
+  );
 }

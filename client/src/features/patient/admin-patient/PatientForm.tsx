@@ -5,10 +5,8 @@ import { Patient } from "../../../app/Models/patient";
 import { useEffect } from "react";
 import usePatients from "../../../app/hooks/usePatient";
 import AppSelectList from "../../../app/components/AppSelectList";
-
 import { yupResolver } from '@hookform/resolvers/yup';
-
-import { validationSchema } from "../../admin/patientValidation";
+import { validationSchema } from "../../validation-schema/patientValidation";
 import CustomButton from "../../../app/components/CustomButton";
 import agent from "../../../app/api/agent";
 import { useDispatch } from "react-redux";

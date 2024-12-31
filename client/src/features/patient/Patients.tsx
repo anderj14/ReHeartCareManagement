@@ -14,6 +14,8 @@ import Pager from "../../app/components/Pager";
 import PatientForm from "./admin-patient/PatientForm";
 import { Patient } from "../../app/Models/patient";
 import usePatients from "../../app/hooks/usePatient";
+import CustomButton from "../../app/components/CustomButton";
+import AddIcon from '@mui/icons-material/Add';
 
 const sortOptions = [
     { value: 'patientName', label: 'Alphabetical' },

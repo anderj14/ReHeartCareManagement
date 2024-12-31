@@ -57,8 +57,6 @@ export default function CardiologySurgeryPatient({ cardiologySurgery }: Props) {
                                     <strong>Post-Operation Diagnosis: </strong>
                                     <span>{latestSurgery.postOpDiagnosis}</span>
                                 </Box>
-                            </section>
-                            <section>
                                 <Box className="details">
                                     <strong>Is Successful: </strong>
                                     <span>{latestSurgery.isSuccessful ? 'YES' : 'NO'}</span>

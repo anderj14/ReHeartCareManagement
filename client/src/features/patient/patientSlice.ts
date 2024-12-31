@@ -129,7 +129,7 @@ export const patientSlice = createSlice({
     });
     builder.addCase(fetchPatientsAsync.fulfilled, (state, action) => {
       patientsAdapter.setAll(state, action.payload);
-      state.status = "idle",
+      state.status = "idle";
       state.patientsLoaded = true;
     });
     builder.addCase(fetchPatientsAsync.rejected, (state, action) => {

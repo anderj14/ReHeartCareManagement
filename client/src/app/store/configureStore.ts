@@ -16,31 +16,38 @@ import { treatmentSlice } from "../../features/patient/treatment/treatmentSlice"
 import { appointmentSlice } from "../../features/appointment/appointmentSlice";
 import { stressTestSlice } from "../../features/patient/stressTest/stressTestSlice";
 import { cardiaccathstudySlice } from "../../features/patient/cardiacTestsPatient/cardiacCathStudySlice";
+import notificationReducer from "./notificationReducer";
+import { surgeryFollowUpSlice } from "../../features/surgery/surgeryfollowups/sugeryFollowUpsSlice";
+import { medicationSlice } from "../../features/surgery/surgeryfollowups/medication/medicationSlice";
 
 export const store = configureStore({
-    reducer: {
-        // Account related reducer
-        account: accountSlice.reducer,
+  reducer: {
+    // Account related reducer
+    account: accountSlice.reducer,
 
-        // Patient related reducers
-        patient: patientSlice.reducer,
-        bloodTest: bloodTestSlice.reducer,
-        cardiacCathStudy: cardiaccathstudySlice.reducer,
-        electrocardiogram: electrocardiogramSlice.reducer,
-        echocardiogram: echocardiogramSlice.reducer,
-        holterStudy: holterStudySlice.reducer,
-        physicalExamination: physicalExaminationSlice.reducer,
-        diseaseHistory: diseaseHistorySlice.reducer,
-        medicalHistory: medicalHistorySlice.reducer,
-        diagnostic: diagnosticSlice.reducer,
-        treatment: treatmentSlice.reducer,
-        stressTest: stressTestSlice.reducer,
+    // Patient related reducers
+    patient: patientSlice.reducer,
+    bloodTest: bloodTestSlice.reducer,
+    cardiacCathStudy: cardiaccathstudySlice.reducer,
+    electrocardiogram: electrocardiogramSlice.reducer,
+    echocardiogram: echocardiogramSlice.reducer,
+    holterStudy: holterStudySlice.reducer,
+    physicalExamination: physicalExaminationSlice.reducer,
+    diseaseHistory: diseaseHistorySlice.reducer,
+    medicalHistory: medicalHistorySlice.reducer,
+    diagnostic: diagnosticSlice.reducer,
+    treatment: treatmentSlice.reducer,
+    stressTest: stressTestSlice.reducer,
 
-        // Other reducers
-        cardiologySurgery: surgerySlice.reducer,
-        note: noteSlice.reducer,
-        appointment: appointmentSlice.reducer,
-    }
+    // Other reducers
+    cardiologySurgery: surgerySlice.reducer,
+    surgeryFollowUp: surgeryFollowUpSlice.reducer,
+    medication: medicationSlice.reducer,
+    note: noteSlice.reducer,
+    appointment: appointmentSlice.reducer,
+
+    notification: notificationReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

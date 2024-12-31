@@ -78,8 +78,8 @@ namespace API.Helper
             .ForMember(d => d.Patient, o => o.MapFrom(s => s.Patient.PatientName));
 
             CreateMap<SurgeryFollowUp, SurgeryFollowUpDto>()
-            // .ForMember(d => d.CardiologySurgery, o => o.MapFrom(s => s.CardiologySurgery.SurgeryName))
-            .ForMember(d => d.MedicationsPrescribed, o => o.MapFrom(s => s.MedicationsPrescribed));
+                .ForMember(d => d.Medications, o => o.MapFrom(s => s.MedicationsPrescribed));
+
 
             CreateMap<Medication, MedicationDto>();
 
@@ -123,6 +123,7 @@ namespace API.Helper
             CreateMap<PhysicalExaminationCreateDto, PhysicalExamination>();
             CreateMap<StressTestCreateDto, StressTest>();
             CreateMap<SurgeryFollowUpsCreateDto, SurgeryFollowUp>();
+            CreateMap<MedicationCreateDto, Medication>();
             CreateMap<TreatmentCreateDto, Treatment>();
             CreateMap<CardiologySurgeryCreateDto, CardiologySurgery>();
             CreateMap<NoteStatusCreateDto, NoteStatus>();

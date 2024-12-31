@@ -106,24 +106,54 @@ const Patient = {
 const CardiologySurgery = {
   list: (params: URLSearchParams) =>
     requests.get("cardiologysurgeries", params),
+  listall: () => requests.get("patients/all"),
   details: (id: number) => requests.get(`cardiologysurgeries/${id}`),
-  listByPatientId: (patientId: number) =>
+  listByPatientId: (params: URLSearchParams, patientId: number) =>
     requests.get(
-      `cardiologysurgeries/patient/${patientId}/cardiologysurgeries`
+      `cardiologysurgeries/patient/${patientId}/cardiologysurgeries`,
+      params
     ),
-  detailsPatientId: (patientId: number, cardiologySurgeryId: number) =>
-    requests.get(
-      `cardiologysurgery/patient/${patientId}/cardiologysurgeries/${cardiologySurgeryId}`
-    ),
+  createCardiologySurgery: (surgery: any) =>
+    requests.postForm("CardiologySurgeries", createFormData(surgery)),
+  updateCardiologySurgery: (id: number, surgery: any) =>
+    requests.putForm(`CardiologySurgeries/${id}`, createFormData(surgery)),
+  deleteCardiologySurgery: (id: number) =>
+    requests.delete(`CardiologySurgeries/${id}`),
 };
+
+const SurgeryFollowUp = {
+  listBySurgeryId: (params: URLSearchParams,surgeryId: number) =>
+    requests.get(`surgeryfollowups/cardiologysurgery/${surgeryId}/followups`, params),
+  detailsBySurgeryId: (surgeryId: number, followUpId: number) =>
+    requests.get(
+      `surgeryfollowups/cardiologysurgery/${surgeryId}/followups/${followUpId}`
+    ),
+  createSurgeryFollowUp: (surgeryfollowup: any) =>
+    requests.postForm("surgeryfollowups", createFormData(surgeryfollowup)),
+  updateSurgeryFollowUp: (id: number, followUp: any) =>
+    requests.putForm(`surgeryfollowups/${id}`, createFormData(followUp)),
+  deleteSurgeryFollowUp: (id: number) =>
+    requests.delete(`surgeryfollowups/${id}`)
+};
+
+const Medication = {
+  listByFollowId: (followId: number) =>
+    requests.get(`medications/followup/${followId}/medications`),
+  createMedication: ( medication: any) =>
+    requests.postForm("medications", createFormData(medication)),
+  updateMedication: (id: number, medication: any) =>
+    requests.putForm(`medications/${id}`, createFormData(medication)),
+  deleteMedication: (id: number) => requests.delete(`medications/${id}`),
+}
 
 const Note = {
   list: (params: URLSearchParams) => requests.get("notes", params),
   details: (id: number) => requests.get(`notes/${id}`),
   statuslist: () => requests.get("notestatus"),
   createNote: (note: any) => requests.postForm("notes", createFormData(note)),
-  updateNote: (id: number, note: any) => requests.putForm(`notes/${id}`, createFormData(note)),
-  deleteNote: (id: number) => requests.delete(`notes/${id}`)
+  updateNote: (id: number, note: any) =>
+    requests.putForm(`notes/${id}`, createFormData(note)),
+  deleteNote: (id: number) => requests.delete(`notes/${id}`),
 };
 
 const BloodTest = {
@@ -254,6 +284,8 @@ const Account = {
 const agent = {
   Patient,
   CardiologySurgery,
+  SurgeryFollowUp,
+  Medication,
   Note,
   TestErrors,
   Account,

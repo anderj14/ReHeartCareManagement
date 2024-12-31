@@ -142,7 +142,7 @@ namespace API.Controllers
         [HttpGet("patient/{patientId}/cardiologySurgeries")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IReadOnlyList<CardiologySurgeryDto>>> GetPatientCardiologySurgeries(int patientId)
+        public async Task<ActionResult<IReadOnlyList<CardiologySurgeryDto>>> GetPatientCardiologySurgeries(int patientId, [FromQuery] CardiologySurgerySpecParams cardiologySurgeryParams)
         {
             try
             {
@@ -160,64 +160,36 @@ namespace API.Controllers
                 }
 
                 // Creates a specification to filter surgeries by patient ID
-                var spec = new CardiologySurgerySpecification(patientId, getByPatientId: true);
+                var spec = new CardiologySurgerySpecification(patientId, cardiologySurgeryParams);
+                var countSpec = new CardiologySurgeryFilterForCountSpecification(patientId, cardiologySurgeryParams);
 
-                // Retrieves the surgeries for the specified patient
-                var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAsync(spec);
+                Expression<Func<CardiologySurgery, bool>> filter = bt => bt.PatientId == patientId;
+
+                var totalItems = await _unitOfWork.Repository<CardiologySurgery>().CountByPatientAsync(filter, countSpec);
+
+                if (totalItems == 0)
+                {
+                    // Return an empty paginated list if no blood tests are found
+                    return Ok(new PagedList<CardiologySurgeryDto>(new List<CardiologySurgeryDto>(), 0, cardiologySurgeryParams.PageIndex, cardiologySurgeryParams.PageSize));
+                }
+
+                // Retrieve the surgeries based on the specification and filter
+                var cardiologySurgeries = await _unitOfWork.Repository<CardiologySurgery>().ListAllByPatientAsync(filter, spec, cardiologySurgeryParams.PageIndex, cardiologySurgeryParams.PageSize);
+
+
                 var cardiologySurgeryDtos = _mapper.Map<IReadOnlyList<CardiologySurgeryDto>>(cardiologySurgeries);
+                
+                // Create a paginated list of cardiology surgeries 
+                var paginatedCardiologySurgeries = new PagedList<CardiologySurgeryDto>(
+                    cardiologySurgeryDtos.ToList(),
+                    totalItems,
+                    cardiologySurgeryParams.PageIndex,
+                    cardiologySurgeryParams.PageSize
+                );
 
-                return Ok(cardiologySurgeryDtos);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+                Response.AddPaginationHeader(paginatedCardiologySurgeries.MetaData);
 
-        /// <summary>
-        /// Retrieves a specific cardiology surgery for a specific patient associated with the authenticated user.
-        /// </summary>
-        /// <param name="patientId">ID of the patient. Must be a valid patient ID.</param>
-        /// <param name="cardiologySurgeryId">ID of the cardiology surgery. Must be a valid surgery ID.</param>
-        /// <returns>CardiologySurgeryDto for the specified surgery and patient.</returns>
-        /// <exception cref="UnauthorizedResult">Thrown when the user is not authenticated.</exception>
-        /// <exception cref="ApiResponse">Thrown when the surgery or patient is not found or internal errors occur.</exception>
-        [HttpGet("patient/{patientId}/cardiologySurgeries/{cardiologySurgeryId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CardiologySurgeryDto>> GetPatientCardiologySurgery(int patientId, int cardiologySurgeryId)
-        {
-            try
-            {
-                // Gets the authenticated user; returns 401 if not authenticated
-                var user = await GetAuthenticatedUserAsync();
-                if (user == null)
-                    return Unauthorized(new ApiResponse(401, "User not found"));
-
-                // Retrieves the patient and ensures they belong to the authenticated user
-                var patientSpec = new PatientWithAllSpecification(patientId);
-                var patient = await _unitOfWork.Repository<Patient>().GetEntityWithSpec(patientSpec);
-                if (patient == null || patient.AppUserId != user.Id)
-                {
-                    return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
-                }
-
-                // Creates a specification to filter the surgery by patient and surgery ID
-                var spec = new CardiologySurgerySpecification(cardiologySurgeryId);
-                var cardiologySurgery = await _unitOfWork.Repository<CardiologySurgery>().GetEntityWithSpec(spec);
-
-                if (cardiologySurgery == null)
-                {
-                    return NotFound(new ApiResponse(404, "Cardiology surgery not found"));
-                }
-
-                // Ensures the surgery belongs to the specified patient
-                if (cardiologySurgery.PatientId != patientId)
-                {
-                    return NotFound(new ApiResponse(404, "Surgery not associated with the specified patient"));
-                }
-
-                return Ok(_mapper.Map<CardiologySurgeryDto>(cardiologySurgery));
+                return Ok(paginatedCardiologySurgeries);
             }
             catch (Exception ex)
             {

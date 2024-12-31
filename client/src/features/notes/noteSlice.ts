@@ -108,7 +108,7 @@ export const noteSlice = createSlice({
     removeNote: (state, action) => {
       notesAdapter.removeOne(state, action.payload);
       state.notesLoaded = false;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchNotesAsync.pending, (state) => {

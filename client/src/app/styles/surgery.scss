@@ -1,76 +1,62 @@
-@import './_variables';
+@import "./_variables";
 
 .contentSurgery {
-    // width: 100v;
-    margin: 25px;
-    // background-color: red;
-    height: 100%;
+  // margin: 30px;
 
-    .filtersContainer {
-        background-color: #ffffff;
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 0 0 0;
-
-        .pager {
-            margin-top: 10px;
-
-            p {
-                font-weight: 300;
-            }
-        }
-
-        .search {
-            display: flex;
-            align-items: center;
-        }
-
-        .button {
-            padding: 6px 15px;
-            text-transform: capitalize;
-            font-size: 16px;
-            font-weight: 400;
-        }
-
-        .addPatientButton .button {
-            background-color: $green;
-            color: $white;
-        }
-
-        .addFilterButton .button {
-            border: 1px solid $black;
-            color: $black;
-        }
-    }
+  
 }
 
-.container {
-    margin: 25px;
+.section-surgery {
+  padding: 40px;
 
-    .surgeryDetails {
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-        .contents {
-            margin-top: 10px;
-            display: flex;
-            gap: 35px;
+  .surgery-details {
+    display: flex;
+    align-items: start;
+    gap: 30px;
+  }
+}
 
-            .contentInfo {
-                display: flex;
-                gap: 20px;
-                max-width: 600px;
+strong {
+  color: #000;
+}
 
-                .surgeryInfoData p {
-                    font-weight: 200;
-                }
+.update,
+.delete {
+  transition: transform 0.2s, box-shadow 0.2s;
 
-                p {
-                    font-size: 18px;
-                }
+  &:hover {
+    transform: translateY(-5px);
+    cursor: pointer;
+  }
+}
 
-                .surgeryInfoData {
-                    font-weight: 220;
-                }
-            }
-        }
-    }
+.css-xn32gr-MuiTableCell-root,
+.css-kv5d71-MuiTableCell-root {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.css-1ua80n0-MuiInputBase-input-MuiOutlinedInput-input {
+  height: 20px !important;
+  font-size: 14px !important;
+  width: 170px !important;
+}
+
+
+
+.textField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: $green;
+}
+
+.textField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: $green;
+}
+
+.textField .MuiInputLabel-root.Mui-focused {
+  color: $green;
 }

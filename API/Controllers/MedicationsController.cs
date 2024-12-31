@@ -16,7 +16,7 @@ namespace API.Controllers
     /// <summary>
     /// Manages medications records for surgery follow ups. Provides endpoints for creating, retrieving, updating, and deleting medications.
     /// </summary>
-    public class MedicationController : BaseApiController
+    public class MedicationsController : BaseApiController
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -27,7 +27,7 @@ namespace API.Controllers
         /// <param name="unitOfWork">Unit of work for handling data operations.</param>
         /// <param name="mapper">Mapper for converting between DTOs and entities.</param>
         /// <param name="userManager">User manager for handling authentication and user management.</param>
-        public MedicationController(
+        public MedicationsController(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             UserManager<AppUser> userManager
@@ -42,11 +42,17 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">The ID of the medication to retrieve.</param>
         /// <returns>The medication details.</returns>
-        [HttpGet("{id}")]
+        /// 
+        /// <summary>
+        /// Retrieves a specific medication for a surgery follow up by its ID.
+        /// </summary>
+        /// <param name="followUpId">ID of the cardiology surgery.</param>
+        /// <returns>The requested medication.</returns>
+        [HttpGet("followup/{followUpId}/medications")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<MedicationDto>> GetMedication(int id)
+        public async Task<ActionResult<IReadOnlyList<MedicationDto>>> GetMedicationsByFollowUpId(int followUpId)
         {
             try
             {
@@ -56,24 +62,66 @@ namespace API.Controllers
                     return Unauthorized(new ApiResponse(401, "User not authenticated or not found"));
                 }
 
+                var followUpSpec = new SurgeryFollowUpSpecification(followUpId);
+                var followUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(followUpSpec);
+
+
+                if (followUp == null || followUp.CardiologySurgery.AppUserId != user.Id)
+                {
+                    return NotFound(new ApiResponse(404, "Surgery follow up not found or not authorized"));
+                }
+
                 // Create and apply a specification to retrieve the medication by its ID.
-                var spec = new MedicationSpecification(id);
+                var spec = new MedicationSpecification(followUpId);
+                var medication = await _unitOfWork.Repository<Medication>().ListAsync(spec);
+
+                var medicationDto = _mapper.Map<IReadOnlyList<MedicationDto>>(medication);
+
+                return Ok(medicationDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a specific medication for a follow up by its ID.
+        /// </summary>
+        /// <param name="cardiologySurgeryId">ID of the follow up.</param>
+        /// <param name="followUpId">ID of the medication.</param>
+        /// <returns>The requested medication.</returns>
+        [HttpGet("followup/{followUpId}/medications/{medicationId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<ActionResult<MedicationDto>> GetMedicationByFollowUpId(int followUpId, int medicationId)
+        {
+            try
+            {
+                var user = await GetAuthenticatedUserAsync();
+                if (user == null)
+                {
+                    return Unauthorized(new ApiResponse(401, "User not authenticated or not found"));
+                }
+
+                var followUpSpec = new SurgeryFollowUpSpecification(followUpId);
+                var followUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(followUpSpec);
+
+
+                if (followUp == null || followUp.CardiologySurgery.AppUserId != user.Id)
+                {
+                    return NotFound(new ApiResponse(404, "Surgery follow up not found or not authorized"));
+                }
+
+                // Create and apply a specification to retrieve the medication by its ID.
+                var spec = new MedicationSpecification(followUpId, medicationId);
                 var medication = await _unitOfWork.Repository<Medication>().GetEntityWithSpec(spec);
 
                 // If the medication is not found, return a 404 Not Found response.
                 if (medication == null)
                 {
                     return NotFound(new ApiResponse(404, "Medication not found"));
-                }
-
-                // Retrieve the associated SurgeryFollowUp to check if the authenticated user is authorized to access it.
-                var surgeryFollowUpSpec = new SurgeryFollowUpSpecification(medication.SurgeryFollowUpId);
-                var surgeryFollowUp = await _unitOfWork.Repository<SurgeryFollowUp>().GetEntityWithSpec(surgeryFollowUpSpec);
-
-                // If the SurgeryFollowUp is not found or the user is not authorized, return a 404 Not Found response.
-                if (surgeryFollowUp == null || surgeryFollowUp.CardiologySurgery.AppUserId != user.Id)
-                {
-                    return NotFound(new ApiResponse(404, "Surgery follow-up not found or not authorized"));
                 }
 
                 var medicationDto = _mapper.Map<MedicationDto>(medication);
@@ -115,11 +163,12 @@ namespace API.Controllers
                 if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating medication"));
                 var medicationDto = _mapper.Map<MedicationDto>(newMedication);
 
-                return CreatedAtAction(
-                    nameof(GetMedication),
-                    new { id = newMedication.Id },
-                    medicationDto
-                );
+                // return CreatedAtAction(
+                //     nameof(GetMedicationByFollowUpId),
+                //     new { surgeryFollowUpId = newMedication.SurgeryFollowUpId ,id = newMedication.Id },
+                //     medicationDto
+                // );
+                return Ok(medicationDto);
             }
             catch (Exception ex)
             {

@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using API.Errors;
 using Core.Entities.Identity;
 using Core.Interfaces;
@@ -42,7 +44,6 @@ namespace API.Extensions
             // .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ManagementContext>();
 
-
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme =
@@ -65,25 +66,24 @@ namespace API.Extensions
                     )
                 };
             });
+
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPhotoService, PhotoService>();
 
-            ////
-            ////
             // Configure the behavior of the API by configuring 'ApiBehaviorOptions'
             services.Configure<ApiBehaviorOptions>(options =>
-            { // An answer factory is established to handle the answers in case of invalid model errors
+            {
                 options.InvalidModelStateResponseFactory = ActionContext =>
                 {
-                    var errors = ActionContext.ModelState // Validation errors that have occurred in the request are collected
+                    var errors = ActionContext.ModelState
                         .Where(e => e.Value.Errors.Count > 0)
                         .SelectMany(x => x.Value.Errors)
                         .Select(x => x.ErrorMessage).ToArray();
 
-                    var errorResponse = new ApiValidationErrorResponse // Which will contain the information of the validation errors of the model.
+                    var errorResponse = new ApiValidationErrorResponse
                     {
                         Errors = errors
                     };
@@ -92,8 +92,18 @@ namespace API.Extensions
                 };
             });
 
-            ///
-            ////////
+            // Custom JSON configuration to handle boolean values coming as strings
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                // Add a converter to handle enums as strings in the JSON (useful for string-based enums)
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+                // Add a custom converter to handle boolean values represented as strings (e.g. "true" or "false")
+                options.JsonSerializerOptions.Converters.Add(new JsonBooleanConverter());
+
+                // Make property names case-insensitive when matching JSON keys to model properties
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
 
             services.AddCors(opt =>
             {
@@ -104,6 +114,30 @@ namespace API.Extensions
             });
 
             return services;
+        }
+    }
+
+    // Custom JsonConverter to handle boolean values sent as strings
+    public class JsonBooleanConverter : JsonConverter<bool>
+    {
+        // Method to read and convert values from JSON to the model in C#
+        public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                // Attempt to parse the string as a boolean value
+                var value = reader.GetString();
+                return bool.TryParse(value, out var result) && result; // Return true or false accordingly
+            }
+
+            // If the token is not a string, assume it's already a boolean and return it
+            return reader.GetBoolean();
+        }
+
+        // Method to write boolean values from the model to the JSON response
+        public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
+        {
+            writer.WriteBooleanValue(value);
         }
     }
 }

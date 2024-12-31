@@ -18,6 +18,7 @@ namespace Core.Specification.SurgeryFollowUpSpec
             AddInclude(sfu => sfu.CardiologySurgery);
             AddInclude(sfu => sfu.MedicationsPrescribed);
 
+
             // Apply pagination based on the provided parameters
             ApplyPaging(
                 baseSpecParams.PageSize * (baseSpecParams.PageIndex - 1),

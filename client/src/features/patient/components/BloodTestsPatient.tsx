@@ -23,18 +23,7 @@ const bloodTestProperties: { label: string; key: keyof BloodTest; formatter?: (v
     { label: 'Mean Corpuscular Hemoglobin Concentration', key: 'meanCorpuscularHemoglobinConcentration', unit: 'g/dL' },
     { label: 'Red Cell Distribution Width', key: 'redCellDistributionWidth', unit: '%' },
     { label: 'Blood Urea Nitrogen', key: 'bloodUreaNitrogen', unit: 'mg/dL' },
-    { label: 'Creatinine', key: 'creatinine', unit: 'mg/dL' },
-    { label: 'Sodium', key: 'sodium', unit: 'mEq/L' },
-    { label: 'Potassium', key: 'potassium', unit: 'mEq/L' },
-    { label: 'Chloride', key: 'chloride', unit: 'mEq/L' },
-    { label: 'Bicarbonate', key: 'bicarbonate', unit: 'mEq/L' },
-    { label: 'Calcium', key: 'calcium', unit: 'mg/dL' },
-    { label: 'Magnesium', key: 'magnesium', unit: 'mg/dL' },
-    { label: 'Neutrophils', key: 'neutrophils', unit: '%' },
-    { label: 'Lymphocytes', key: 'lymphocytes', unit: '%' },
-    { label: 'Monocytes', key: 'monocytes', unit: '%' },
-    { label: 'Eosinophils', key: 'eosinophils', unit: '%' },
-    { label: 'Basophils', key: 'basophils', unit: '%' },
+
 ];
 
 export default function BloodTestPatient({ bloodTests }: Props) {

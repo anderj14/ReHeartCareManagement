@@ -14,7 +14,6 @@ namespace Core.Specification
             AddInclude(bt => bt.Patient);
         }
 
-
         // Constructor to get a specific blood test by patient ID and blood test ID.
         public BloodTestSpecification(int patientId, int bloodTestId)
         : base(bt => bt.PatientId == patientId && bt.Id == bloodTestId)

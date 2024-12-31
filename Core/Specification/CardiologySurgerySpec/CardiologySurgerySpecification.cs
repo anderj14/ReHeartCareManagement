@@ -1,4 +1,5 @@
 using Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Specification.CardiologySurgerySpec
 {
@@ -19,7 +20,7 @@ namespace Core.Specification.CardiologySurgerySpec
             .Contains(cardiologySurgeryParams.Search)
             )
         {
-            AddCommonIncludes(); // Add common includes like Patient and SurgeryFollowUps.
+            AddInclude(cs => cs.Patient);
             ApplySorting(cardiologySurgeryParams.Sort); // Apply sorting based on the provided sort parameter.
         }
 
@@ -30,18 +31,7 @@ namespace Core.Specification.CardiologySurgerySpec
         public CardiologySurgerySpecification(int id)
         : base(a => a.Id == id)
         {
-            AddCommonIncludes();
-        }
-
-        /// <summary>
-        /// Constructor to get a specific cardiology surgery by patient ID and surgery ID.
-        /// </summary>
-        /// <param name="patientId">The ID of the patient.</param>
-        /// <param name="cardiologySurgeryId">The ID of the cardiology surgery.</param>
-        public CardiologySurgerySpecification(int patientId, int cardiologySurgeryId)
-            : base(cs => cs.PatientId == patientId && cs.Id == cardiologySurgeryId)
-        {
-            AddCommonIncludes();
+            AddInclude(cs => cs.Patient);
         }
 
         /// <summary>
@@ -49,20 +39,14 @@ namespace Core.Specification.CardiologySurgerySpec
         /// </summary>
         /// <param name="id">The ID of the surgery or patient.</param>
         /// <param name="getByPatientId">Flag to determine if the query is by patient ID or surgery ID.</param>
-        public CardiologySurgerySpecification(int id, bool getByPatientId = false)
-            : base(a => getByPatientId ? a.PatientId == id : a.Id == id)
-        {
-            AddCommonIncludes(); // Add common includes like Patient and SurgeryFollowUps.
-        }
-
-        /// <summary>
-        /// Adds common includes for related entities, such as Patient and SurgeryFollowUps,
-        /// that are commonly used in cardiology surgery queries.
-        /// </summary>
-        private void AddCommonIncludes()
+        public CardiologySurgerySpecification(int id, CardiologySurgerySpecParams cardiologySurgeryParams)
+            : base(a =>  a.PatientId == id &&
+            string.IsNullOrEmpty(cardiologySurgeryParams.Search) || a.SurgeryName.ToLower().Contains(cardiologySurgeryParams.Search)
+            )
         {
             AddInclude(cs => cs.Patient);
-            AddInclude(cs => cs.SurgeryFollowUps); // Include the related SurgeryFollowUps entity.
+            ApplyPatientSorting(cardiologySurgeryParams.Sort);
+
         }
 
         /// <summary>
@@ -85,6 +69,31 @@ namespace Core.Specification.CardiologySurgerySpec
 
                     default:
                         AddOrderBy(n => n.Patient.PatientName);
+                        break;
+                }
+            }
+        }
+
+         /// <summary>
+        /// Applies sorting logic based on the provided sort parameter.
+        /// If no sort parameter is provided, the default sort is by patient name.
+        /// </summary>
+        /// <param name="sort">The sorting criteria (e.g., dateAsc, dateDesc).</param>
+        private void ApplyPatientSorting(string sort)
+        {
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch (sort)
+                {
+                    case "dateAsc":
+                        AddOrderBy(a => a.Date);
+                        break;
+                    case "dateDesc":
+                        AddOrderByDescending(a => a.Date);
+                        break;
+
+                    default:
+                        AddOrderBy(a => a.SurgeryName);
                         break;
                 }
             }

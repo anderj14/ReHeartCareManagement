@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Drawer,
@@ -11,16 +12,21 @@ import {
 import "../../app/styles/notes.scss";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import NoteCard from "./NoteCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "../../Images/calendar.svg";
 import Thunder from "../../Images/thunder.svg";
-import { useAppDispatch } from "../../app/store/configureStore";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../app/store/configureStore";
 import { setNoteParams, setPageIndex } from "./noteSlice";
 import NoteSearch from "./NoteSearch";
 import useNote from "../../app/hooks/useNote";
 import PaginationItem from "../../app/components/PaginationItem";
 import { Note } from "../../app/Models/note";
 import UserNoteForm from "./UserNoteForm";
+import { clearNotification } from "../../app/store/notificationReducer";
+import { toast } from "react-toastify";
 
 export default function UserNotes() {
   const { notes, notesLoaded, noteStatus, metaData, status } = useNote();
@@ -28,6 +34,14 @@ export default function UserNotes() {
   const dispatch = useAppDispatch();
   const [selectedNote] = useState<Note | undefined>(undefined);
   const [openForm, setOpenForm] = useState(false);
+  const notification = useAppSelector((state) => state.notification);
+
+  useEffect(() => {
+    if (notification.message) {
+      toast[notification.type!](notification.message);
+      dispatch(clearNotification());
+    }
+  }, [notification, dispatch]);
 
   const handleStatusChange = (event: any) => {
     setSelectedStatus(event.target.value);
@@ -36,18 +50,22 @@ export default function UserNotes() {
 
   const toggleDrawer = (open: boolean) => () => {
     setOpenForm(open);
-  }
+  };
 
-  const DrawerList =(
-    <Box sx={{with: 650, padding: '20px'}} role="presentation">
-      <UserNoteForm note={selectedNote} cancelEdit={() => setOpenForm(false)} title={'Creating new Note'}/>
+  const DrawerList = (
+    <Box sx={{ with: 650, padding: "20px" }} role="presentation">
+      <UserNoteForm
+        note={selectedNote}
+        cancelEdit={() => setOpenForm(false)}
+        title={"Creating new Note"}
+      />
     </Box>
-  )
+  );
 
   return (
     <div className="contentNote">
       <Box className="filters">
-        <Box className="search" sx={{display: 'flex', gap: '10px'}}>
+        <Box className="search" sx={{ display: "flex", gap: "10px" }}>
           <NoteSearch />
           <FormControl>
             <InputLabel id="status-select-label">Note Status</InputLabel>
@@ -69,13 +87,15 @@ export default function UserNotes() {
           </FormControl>
         </Box>
         <div className="addNoteButton">
-          <Button className="button" startIcon={<AddRoundedIcon />} onClick={toggleDrawer(true)}>
+          <Button
+            className="button"
+            startIcon={<AddRoundedIcon />}
+            onClick={toggleDrawer(true)}
+          >
             Add Notes
           </Button>
           <Drawer open={openForm} onClose={toggleDrawer(false)} anchor="right">
-            <Box sx={{ width: 600, p: 1 }}>
-              {DrawerList}
-            </Box>
+            <Box sx={{ width: 600, p: 1 }}>{DrawerList}</Box>
           </Drawer>
         </div>
       </Box>
@@ -111,18 +131,18 @@ export default function UserNotes() {
         {notesLoaded && notes.length === 0 && (
           <Typography variant="h6">Not Note Found</Typography>
         )}
-        {notesLoaded && notes.length > 0 &&( 
-          <NoteCard notes={notes} />
-        )}
+        {notesLoaded && notes.length > 0 && <NoteCard notes={notes} />}
       </Box>
 
-      <Box marginTop='30px'>
+      <Box marginTop="30px">
         {metaData && metaData.count > 0 && (
-            <PaginationItem
-              metaData={metaData}
-              onPageChange={(page: number) => dispatch(setPageIndex({ pageIndex: page }))}
-              name='Notes'
-            />
+          <PaginationItem
+            metaData={metaData}
+            onPageChange={(page: number) =>
+              dispatch(setPageIndex({ pageIndex: page }))
+            }
+            name="Notes"
+          />
         )}
       </Box>
     </div>

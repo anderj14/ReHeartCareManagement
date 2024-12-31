@@ -356,18 +356,7 @@ export default function PatientDetail() {
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
                         <Box className="componentContainer">
-                            <section style={{ display: "flex", flexDirection: "column", gap: 25 }}>
-                                <Link to={`/bloodtests/patient/${patient.id}/bloodtests`} style={{ textDecoration: 'none' }}>
-                                    <BloodTestPatient bloodTests={bloodTestsByPatient} />
-                                </Link>
-                                <Link to={`/electrocardiogram/patient/${patient.id}/electrocardiograms`} style={{ textDecoration: 'none' }}>
-                                    <ElectrocardiogramPatient electrocardiogram={electrocardiogramByPatient} />
-                                </Link>
-                                <Link to={`/echocardiogram/patient/${patient.id}/echocardiograms`} style={{ textDecoration: 'none' }}>
-                                    <EchocardiogramPatient echocardiogram={echocardiogramByPatient} />
-                                </Link>
-                            </section>
-                            <section style={{ display: "flex", flexDirection: "column", gap: 25 }}>
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25,  width: '60%' }}>
                                 <Link to={`/cardiaccatheterizationstudy/patient/${patient.id}/cardiaccathstudies`} style={{ textDecoration: 'none' }}>
                                     <CardiacCathStudyPatient cardiacCathStudy={cardiacCathStudyByPatient} />
                                 </Link>
@@ -380,8 +369,19 @@ export default function PatientDetail() {
                                 <Link to={`/stresstest/patient/${patient.id}/stresstests`} style={{ textDecoration: 'none' }}>
                                     <StressTestPatient stressTest={stressTestByPatient} />
                                 </Link>
-
                             </section>
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25, width: '40%' }}>
+                                <Link to={`/bloodtests/patient/${patient.id}/bloodtests`} style={{ textDecoration: 'none' }}>
+                                    <BloodTestPatient bloodTests={bloodTestsByPatient} />
+                                </Link>
+                                <Link to={`/electrocardiogram/patient/${patient.id}/electrocardiograms`} style={{ textDecoration: 'none' }}>
+                                    <ElectrocardiogramPatient electrocardiogram={electrocardiogramByPatient} />
+                                </Link>
+                                <Link to={`/echocardiogram/patient/${patient.id}/echocardiograms`} style={{ textDecoration: 'none' }}>
+                                    <EchocardiogramPatient echocardiogram={echocardiogramByPatient} />
+                                </Link>
+                            </section>
+                            
                         </Box>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
@@ -400,12 +400,12 @@ export default function PatientDetail() {
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
                         <Box className="componentContainer">
-                            <section style={{ display: "flex", flexDirection: "column" }}>
-                                <Link to={`/cardiologysurgery/patient/${patient.id}/cardiologysurgeries`} style={{ textDecoration: 'none' }}>
+                            <section style={{ display: "flex", flexDirection: "column", width: '70%'}}>
+                                <Link to={`/cardiologysurgeries/patient/${patient.id}/cardiologysurgeries`} style={{ textDecoration: 'none' }}>
                                     <CardiologySurgeryPatient cardiologySurgery={surgeryByPatient} />
                                 </Link>
                             </section>
-                            <section style={{ display: "flex", flexDirection: "column", gap: 25 }}>
+                            <section style={{ display: "flex", flexDirection: "column", gap: 25,  width: '30%' }}>
                                 <Link to={`/diagnostic/patient/${patient.id}/diagnostics`} style={{ textDecoration: 'none' }}>
                                     <DiagnosticPatient diagnostic={diagnosticByPatient} />
                                 </Link>

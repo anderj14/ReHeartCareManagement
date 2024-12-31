@@ -1,26 +1,19 @@
 @import "./_variables";
 
 body {
-  font-family: $fontFamily;
-  background-color: $veryLightGreen;
+  // font-family: $fontFamily;
+  background-color: $white;
   text-transform: capitalize;
   margin: 0px;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Segoe UI";
+* {
+  font-family: "Geist", sans-serif;
 }
 
-a,
-p,
-span,
+
 strong {
-  font-family: "Helvetica Neue";
+  font-weight: 600;
 }
 
 .flex {
@@ -53,6 +46,7 @@ strong {
   height: 100vh;
   transition: 0.5s all;
   box-sizing: border-box;
+  border-right: 1px solid #eee;
 
   .logoContainer {
     margin: 0;

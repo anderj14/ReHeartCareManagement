@@ -20,7 +20,7 @@ namespace API.Controllers
     /// <summary>
     /// Manages surgery follow-up records. Provides endpoints for creating, retrieving, updating, and deleting follow-ups.
     /// </summary>
-    public class SurgeryFollowUpController : BaseApiController
+    public class SurgeryFollowUpsController : BaseApiController
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -31,7 +31,7 @@ namespace API.Controllers
         /// <param name="unitOfWork">Unit of work for handling data operations.</param>
         /// <param name="mapper">Mapper for converting between DTOs and entities.</param>
         /// <param name="userManager">User manager for handling authentication and user management.</param>
-        public SurgeryFollowUpController(
+        public SurgeryFollowUpsController(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             UserManager<AppUser> userManager
