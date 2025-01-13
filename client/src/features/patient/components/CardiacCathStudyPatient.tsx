@@ -24,10 +24,6 @@ export default function CardiacCathStudyPatient({ cardiacCathStudy }: Props) {
                                     <span>{formatDateTime(latestCardiacCathStudyPatient.date)}</span>
                                 </Box>
                                 <Box className="details">
-                                    <strong>Time: </strong>
-                                    <span>{latestCardiacCathStudyPatient.time}</span>
-                                </Box>
-                                <Box className="details">
                                     <strong>Location of Main Coronary Artery: </strong>
                                     <span>{latestCardiacCathStudyPatient.locationMainCoronaryArteries}</span>
                                 </Box>

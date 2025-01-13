@@ -26,7 +26,6 @@ export default function CardiacCathStudyList({ cardiacCathStudies }: Props) {
                         <TableRow className="row">
                             <TableCell sx={{ fontSize: '18px', fontWeight: 400 }}>Patient Name</TableCell>
                             <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Date</TableCell>
-                            <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Time</TableCell>
                             <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Blockage (Each Coronary Artery)</TableCell>
                             <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Systolic Blood Pressure (Aorta)</TableCell>
                             <TableCell sx={{ fontSize: '18px', fontWeight: 400 }} align="right">Diastolic Blood Pressure (Aorta)</TableCell>
@@ -43,7 +42,6 @@ export default function CardiacCathStudyList({ cardiacCathStudies }: Props) {
                                     {cardiacCathStudy.patient}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{formatDateTime(cardiacCathStudy.date)}</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{cardiacCathStudy.time}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{cardiacCathStudy.blockageEachCoronaryArtery} %</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{cardiacCathStudy.systolicPressureAorta} mmHg</TableCell>
                                 <TableCell sx={{ fontSize: '18px', fontWeight: 300 }} align="right">{cardiacCathStudy.diastolicPressureAorta} mmHg</TableCell>

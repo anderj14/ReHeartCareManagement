@@ -42,7 +42,8 @@ interface Props {
 export default function SurgeryFollowUps({ surgeryFollowUp }: Props) {
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
   const [openForm, setOpenForm] = useState(false);
-  const [seletedSurgeryFollowUp, setSelectedSurgeryFollowUp] = useState<SurgeryFollowUp | undefined>(undefined);
+  const [selectedSurgeryFollowUp, setSelectedSurgeryFollowUp] = useState<SurgeryFollowUp | undefined>(undefined);
+  const [formTitle, setFormTitle] = useState("Creating New Surgery Follow Up");
   const { id } = useParams<{ id: any }>();
   const [target, setTarget] = useState(0);
 
@@ -50,6 +51,9 @@ export default function SurgeryFollowUps({ surgeryFollowUp }: Props) {
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpenForm(newOpen);
+    if (!newOpen) {
+      setSelectedSurgeryFollowUp(undefined);
+    }
   }
 
   const surgery = useAppSelector((state) => surgerySelectors.selectById(state, id));
@@ -57,9 +61,9 @@ export default function SurgeryFollowUps({ surgeryFollowUp }: Props) {
   const DrawerList = (
     <Box sx={{ width: 550, padding: "20px" }} role="presentation">
       <SurgeryFollowUpForm
-        followUp={seletedSurgeryFollowUp}
+        followUp={selectedSurgeryFollowUp}
         cancelEdit={() => setOpenForm(false)}
-        title={"Creating New Surgery Follow Up"}
+        title={formTitle}
         surgeryId={surgery.id}
       />
     </Box>
@@ -68,6 +72,7 @@ export default function SurgeryFollowUps({ surgeryFollowUp }: Props) {
   const handleEditClick = (surgeryFollowUp: SurgeryFollowUp) => {
     if(surgeryFollowUp) {
       setSelectedSurgeryFollowUp(surgeryFollowUp);
+      setFormTitle("Editing Surgery Follow-Up");
       setOpenForm(true);
     }
   }

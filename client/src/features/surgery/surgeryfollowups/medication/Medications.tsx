@@ -43,8 +43,9 @@ export default function Medications({ medication, followUpId }: Props) {
   const [selectedMedication, setSelectedMedication] = useState<Medication | undefined>(undefined);
   const [openForm, setOpenForm] = useState(false);
   const [target, setTarget] = useState(0);
-    const dispatch = useAppDispatch();
-    const { id } = useParams<{ id: any }>();
+  const [formTitle, setFormTitle] = useState("Add Medication");
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: any }>();
   
   const reloadSurgeryFollowUp = () => {
     dispatch(fetchSugeryFollowUpsBySurgeryAsync(id));
@@ -52,6 +53,9 @@ export default function Medications({ medication, followUpId }: Props) {
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpenForm(newOpen);
+    if(!newOpen) {
+      setSelectedMedication(undefined);
+    }
   }
   
   const DrawerList = (
@@ -63,7 +67,7 @@ export default function Medications({ medication, followUpId }: Props) {
       role="presentation"
     >
      <MedicationForm 
-        title={"Add Medication"}
+        title={formTitle}
         cancelEdit={() => setOpenForm(false)}
         medication={selectedMedication}
         surgeryFollowUpId={followUpId}
@@ -75,6 +79,7 @@ export default function Medications({ medication, followUpId }: Props) {
     const handleEditClick = (medication: Medication) => {
       if(medication) {
         setSelectedMedication(medication);
+        setFormTitle("Editing Medication");
         setOpenForm(true);
       }
     }

@@ -39,8 +39,6 @@ export default function SurgeryFollowUpForm({ followUp, cancelEdit, title, surge
     async function handleSubmitData(data: FieldValues) {
         try {
             let response: SurgeryFollowUp;
-            console.log(data);
-            
 
             if (followUp) {
                 response = await agent.SurgeryFollowUp.updateSurgeryFollowUp(followUp.id, data);

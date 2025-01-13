@@ -6,52 +6,62 @@ namespace Core.Dtos.CreateDto
     public class CardiacCathStudyCreateDto
     {
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } // Date of the study
         [Required]
-        public string Time { get; set; }
+        public TimeSpan Time { get; set; } = new TimeSpan(0, 0, 0); // Time of the study
         [Required]
-        public string LocationMainCoronaryArteries { get; set; }
+        public string LocationMainCoronaryArteries { get; set; } // Location and number of main coronary arteries examined
+
         [Required]
-        public string BlockageEachCoronaryArtery { get; set; }
+        public decimal BlockageEachCoronaryArtery { get; set; } // Blockage percentage for each coronary artery
+
         [Required]
-        public string DescriptionAbnormalities { get; set; }
+        public string DescriptionAbnormalities { get; set; } // Description of any abnormalities found
         [Required]
-        public string BloodPressureAorta { get; set; }
+        public int SystolicPressureAorta { get; set; } // Systolic blood pressure in the aorta (mmHg)
         [Required]
-        public string ChambersLeftAtrium { get; set; }
+        public int DiastolicPressureAorta { get; set; } // Diastolic blood pressure in the aorta (mmHg)
+
         [Required]
-        public string ChambersLeftVentricle { get; set; }
+        public string ChambersLeftAtrium { get; set; } // Observations in the left atrium
         [Required]
-        public string ChambersRightAtrium { get; set; }
+        public string ChambersLeftVentricle { get; set; } // Observations in the left ventricle
         [Required]
-        public string ChambersRightVentricle { get; set; }
+        public string ChambersRightAtrium { get; set; } // Observations in the right atrium
         [Required]
-        public string BloodFlowCoronaryArteries { get; set; }
+        public string ChambersRightVentricle { get; set; } // Observations in the right ventricle
+
         [Required]
-        public string VelocityBloodFlow { get; set; }
+        public decimal BloodFlowCoronaryArteries { get; set; } // Blood flow in the coronary arteries (could be a flow rate)
         [Required]
-        public string LeftVentricularEjectionFraction { get; set; }
+        public decimal VelocityBloodFlow { get; set; } // Velocity of blood flow (cm/s)
         [Required]
-        public string BloodPressurePulmonaryArteries { get; set; }
+        public decimal LeftVentricularEjectionFraction { get; set; } // Left ventricular ejection fraction (LVEF) (%)
         [Required]
-        public string ValvularInsufficiencyAortic { get; set; }
+        public int SystolicPressurePulmonaryArteries { get; set; } // Systolic blood pressure in the pulmonary arteries (mmHg)
         [Required]
-        public string ValvularInsufficiencyMitral { get; set; }
+        public int DiastolicPressurePulmonaryArteries { get; set; } // Diastolic blood pressure in the pulmonary arteries (mmHg)
+
         [Required]
-        public string ValvularInsufficiencyPulmonary { get; set; }
+        public string ValvularInsufficiencyAortic { get; set; } // Aortic valvular insufficiency details
         [Required]
-        public string ValvularInsufficiencyTricuspid { get; set; }
+        public string ValvularInsufficiencyMitral { get; set; } // Mitral valvular insufficiency details
         [Required]
-        public string PressureGradientValves { get; set; }
+        public string ValvularInsufficiencyPulmonary { get; set; } // Pulmonary valvular insufficiency details
         [Required]
-        public string StructuralAbnormalities { get; set; }
+        public string ValvularInsufficiencyTricuspid { get; set; } // Tricuspid valvular insufficiency details
         [Required]
-        public string CardiacChamberFunctions { get; set; }
+        public decimal PressureGradientValves { get; set; } // Pressure gradient across valves (mmHg)
         [Required]
-        public string DescriptionComplications { get; set; }
+        public string StructuralAbnormalities { get; set; } // Structural abnormalities observed
         [Required]
-        public string Conclusion { get; set; }
+        public string CardiacChamberFunctions { get; set; } // Functions of cardiac chambers
         [Required]
-        public int PatientId { get; set; }
+        public string DescriptionComplications { get; set; } // Description of any complications during the study
+        [Required]
+        public string Conclusion { get; set; } // Conclusion of the study
+
+        [Required]
+        public int PatientId { get; set; } // ID of the associated patient
     }
 }

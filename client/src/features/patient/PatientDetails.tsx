@@ -224,6 +224,9 @@ export default function PatientDetail() {
     if (patientStatus.includes('pending')) return <h3>Loading...</h3>;
     if (!patient) return <NotFound />;
 
+    console.log(patient);
+    
+
     return (
         <div className="container">
             <Breadcrumb page='patients / patient name' />

@@ -67,10 +67,9 @@ export const fetchCardiologySurgeryAsync = createAsyncThunk<
   number
 >(
   "cardiologysurgery/fetchCardiologySurgeryAsync",
-  async (patientId, thunkAPI) => {
+  async (id, thunkAPI) => {
     try {
-      const surgery = await agent.CardiologySurgery.details(patientId);
-      console.log(surgery);
+      const surgery = await agent.CardiologySurgery.details(id);
       return surgery;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });

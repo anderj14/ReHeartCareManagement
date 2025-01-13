@@ -9,7 +9,7 @@ import CardiologySurgeryDetails from "../../features/patient/cardiologySurgery/C
 import AppointmentCalendar from "../../features/appointment/AppointmentCalendar";
 import BloodTestDetails from "../../features/patient/bloodTest/BloodTestDetails";
 import BloodTests from "../../features/patient/bloodTest/BloodTests";
-import CardiacCathStudy from "../../features/patient/cardiacTestsPatient/CardiacCathStudy";
+import CardiacCathStudy from "../../features/patient/cardiacTestsPatient/CardiacCathStudies";
 import CardiacCathStudyDetails from "../../features/patient/cardiacTestsPatient/CardiacCathStudyDetails";
 import ElectrocardiogramDetails from "../../features/patient/electrocardiogram/ElectrocardiogramDetails";
 import Electrocardiograms from "../../features/patient/electrocardiogram/Electrocardiograms";

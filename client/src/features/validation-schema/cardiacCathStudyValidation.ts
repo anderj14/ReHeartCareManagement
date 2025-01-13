@@ -1,0 +1,27 @@
+import * as yup from "yup";
+
+export const validationSchema = yup.object({
+    locationMainCoronaryArteries: yup.string().required("Location of main coronary arteries is required"),
+    blockageEachCoronaryArtery: yup.number().required("Blockage of each coronary artery is required"),
+    descriptionAbnormalities: yup.string().required("Description of abnormalities is required"),
+    systolicPressureAorta: yup.number().required("Systolic pressure of aorta is required"),
+    diastolicPressureAorta: yup.number().required("Diastolic pressure of aorta is required"),
+    chambersLeftAtrium: yup.string().required("Left atrium chamber is required"),
+    chambersLeftVentricle: yup.string().required("Left ventricle chamber is required"),
+    chambersRightAtrium: yup.string().required("Right atrium chamber is required"),
+    chambersRightVentricle: yup.string().required("Right ventricle chamber is required"),
+    bloodFlowCoronaryArteries: yup.number().required("Blood flow in coronary arteries is required"),
+    velocityBloodFlow: yup.number().required("Velocity of blood flow is required"),
+    leftVentricularEjectionFraction: yup.number().required("Left ventricular ejection fraction is required"),
+    systolicPressurePulmonaryArteries: yup.number().required("Systolic pressure of pulmonary arteries is required"),
+    diastolicPressurePulmonaryArteries: yup.number().required("Diastolic pressure of pulmonary arteries is required"),
+    valvularInsufficiencyAortic: yup.string().required("Aortic valvular insufficiency is required"),
+    valvularInsufficiencyMitral: yup.string().required("Mitral valvular insufficiency is required"),
+    valvularInsufficiencyPulmonary: yup.string().required("Pulmonary valvular insufficiency is required"),
+    valvularInsufficiencyTricuspid: yup.string().required("Tricuspid valvular insufficiency is required"),
+    pressureGradientValves: yup.number().required("Pressure gradient of valves is required"),
+    structuralAbnormalities: yup.string().required("Structural abnormalities are required"),
+    cardiacChamberFunctions: yup.string().required("Cardiac chamber functions are required"),
+    descriptionComplications: yup.string().required("Description of complications is required"),
+    conclusion: yup.string().required("Conclusion is required"),
+});

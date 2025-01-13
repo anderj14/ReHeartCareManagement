@@ -101,6 +101,10 @@ export const cardiaccathstudySlice = createSlice({
         ...action.payload,
       };
     },
+    setCardiacCathStudy: (state, action) => {
+      cardiacCathStudiesAdapter.upsertOne(state, action.payload);
+      state.cardiacCathStudyByPatientLoaded = false;
+    },
     setPageIndex: (state, action) => {
       state.cardiacCathStudyByPatientLoaded = false;
       state.cardiacCathStudyParams = {
@@ -114,6 +118,10 @@ export const cardiaccathstudySlice = createSlice({
     resetCardiacCathStudyParams: (state) => {
       state.cardiacCathStudyParams = initParams();
     },
+    removeCardiacCathStudy: (state, action) => {
+      cardiacCathStudiesAdapter.removeOne(state, action.payload);
+      state.cardiacCathStudyByPatientLoaded = false;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCardiacCathStudiesByPatientAsync.pending, (state) => {
@@ -157,9 +165,11 @@ export const cardiaccathstudySlice = createSlice({
 
 export const {
   setCardiacCathStudyParams,
+  setCardiacCathStudy,
   resetCardiacCathStudyParams,
   setMetaData,
   setPageIndex,
+  removeCardiacCathStudy,
 } = cardiaccathstudySlice.actions;
 
 export const cardiacCathStudySelectors = cardiacCathStudiesAdapter.getSelectors(

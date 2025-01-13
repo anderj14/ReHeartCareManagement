@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { store } from "../store/configureStore";
 import { PaginatedResponse } from "../Models/pagination";
 import { router } from "../router/Routes";
+import { create } from "domain";
 
 axios.defaults.baseURL = "https://localhost:5001/api/v1/";
 
@@ -166,13 +167,19 @@ const BloodTest = {
 const CardiacCathStudy = {
   listByPatientId: (params: URLSearchParams, patientId: number) =>
     requests.get(
-      `cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies`,
+      `cardiaccatheterizationstudies/patient/${patientId}/cardiaccathstudies`,
       params
     ),
   detailsByPatientId: (patientId: number, cardiacCathStudyId: number) =>
     requests.get(
-      `cardiaccatheterizationstudy/patient/${patientId}/cardiaccathstudies/${cardiacCathStudyId}`
+      `cardiaccatheterizationstudies/patient/${patientId}/cardiaccathstudies/${cardiacCathStudyId}`
     ),
+  createCardiacCathStudy: (cardiacCathStudy: any) =>
+    requests.postForm("cardiaccatheterizationstudies", createFormData(cardiacCathStudy)),
+  updateCardiacCathStudy: (id: number, cardiacCathStudy: any) =>
+    requests.putForm(`cardiaccatheterizationstudies/${id}`, createFormData(cardiacCathStudy)),
+  deleteCardiacCathStudy: (id: number) =>
+    requests.delete(`cardiaccatheterizationstudies/${id}`),
 };
 
 const Electrocardiogram = {

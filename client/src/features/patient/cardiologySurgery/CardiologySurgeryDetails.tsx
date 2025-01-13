@@ -43,6 +43,8 @@ export default function CardiologySurgeryDetails() {
   const [target, setTarget] = useState(0);
   const navigate = useNavigate();
 
+  
+
   const cardiologySurgery = useAppSelector((state) =>
     surgerySelectors.selectById(state, id)
   );
@@ -100,6 +102,7 @@ export default function CardiologySurgeryDetails() {
   const toggleDrawer = () => {
     setEditMode(false);
   };
+  console.log(selectedSurgery);
 
   if (cardiologySurgeryStatus.includes("pending")) return <h3>Loading...</h3>;
 

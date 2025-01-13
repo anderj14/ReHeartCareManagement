@@ -17,12 +17,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class CardiacCatheterizationStudyController : BaseApiController
+    public class CardiacCatheterizationStudiesController : BaseApiController
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CardiacCatheterizationStudyController(
+        public CardiacCatheterizationStudiesController(
             IUnitOfWork unitOfWork,
             IMapper mapper, UserManager<AppUser> userManager) : base(userManager)
         {
@@ -83,7 +83,6 @@ namespace API.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-
         }
 
         // Retrieves a specific cardiac catheterization study by patient ID and study ID
@@ -131,7 +130,14 @@ namespace API.Controllers
                 if (user == null)
                     return Unauthorized(new ApiResponse(401, "User not found"));
 
-                var newCardiacCathStudy = _mapper.Map<CardiacCathStudyCreateDto, CardiacCatheterizationStudy>(cardiacCathStudyCreateDto);
+                var patient = await _unitOfWork.Repository<Patient>().GetByIdAsync(cardiacCathStudyCreateDto.PatientId);
+                if (patient == null || patient.AppUserId != user.Id)
+                {
+                    return NotFound(new ApiResponse(404, "Patient not found or not authorized"));
+                }
+
+                var newCardiacCathStudy = _mapper.Map<CardiacCatheterizationStudy>(cardiacCathStudyCreateDto);
+                cardiacCathStudyCreateDto.PatientId = patient.Id;
 
                 _unitOfWork.Repository<CardiacCatheterizationStudy>().Add(newCardiacCathStudy);
 
@@ -139,9 +145,11 @@ namespace API.Controllers
 
                 if (result <= 0) return BadRequest(new ApiResponse(400, "Problem creating cardiac catheterization study"));
 
+                var createCardiacCathStudyDto = _mapper.Map<CardiacCatheterizationStudyDto>(newCardiacCathStudy);               
+                
                 return CreatedAtAction(
                     nameof(GetCardiacCathStudyIdByPatientId),
-                    new { patientId = newCardiacCathStudy.PatientId, id = newCardiacCathStudy.Id },
+                    new { patientId = newCardiacCathStudy.PatientId, cardiacCathStudyId = newCardiacCathStudy.Id },
                     cardiacCathStudyCreateDto
                     );
             }
@@ -152,7 +160,7 @@ namespace API.Controllers
         }
 
         // Updates an existing cardiac catheterization study
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize]
         public async Task<ActionResult<CardiacCatheterizationStudy>> UpdateCardiacCathStudy(int id, CardiacCathStudyCreateDto cardiacCathStudyCreateDto)
         {
