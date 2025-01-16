@@ -159,9 +159,13 @@ const Note = {
 
 const BloodTest = {
   listByPatientId: (params: URLSearchParams, patientId: number) =>
-    requests.get(`bloodtest/patient/${patientId}/bloodtests`, params),
+    requests.get(`bloodtests/patient/${patientId}/bloodtests`, params),
   detailsByPatientId: (patientId: number, bloodTestId: number) =>
-    requests.get(`bloodtest/patient/${patientId}/bloodtests/${bloodTestId}`),
+    requests.get(`bloodtests/patient/${patientId}/bloodtests/${bloodTestId}`),
+  createBloodTest: (bloodTest: any) => requests.postForm("bloodtests", createFormData(bloodTest)),
+  updateBloodTest: (id: number, bloodTest: any) =>
+    requests.putForm(`bloodtests/${id}`, createFormData(bloodTest)),
+  deleteBloodTest: (id: number) => requests.delete(`bloodtests/${id}`)
 };
 
 const CardiacCathStudy = {

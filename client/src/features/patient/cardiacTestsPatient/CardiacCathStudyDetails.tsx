@@ -73,7 +73,6 @@ export default function CardiacCathStudyDetails() {
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
             <Box sx={{ margin: '30px 0px 30px 30px' }}>
-
                 <Card sx={{ maxWidth: '900px' }}>
                     <CardContent sx={{backgroundImage: 'linear-gradient(#a7d7c5, #fff)', padding: '30px'}}>
                         <Typography gutterBottom variant="h5">

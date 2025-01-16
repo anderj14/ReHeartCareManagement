@@ -1,16 +1,20 @@
-import { Card, CardContent, Box, Typography, Button, CardActions, Paper, TableContainer, Table, TableHead, TableCell, TableRow, TableBody, capitalize } from '@mui/material';
-import { useEffect } from 'react'
-import { useParams } from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import Breadcrumb from '../../../app/components/Breadcrumb';
+import { Card, CardContent, Box, Typography, CardActions, TableContainer, Table, TableHead, TableCell, TableRow, TableBody, Tooltip, Drawer } from '@mui/material';
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/store/configureStore';
-import { bloodTestSelectors, fetchBloodTestByPatientAsync } from './bloodTestSlice';
+import { bloodTestSelectors, fetchBloodTestByPatientAsync, removeBloodTest } from './bloodTestSlice';
 import NotFound from '../../../app/errors/NotFound';
-import { patientSelectors } from '../patientSlice';
 import formatDateTime from '../../../app/components/formatDateTime';
 import '../../../app/styles/main.scss';
 import CustomButton from '../../../app/components/CustomButton';
+import Subtitle from '../../../app/components/Subtitle';
+import { LuPenLine } from 'react-icons/lu';
+import { MdOutlineDelete } from 'react-icons/md';
+import { RiCheckboxCircleLine, RiErrorWarningLine } from 'react-icons/ri';
+import { BiDonateBlood } from "react-icons/bi";
+import { BloodTest } from '../../../app/Models/bloodTest';
+import BloodTestForm from './BloodTestForm';
+import agent from '../../../app/api/agent';
 
 
 export default function BloodTestDetails() {
@@ -23,14 +27,21 @@ export default function BloodTestDetails() {
     const bloodTestByPatient = useAppSelector((state) =>
         bloodTestIdNumber ? bloodTestSelectors.selectById(state, bloodTestIdNumber) : undefined
     );
-    const patient = useAppSelector(state => patientSelectors.selectById(state, patientIdNumber));
+    const [selectedBloodTest, setSelectedBloodTest] = useState<BloodTest | undefined>(undefined);
+    const [editMode, setEditMode] = useState(false);
+    const [target, setTarget] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (patientIdNumber && bloodTestIdNumber && !bloodTestByPatient) {
-            dispatch(fetchBloodTestByPatientAsync({ patientId: patientIdNumber, bloodTestId: bloodTestIdNumber }));
+        const fetchBloodTestByPatientId = async () => {
+            if (patientIdNumber !== undefined && bloodTestIdNumber !== undefined && !bloodTestByPatient) {
+                dispatch(fetchBloodTestByPatientAsync({ patientId: patientIdNumber, bloodTestId: bloodTestIdNumber }));
+            }
         }
-    }, [dispatch, patientIdNumber, bloodTestIdNumber, bloodTestByPatient]);
 
+        fetchBloodTestByPatientId();
+      
+    }, [dispatch, patientIdNumber, bloodTestIdNumber, bloodTestByPatient, bloodTestsByPatientStatus]);
 
     if (bloodTestsByPatientStatus.includes('pending')) return <h3>Loading...</h3>;
     if (!bloodTestByPatient) return <NotFound />;
@@ -41,200 +52,272 @@ export default function BloodTestDetails() {
       return 'Normal';
     }
 
+    const bloodTests = [
+        { name: "Hemoglobin", value: bloodTestByPatient?.hemoglobin, range: [13.8, 17.2], unit: "g/dL" },
+        { name: "Hematocrit", value: bloodTestByPatient?.hematocrit, range: [40.7, 50.3], unit: "%" },
+        { name: "White Blood Cell", value: bloodTestByPatient?.whiteBloodCell, range: [4500, 11000], unit: "cells/µL" },
+        { name: "Platelets", value: bloodTestByPatient?.platelets, range: [150000, 450000], unit: "cells/µL" },
+        { name: "Glucose", value: bloodTestByPatient?.glucose, range: [70, 99], unit: "mg/dL" },
+        { name: "Cholesterol HDL", value: bloodTestByPatient?.cholesterolHDL, range: [40, Infinity], unit: "mg/dL" },
+        { name: "Cholesterol LDL", value: bloodTestByPatient?.cholesterolLDL, range: [0, 100], unit: "mg/dL" },
+        { name: "Triglycerides", value: bloodTestByPatient?.triglycerides, range: [0, 150], unit: "mg/dL" },
+        { name: "Red Blood Cell", value: bloodTestByPatient?.redBloodCell, range: [4.7, 6.1], unit: "million/uL" },
+        { name: "Mean Corpuscular Volume", value: bloodTestByPatient?.meanCorpuscularVolume, range: [80, 100], unit: "fL" },
+        { name: "Mean Corpuscular Hemoglobin", value: bloodTestByPatient?.meanCorpuscularHemoglobin, range: [27, 33], unit: "pg" },
+        { name: "Mean Corpuscular Hemoglobin Concentration", value: bloodTestByPatient?.meanCorpuscularHemoglobinConcentration, range: [32, 36], unit: "g/dL" },
+        { name: "Red Cell Distribution Width", value: bloodTestByPatient?.redCellDistributionWidth, range: [11.5, 14.5], unit: "%" },
+        { name: "Blood Urea Nitrogen", value: bloodTestByPatient?.bloodUreaNitrogen, range: [6, 20], unit: "mg/dL" },
+        { name: "Creatinine", value: bloodTestByPatient?.creatinine, range: [0.7, 1.3], unit: "mg/dL" },
+        { name: "Sodium", value: bloodTestByPatient?.sodium, range: [135, 145], unit: "mEq/L" },
+        { name: "Potassium", value: bloodTestByPatient?.potassium, range: [3.5, 5.0], unit: "mEq/L" },
+        { name: "Chloride", value: bloodTestByPatient?.chloride, range: [96, 106], unit: "mEq/L" },
+        { name: "Bicarbonate", value: bloodTestByPatient?.bicarbonate, range: [22, 29], unit: "mEq/L" },
+        { name: "Calcium", value: bloodTestByPatient?.calcium, range: [8.6, 10.2], unit: "mg/dL" },
+        { name: "Magnesium", value: bloodTestByPatient?.magnesium, range: [1.7, 2.2], unit: "mg/dL" },
+      ];
+      const differentials =[
+        { name: "Neutrophils", value: bloodTestByPatient?.neutrophils, range: [40, 60], unit: "%" },
+        { name: "Lymphocytes", value: bloodTestByPatient?.lymphocytes, range: [20, 40], unit: "%" },
+        { name: "Monocytes", value: bloodTestByPatient?.monocytes, range: [2, 8], unit: "%" },
+        { name: "Eosinophils", value: bloodTestByPatient?.eosinophils, range: [1, 4], unit: "%" },
+        { name: "Basophils", value: bloodTestByPatient?.basophils, range: [0, 1], unit: "%" },
+      ]
+      
+    const getBackgroundColor = (value: any, min: any, max: any) => {
+        if (value <= min) return "#ffe6cc";
+        if (value >= max) return "#ffcccc";
+    };
+
+    const getColor = (value: any, min: any, max: any) => {
+        if (value <= min) return "#DE8B3D";
+        if (value >= max) return "#fc4545";
+        return "#37A349"
+    };
+    const getIcon = (value: any, min: any, max: any) => {
+        if (value <= min) return <RiErrorWarningLine color="#DE8B3D" />;
+        if (value >= max) return <RiErrorWarningLine color="#fc4545" />;
+        return <RiCheckboxCircleLine color="#37A349" />;
+    };
+      
+    const getTooltipText = (value: any, min: any, max: any) => {
+        if (value <= min) return "Low: Intervention required.";
+        if (value >= max) return "High: Intervention required.";
+        return "Low: No intervention required.";
+    };
+
+    const getAbnormalResults = (tests: any) => {
+        return tests.filter((test: any) => {
+          const value = test.value || 0;
+          const [min, max] = test.range;
+          return value <= min || value >= max;
+        });
+    };
+
+    const abnormalResults = getAbnormalResults(bloodTests);
+    const abnormalDifferential = getAbnormalResults(differentials);
+
+    const handleEditClick = () => {
+        if(bloodTestByPatient) {
+            setSelectedBloodTest(bloodTestByPatient);
+            setEditMode(true);
+        }
+    }
+
+    const toggleDrawer = () => {
+        setEditMode(false);
+    }
+
+    function handleDeleteBloodTest(id: number) {
+        setTarget(id);
+        agent.BloodTest.deleteBloodTest(id)
+        .then(() => {
+            dispatch(removeBloodTest(id));
+            navigate(`/bloodtests/patient/${patientIdNumber}/bloodtests`);
+        })
+        .catch(error => console.log(error));
+
+    }
+
     return (
-      <Box sx={{ margin: '30px 0px 30px 30px' }}>
-        <Breadcrumb page="Blood Tests" />
-        <Card sx={{ maxWidth: 745, padding: '20px' }}>
-          <CardContent>
-            <Box>
-              <Typography gutterBottom variant="h5" key={patient?.id}>
-                  {patient?.patientName}
-              </Typography>
-              <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                  Blood Test | {formatDateTime(bloodTestByPatient.date)}
-              </Typography>
-            </Box>
-            <TableContainer component={Paper} sx={{marginTop: '20px'}}>
-              <Table>
-                <TableHead>
-                <TableRow>
-                  <TableCell sx={{color: '#71717a'}}>Test</TableCell>
-                  <TableCell sx={{color: '#71717a'}} align="right">Result</TableCell>
-                  <TableCell sx={{color: '#71717a'}} align="right">Reference Range</TableCell>
-                  <TableCell sx={{color: '#71717a'}} align="right">Status</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody sx={{fontSize: '28px'}}>
-                  <TableRow>
-                    <TableCell sx={{fontWeight: '500'}}>Hemoglobin</TableCell>
-                    <TableCell align="right">{bloodTestByPatient?.hemoglobin}</TableCell>
-                    <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}> 13.8 - 17.2 <Typography variant='body2' sx={{textTransform: 'none'}}> g/dL</Typography></TableCell>
-                    <TableCell align="right">{getStatus(bloodTestByPatient?.hemoglobin, 13.8, 17.2)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Hematocrit</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.hematocrit}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>40.7 - 50.3 <Typography variant='body2' sx={{textTransform: 'none'}}>%</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.hematocrit, 40.7, 50.3)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>White Blood Cell</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.whiteBloodCell}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>4500 - 11000 <Typography variant='body2' sx={{textTransform: 'none'}}>cells/µL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.whiteBloodCell, 4500, 11000)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Platelets</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.platelets}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>150000 - 450000 <Typography variant='body2' sx={{textTransform: 'none'}}>cells/µL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.platelets, 150000, 450000)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Glucose</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.glucose}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>70 - 99 <Typography variant='body2' sx={{textTransform: 'none'}}>mg/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.glucose, 70, 99)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Cholesterol HDL</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.cholesterolHDL}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>&gt; 40 <Typography variant='body2' sx={{textTransform: 'none'}}>mg/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.cholesterolHDL, 40, Infinity)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Cholesterol LDL</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.cholesterolLDL}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>&lt; 100 <Typography variant='body2' sx={{textTransform: 'none'}}>mg/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.cholesterolLDL, 0, 100)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Triglycerides</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.triglycerides}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>&lt; 150 <Typography variant='body2' sx={{textTransform: 'none'}}>mg/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.triglycerides, 0, 150)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Red Blood Cell</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.redBloodCell}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>4.7 - 6.1 <Typography variant='body2' sx={{textTransform: 'none'}}>million/uL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.redBloodCell, 4.7, 6.1)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Mean Corpuscular Volume</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.meanCorpuscularVolume}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>80 - 100 <Typography variant='body2' sx={{textTransform: 'none'}}>fL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.meanCorpuscularVolume, 80, 100)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Mean Corpuscular Hemoglobin</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.meanCorpuscularHemoglobin}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>27 - 33 <Typography variant='body2' sx={{textTransform: 'none'}}>pg</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.meanCorpuscularHemoglobin, 27, 33)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Mean Corpuscular Hemoglobin Concentration</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.meanCorpuscularHemoglobinConcentration}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>32 - 36 <Typography variant='body2' sx={{textTransform: 'none'}}>g/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.meanCorpuscularHemoglobinConcentration, 32, 36)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Red Cell Distribution Width</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.redCellDistributionWidth}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>11.5 - 14.5 <Typography variant='body2' sx={{textTransform: 'none'}}>%</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.redCellDistributionWidth, 11.5, 14.5)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Blood Urea Nitrogen</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.bloodUreaNitrogen}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>6 - 20 <Typography variant='body2' sx={{textTransform: 'none'}}>mg/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.bloodUreaNitrogen, 6, 20)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Creatinine</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.creatinine}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>0.7 - 1.3 <Typography variant='body2' sx={{textTransform: 'none'}}>mg/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.creatinine, 0.7, 1.3)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Sodium</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.sodium}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>135 - 145 <Typography variant='body2' sx={{textTransform: 'none'}}>mEq/L</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.sodium, 135, 145)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Potassium</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.potassium}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>3.5 - 5.0 <Typography variant='body2' sx={{textTransform: 'none'}}>mEq/L</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.potassium, 3.5, 5.0)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Chloride</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.chloride}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>96 - 106 <Typography variant='body2' sx={{textTransform: 'none'}}>mEq/L</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.chloride, 96, 106)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Bicarbonate</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.bicarbonate}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>22 - 29 <Typography variant='body2' sx={{textTransform: 'none'}}>mEq/L</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.bicarbonate, 22, 29)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Calcium</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.calcium}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>8.6 - 10.2 <Typography variant='body2' sx={{textTransform: 'none'}}>mg/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.calcium, 8.6, 10.2)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Magnesium</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.magnesium}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>1.7 - 2.2 <Typography variant='body2' sx={{textTransform: 'none'}}>mg/dL</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.magnesium, 1.7, 2.2)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Neutrophils</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.neutrophils}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>40 - 60 <Typography variant='body2' sx={{textTransform: 'none'}}>%</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.neutrophils, 40, 60)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Lymphocytes</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.lymphocytes}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>20 - 40 <Typography variant='body2' sx={{textTransform: 'none'}}>%</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.lymphocytes, 20, 40)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Monocytes</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.monocytes}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>2 - 8 <Typography variant='body2' sx={{textTransform: 'none'}}>%</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.monocytes, 2, 8)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Eosinophils</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.eosinophils}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>1 - 4 <Typography variant='body2' sx={{textTransform: 'none'}}>%</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.eosinophils, 1, 4)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell sx={{fontWeight: '500'}}>Basophils</TableCell>
-                      <TableCell align="right">{bloodTestByPatient?.basophils}</TableCell>
-                      <TableCell sx={{display: 'flex', flexDirection: 'row', justifyContent: 'end', gap: '5px'}}>&lt; 1 <Typography variant='body2' sx={{textTransform: 'none'}}>%</Typography></TableCell>
-                      <TableCell align="right">{getStatus(bloodTestByPatient?.basophils, 0, 1)}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-            
-          </CardContent>
-          <CardActions sx={{ marginLeft: '8px' }}>
-          <CustomButton icon={ModeEditIcon} color="#000" hoverColor="#f3f3f3" width='180px'>
-            Update Test Result
-          </CustomButton>
-          <CustomButton icon={DeleteIcon} color="#EF4444" hoverColor="#f3f3f3" hoverTextColor="#c93b3b"  width='180px'>
-            Delete Test Result
-          </CustomButton>
-          </CardActions>
-        </Card>
-      </Box >
+    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+        <Box sx={{margin: '30px 0px 30px 0px'}}>
+            <Card sx={{ width: '1000px'}}>
+            <CardContent sx={{backgroundImage: 'linear-gradient(#a7d7c5, #fff)', padding: '30px'}}>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Box>
+                        <Typography gutterBottom variant="h5">
+                            {bloodTestByPatient?.patient}
+                        </Typography>
+                        <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
+                            Blood Test | {formatDateTime(bloodTestByPatient.date)}
+                        </Typography>
+                    </Box>
+                    <Box sx={{fontSize: '55px', color: '#EF4444'}}>
+                        <BiDonateBlood />
+                    </Box>
+                </Box>
+                {(abnormalResults.length > 0 || abnormalDifferential.length > 0) && (
+                    <Box sx={{backgroundColor: '#FEFCE8', border: '1px solid #FEFBEB', borderRadius: '4px', padding: '15px', marginTop: '10px'}}>
+                        <Typography variant="h6" sx={{ fontWeight: "bold", color: "#92400D", marginBottom: 2 }}>
+                            Attention Required
+                        </Typography>
+                        {abnormalResults.map((test: any, index: any) => (
+                            <Typography key={index} variant="body2" sx={{color: '#B45308'}}>
+                            {test.name}: {test.value} {test.unit} ({test.value < test.range[0] ? "Low" : "High"})
+                            </Typography>
+                        ))}
+                        {abnormalDifferential.map((test: any, index: any) => (
+                            <Typography key={index} variant="body2" sx={{color: '#B45308'}}>
+                            {test.name}: {test.value} {test.unit} ({test.value < test.range[0] ? "Low" : "High"})
+                            </Typography>
+                        ))}
+                    </Box>
+                )}
+            </CardContent>
+            <CardContent sx={{marginTop: '-30px'}}>
+                <TableContainer>
+                    <Box>
+                        <Subtitle subtitle={"Blood Test"} />
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                <TableCell sx={{color: '#71717a'}}>Test</TableCell>
+                                <TableCell sx={{color: '#71717a'}} align="right">Result</TableCell>
+                                <TableCell sx={{color: '#71717a'}} align="right">Reference Range</TableCell>
+                                <TableCell sx={{color: '#71717a'}} align="right">Status</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody sx={{fontSize: '28px'}}>
+                                {bloodTests.map((test, index) => (
+                                    <TableRow
+                                    key={index}
+                                    sx={{
+                                        backgroundColor: getBackgroundColor(test.value, test.range[0], test.range[1]),
+                                    }}
+                                    >
+                                        <TableCell sx={{ fontWeight: "500" }}>{test.name}</TableCell>
+                                        <TableCell align="right">{test.value} <span>{test.unit}</span></TableCell>
+                                        <TableCell align="right">{test.range[0]} - {test.range[1]} <span>{test.unit}</span>
+                                        </TableCell>
+                                        <TableCell align="right" sx={{ color: getColor(test.value, test.range[0], test.range[1]) }}>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent: "flex-end",
+                                                    alignItems: "center",
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                <Tooltip title={getTooltipText(test.value, test.range[0], test.range[1])}>
+                                                <Box
+                                                    component="span"
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        lineHeight: 0,
+                                                    }}
+                                                >
+                                                    {getIcon(test.value, test.range[0], test.range[1])}
+                                                </Box>
+                                                </Tooltip>
+                                                <span>{getStatus(test.value, test.range[0], test.range[1])}</span>
+                                            </Box>
+                                        </TableCell>                                    
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Box>
+                    <Box sx={{marginTop: '30px'}}>
+                        <Subtitle subtitle={"Differential"} />
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                <TableCell sx={{color: '#71717a'}}>Test</TableCell>
+                                <TableCell sx={{color: '#71717a'}} align="right">Result</TableCell>
+                                <TableCell sx={{color: '#71717a'}} align="right">Reference Range</TableCell>
+                                <TableCell sx={{color: '#71717a'}} align="right">Status</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody sx={{fontSize: '28px'}}>
+                                {differentials.map((test, index) => (
+                                    <TableRow
+                                    key={index}
+                                    sx={{
+                                        backgroundColor: getBackgroundColor(test.value, test.range[0], test.range[1]),
+                                    }}
+                                    >
+                                        <TableCell sx={{ fontWeight: "500" }}>{test.name}</TableCell>
+                                        <TableCell align="right">{test.value} <span>{test.unit}</span></TableCell>
+                                        <TableCell align="right">{test.range[0]} - {test.range[1]} <span>{test.unit}</span>
+                                        </TableCell>
+                                        <TableCell align="right" sx={{ color: getColor(test.value, test.range[0], test.range[1]) }}>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent: "flex-end",
+                                                    alignItems: "center",
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                <Tooltip title={getTooltipText(test.value, test.range[0], test.range[1])}>
+                                                <Box
+                                                    component="span"
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        lineHeight: 0,
+                                                    }}
+                                                >
+                                                    {getIcon(test.value, test.range[0], test.range[1])}
+                                                </Box>
+                                                </Tooltip>
+                                                <span>{getStatus(test.value, test.range[0], test.range[1])}</span>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Box>
+                </TableContainer>
+            </CardContent>
+            <CardActions sx={{marginTop: '20px' }}>
+                <CustomButton
+                    icon={LuPenLine}
+                    color="#fff"
+                    width="130px"
+                    bg="#2377cb"
+                    borderColor="transparent"
+                    hoverColor="#1261a2"
+                    onClick={handleEditClick}
+                >
+                    Update
+                </CustomButton>
+                <CustomButton
+                    icon={MdOutlineDelete}
+                    color="#dc3737"
+                    width="130px"
+                    bg="transparent"
+                    borderColor="#dc3737"
+                    hoverColor="transparent"
+                    onClick={() => handleDeleteBloodTest(bloodTestByPatient!.id)}
+                >
+                    Delete
+                </CustomButton>
+            </CardActions>
+            <Drawer anchor='right' open={editMode} onClose={toggleDrawer}>
+                <Box sx={{width: 600, p:2}}>
+                    <BloodTestForm 
+                        test={selectedBloodTest}
+                        cancelEdit={toggleDrawer}
+                        title={'Editing Blood Test'}
+                        patientId={patientIdNumber}
+                    />
+                </Box>
+            </Drawer>
+            </Card>
+        </Box >
+      </Box>
     )
 }

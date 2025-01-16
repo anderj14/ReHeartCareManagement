@@ -69,7 +69,7 @@ function initParams() {
   return {
     pageIndex: 1,
     pageSize: 8,
-    sort: "PatientName",
+    sort: "patientName",
   };
 }
 
@@ -88,6 +88,10 @@ export const bloodTestSlice = createSlice({
       state.bloodTestByPatientLoaded = false;
       state.bloodTestParams = { ...state.bloodTestParams, ...action.payload };
     },
+    setBloodTest: (state, action) => {
+      bloodTestsAdapter.upsertOne(state, action.payload);
+      state.bloodTestByPatientLoaded = false;
+    },
     setPageIndex: (state, action) => {
       state.bloodTestByPatientLoaded = false;
       state.bloodTestParams = { ...state.bloodTestParams, ...action.payload };
@@ -97,6 +101,11 @@ export const bloodTestSlice = createSlice({
     },
     resetBloodTestParams: (state) => {
       state.bloodTestParams = initParams();
+    },
+    removeBloodTest: (state, action) => {
+      const { bloodTestId } = action.payload;
+      bloodTestsAdapter.removeOne(state, bloodTestId!);
+      state.bloodTestByPatientLoaded = false;
     },
   },
   extraReducers: (builder) => {
@@ -134,9 +143,11 @@ export const bloodTestSlice = createSlice({
 
 export const {
   setBloodTestParams,
+  setBloodTest,
   resetBloodTestParams,
   setMetaData,
   setPageIndex,
+  removeBloodTest,
 } = bloodTestSlice.actions;
 
 export const bloodTestSelectors = bloodTestsAdapter.getSelectors(

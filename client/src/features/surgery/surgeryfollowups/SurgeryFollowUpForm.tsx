@@ -35,7 +35,7 @@ export default function SurgeryFollowUpForm({ followUp, cancelEdit, title, surge
         }
 
     }, [followUp, reset, isDirty]);
-
+ 
     async function handleSubmitData(data: FieldValues) {
         try {
             let response: SurgeryFollowUp;
