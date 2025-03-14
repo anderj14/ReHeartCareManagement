@@ -1,4 +1,3 @@
-// agent.js
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { store } from "../store/configureStore";
@@ -200,7 +199,7 @@ const Electrocardiogram = {
 
 const Echocardiogram = {
   listByPatientId: (params: URLSearchParams, patientId: number) =>
-    requests.get(`echocardiogram/patient/${patientId}/echocardiograms`),
+    requests.get(`echocardiogram/patient/${patientId}/echocardiograms`, params),
   detailsByPatientId: (patientId: number, echocardiogramId: number) =>
     requests.get(
       `echocardiogram/patient/${patientId}/echocardiograms/${echocardiogramId}`
@@ -209,12 +208,49 @@ const Echocardiogram = {
 
 const HolterStudy = {
   listByPatientId: (params: URLSearchParams, patientId: number) =>
-    requests.get(`holterstudy/patient/${patientId}/holterstudies`),
+    requests.get(`holterstudy/patient/${patientId}/holterstudies`, params),
   detailsByPatientId: (patientId: number, holterStudyId: number) =>
     requests.get(
       `HolterStudy/patient/${patientId}/holterStudies/${holterStudyId}`
     ),
+  createHolterStudy: (holterStudy: any) =>
+    requests.postForm("holterstudy", createFormData(holterStudy)),
+  updateHolterStudy: (id: number, holterStudy: any) =>
+    requests.putForm(`holterstudy/${id}`, createFormData(holterStudy)),
+  deleteHolterStudy: (id: number) => requests.delete(`holterstudy/${id}`)
 };
+
+const AdditionalTestResult = {
+  createAdditionalTestResult: (additionalTestResult: any) =>
+    requests.postForm("AdditionalTestResult", createFormData(additionalTestResult)),
+  updateAdditionalTestResult: (id: number, additionalTestResult: any) =>
+    requests.putForm(`AdditionalTestResult/${id}`, createFormData(additionalTestResult)),
+  deleteAdditionalTestResult: (id: number) => requests.delete(`AdditionalTestResult/${id}`)
+}
+
+const PatientSymptom = {
+  createPatientSymptom: (patientSymptom: any) =>
+    requests.postForm("patientsymptom", createFormData(patientSymptom)),
+  updatePatientSymptom: (id: number, patientSymptom: any) =>
+    requests.putForm(`patientsymptom/${id}`, createFormData(patientSymptom)),
+  deletePatientSymptom: (id: number) => requests.delete(`patientsymptom/${id}`)
+}
+
+const ClinicalEvaluation = {
+  createClinicalEvaluation: (clinicalEvaluation: any) =>
+    requests.postForm("clinicalevaluation", createFormData(clinicalEvaluation)),
+  updateClinicalEvaluation: (id: number, clinicalEvaluation: any) =>
+    requests.putForm(`clinicalevaluation/${id}`, createFormData(clinicalEvaluation)),
+  deleteClinicalEvaluation: (id: number) => requests.delete(`clinicalevaluation/${id}`)
+}
+
+const MedicationAdministration = {
+  createMedicationAdministration: (medicationAdministration: any) =>
+    requests.postForm("medicationadministration", createFormData(medicationAdministration)),
+  updateMedicationAdministration: (id: number, medicationAdministration: any) =>
+    requests.putForm(`medicationadministration/${id}`, createFormData(medicationAdministration)),
+  deleteMedicationAdministration: (id: number) => requests.delete(`medicationadministration/${id}`)
+}
 
 const PhysicalExamination = {
   listByPatientId: (params: URLSearchParams, patientId: number) =>
@@ -251,6 +287,14 @@ const MedicalHistory = {
       `medicalhistory/patient/${patientId}/medicalhistories/${medicalHistoryId}`
     ),
 };
+
+const ArrhythmiaEvent = {
+  createArrhythmiaEvent: (arrhythmiaEvent: any) =>
+    requests.postForm("arrhythmiaevents", createFormData(arrhythmiaEvent)),
+  updateArrhythmiaEvent: (id: number, arrhythmiaEvent: any) =>
+    requests.putForm(`arrhythmiaevents/${id}`, createFormData(arrhythmiaEvent)),
+  deleteArrhythmiaEvent: (id: number) => requests.delete(`arrhythmiaevents/${id}`)
+}
 
 const Diagnostic = {
   listByPatientId: (params: URLSearchParams, patientId: number) =>
@@ -305,9 +349,14 @@ const agent = {
   Electrocardiogram,
   Echocardiogram,
   HolterStudy,
+  AdditionalTestResult,
+  ClinicalEvaluation,
+  PatientSymptom,
+  MedicationAdministration,
   PhysicalExamination,
   DiseaseHistory,
   MedicalHistory,
+  ArrhythmiaEvent,
   Diagnostic,
   Treatment,
   Appointment,

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { HolterStudy } from "../../../app/Models/holterStudy";
 import { useAppSelector } from "../../../app/store/configureStore";
 import { patientSelectors } from "../patientSlice";

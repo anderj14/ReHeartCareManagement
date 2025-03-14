@@ -1,14 +1,26 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/configureStore";
-import { fetchHolterStudyByPatientAsync, holterStudySelectors } from "./holterStudySlice";
-import { useEffect } from "react";
+import { fetchHolterStudyByPatientAsync, holterStudySelectors, removeHolterStudy } from "./holterStudySlice";
+import { useEffect, useState } from "react";
 import NotFound from "../../../app/errors/NotFound";
-import { Box, Card, CardContent, Typography, CardActions, Button, Accordion, AccordionDetails, AccordionSummary, Divider } from "@mui/material";
-import Breadcrumb from "../../../app/components/Breadcrumb";
-import DeleteIcon from '@mui/icons-material/Delete';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box, Card, CardContent, Typography, CardActions, Grid, Drawer } from "@mui/material";
 import formatDateTime from "../../../app/components/formatDateTime";
+import { timeDisplay } from "../../../app/components/timeDisplay";
+import { CiCalendar, CiHeart, CiUser } from "react-icons/ci";
+import { IoMdTime } from "react-icons/io";
+import { MdOutlineDelete, MdOutlineTimer } from "react-icons/md";
+import { LuActivity, LuHeartPulse, LuPenLine } from "react-icons/lu";
+import Title from "../../../app/components/Title";
+import { HolterStudy } from "../../../app/Models/holterStudy";
+import CustomButton from "../../../app/components/CustomButton";
+import HolterStudyForm from "./HolterStudyform";
+import '../../../app/styles/holter.scss';
+import AdditionalTestResults from "./additionalTestResults/AdditionalTestResult";
+import agent from "../../../app/api/agent";
+import ClinicalEvaluations from "./clinicalEvaluation/ClinicalEvaluations";
+import PatientSymptoms from "./patientSymptoms/PatientSymptoms";
+import MedicationAdministrations from "./medicationAdministration/MedicationAdministrations";
+import ArrhythmiaEvents from "./arrhythmiaEvents/ArrhythmiaEvents";
 
 export default function HolterStudyDetails() {
 
@@ -21,6 +33,28 @@ export default function HolterStudyDetails() {
     const holterStudyByPatient = useAppSelector((state) =>
         holterStudyIdNumber ? holterStudySelectors.selectById(state, holterStudyIdNumber) : undefined
     );
+    const [selectedHolterStudy, setSelectedHolterStudy] = useState<HolterStudy | undefined>(undefined);
+    const [editMode, setEditMode] = useState(false);
+    const navigate = useNavigate();
+
+    const handleEditClick = () => {
+        if(holterStudyByPatient) {
+            setSelectedHolterStudy(holterStudyByPatient);
+            setEditMode(true);
+        }
+    }
+
+    const toggleDrawer = () => {
+        setEditMode(false);
+    };
+
+    function handleDeleteHolterStudy(id: number) {
+        agent.HolterStudy.deleteHolterStudy(id).then(() => {
+            dispatch(removeHolterStudy(id));
+            navigate(`/holterstudy/patient/${patientIdNumber}/holterstudies`);
+        })
+        .catch(error => console.log(error));
+    }
 
     useEffect(() => {
         const fetchHolterStudyByPatientId = async () => {
@@ -36,271 +70,170 @@ export default function HolterStudyDetails() {
     if (!holterStudyByPatient) return <NotFound />;
 
     return (
-        <Box sx={{ margin: '30px 0px 0px 30px' }}>
-            <Breadcrumb page="Holter Studies" />
-
-            <Card sx={{ maxWidth: 745, padding: '20px' }}>
-                <CardContent>
-                    <Box>
-                        <Typography gutterBottom variant="h5">
-                            {holterStudyByPatient?.patient}
-                        </Typography>
-                        <Typography sx={{ marginTop: '-10px' }} gutterBottom variant='body1' color="text.secondary">
-                            Holter Study | {formatDateTime(holterStudyByPatient.date)} | {holterStudyByPatient.time}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Study Duration
-                                </Typography>
-                                <Typography>
-                                    {holterStudyByPatient?.studyDuration}
-                                </Typography>
-                            </Box>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Average Heart Rate Bpm
-                                </Typography>
-                                <Typography>
-                                    {holterStudyByPatient?.averageHeartRate} Bpm
-                                </Typography>
-                            </Box>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Maximum Heart Rate
-                                </Typography>
-                                <Typography>
-                                    {holterStudyByPatient?.maximumHeartRate} Bpm
-                                </Typography>
-                            </Box>
-                        </Box>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Type of Heart Rhythm
-                                </Typography>
-                                <Typography>
-                                    {holterStudyByPatient?.typeHeartRhythm}
-                                </Typography>
-                            </Box>
-                            <Box>
-                                <Typography variant="body1" color="text.secondary">
-                                    Physical Activity
-                                </Typography>
-                                <Typography>
-                                    {holterStudyByPatient?.physicalActivity}
-                                </Typography>
-                            </Box>
-                        </Box>
+        <Grid container justifyContent="center">
+            <Grid item xs={12} sm={10} md={9} lg={9}>
+                <Card sx={{ margin: 2 }}>
+                    <CardContent
+                    sx={{
+                        backgroundImage: 'linear-gradient(#a7d7c5, #fff)',
+                        padding: { xs: '20px', sm: '30px' },
+                    }}
+                    >
                         <Box>
-                            <Typography variant="body1" color="text.secondary">
-                                Conclusion
-                            </Typography>
-                            <Typography>
-                                {holterStudyByPatient?.conclusion}
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Box>
+                                    <Box
+                                        sx={{ display: 'flex', alignItems: 'center', gap: 1, fontWeight: 'bold' }}
+                                    >
+                                        <CiUser style={{ fontSize: "30px", strokeWidth: '0.7'}}/>
+                                        <Title title={holterStudyByPatient?.patient} weight="600"/>
+                                    </Box>
+                                    <Typography
+                                        sx={{ marginTop: '5px', fontSize: '18px' }}
+                                        gutterBottom
+                                        color="text.secondary"
+                                    >
+                                        Holter Study Report
+                                    </Typography>
+                                </Box>
+                                <LuHeartPulse style={{ fontSize: "55px", strokeWidth: '1.5', color: '#EF4444' }}/>
+                            </Box>
+
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px' }}>
+                                <Typography sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}  variant='body1' color="text.secondary">
+                                    <CiCalendar style={{ fontSize: '18px', strokeWidth: '1' }} />
+                                    {formatDateTime(holterStudyByPatient.date)}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                    <IoMdTime style={{ fontSize: '18px', strokeWidth: '1' }} />
+                                    <span>
+                                        {timeDisplay(holterStudyByPatient.date)}
+                                    </span>
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                    <MdOutlineTimer style={{ fontSize: '18px' }}/>
+                                    Study Duration:
+                                    <span>
+                                        {holterStudyByPatient?.studyDuration}
+                                    </span>
+                                </Typography>
+                            </Box>
+                            
                         </Box>
-                    </Box>
-                </CardContent>
-                <Divider sx={{ margin: '10px 0px 10px 0px' }} />
-                <CardContent sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <Accordion className="arryhmia-event">
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1-content"
-                                id="panel1-header"
-                            >
-                                Arrhythmia Events
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Box>
-                                    {holterStudyByPatient.arrhythmiaEvents.length > 0 ? (
-                                        holterStudyByPatient.arrhythmiaEvents.map((a) => (
-                                            <Box sx={{ marginBottom: 2, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Type</Typography>
-                                                    <Typography>{a.type}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Duration</Typography>
-                                                    <Typography>{a.duration}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Heart Rate During Event</Typography>
-                                                    <Typography>{a.heartRateDuringEvent} Bpm</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Description</Typography>
-                                                    <Typography>{a.description}</Typography>
-                                                </Box>
-                                                <Divider />
-                                            </Box>
-
-                                        ))) : (
-                                        <Typography variant="body2" color="text.secondary">
-                                            No attachments available
-                                        </Typography>
-                                    )}
-                                </Box>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion className="medication-administrations">
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1-content"
-                                id="panel1-header"
-                            >
-                                Medication Administration
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Box>
-                                    {holterStudyByPatient.medicationAdministrations.length > 0 ? (
-                                        holterStudyByPatient.medicationAdministrations.map((a) => (
-                                            <Box sx={{ marginBottom: 2, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Medication Name</Typography>
-                                                    <Typography>{a.medicationName}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Administration Date</Typography>
-                                                    <Typography>{formatDateTime(a.administrationDateTime)}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Dosage</Typography>
-                                                    <Typography>{a.dosage}</Typography>
-                                                </Box>
-                                                <Divider />
-                                            </Box>
-
-                                        ))) : (
-                                        <Typography variant="body2" color="text.secondary">
-                                            No attachments available
-                                        </Typography>
-                                    )}
-                                </Box>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion className="patient-symptoms">
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1-content"
-                                id="panel1-header"
-                            >
-                                Symptoms
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Box>
-                                    {holterStudyByPatient.patientSymptoms.length > 0 ? (
-                                        holterStudyByPatient.patientSymptoms.map((a) => (
-                                            <Box sx={{ marginBottom: 2, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Symptom Name</Typography>
-                                                    <Typography>{a.symptomName}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Symptom Date</Typography>
-                                                    <Typography>{formatDateTime(a.symptomDateTime)}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Description</Typography>
-                                                    <Typography>{a.description}</Typography>
-                                                </Box>
-                                                <Divider />
-                                            </Box>
-
-                                        ))) : (
-                                        <Typography variant="body2" color="text.secondary">
-                                            No attachments available
-                                        </Typography>
-                                    )}
-                                </Box>
-                            </AccordionDetails>
-                        </Accordion>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <Accordion className="clinical-evaluations">
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1-content"
-                                id="panel1-header"
-                            >
-                                Clinical Evaluation
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Box>
-                                    {holterStudyByPatient.clinicalEvaluations.length > 0 ? (
-                                        holterStudyByPatient.clinicalEvaluations.map((a) => (
-                                            <Box sx={{ marginBottom: 2, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Evaluation Date</Typography>
-                                                    <Typography>{a.evaluationDateTime}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Findings</Typography>
-                                                    <Typography>{formatDateTime(a.findings)}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Recommendations</Typography>
-                                                    <Typography>{a.recommendations}</Typography>
-                                                </Box>
-                                                <Divider />
-                                            </Box>
-
-                                        ))) : (
-                                        <Typography variant="body2" color="text.secondary">
-                                            No attachments available
-                                        </Typography>
-                                    )}
-                                </Box>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion className="patient-symptoms">
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1-content"
-                                id="panel1-header"
-                            >
-                                Additional Test Results
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Box>
-                                    {holterStudyByPatient.additionalTestResults.length > 0 ? (
-                                        holterStudyByPatient.additionalTestResults.map((a) => (
-                                            <Box sx={{ marginBottom: 2, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Test Name</Typography>
-                                                    <Typography>{a.testName}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Test Date</Typography>
-                                                    <Typography>{formatDateTime(a.testDateTime)}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body1" color="text.secondary">Results</Typography>
-                                                    <Typography>{a.results}</Typography>
-                                                </Box>
-                                                <Divider />
-                                            </Box>
-
-                                        ))) : (
-                                        <Typography variant="body2" color="text.secondary">
-                                            No attachments available
-                                        </Typography>
-                                    )}
-                                </Box>
-                            </AccordionDetails>
-                        </Accordion>
-                    </Box>
-                </CardContent>
-                <CardActions sx={{ padding: '0px', marginTop: '10px' }}>
-                    <Button size="small" color="info"><ModeEditIcon sx={{ marginRight: '5px', }} />Edit</Button>
-                    <Button size="small" color="error"><DeleteIcon sx={{ marginRight: '5px' }} />Delete</Button>
-                </CardActions>
-            </Card>
-        </Box >
+                    </CardContent>
+                    <CardContent>
+                        <Box
+                            sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '20px',
+                            marginTop: '20px',
+                            }}
+                        >
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={4}>
+                                    <Card>
+                                        <CardContent sx={{ padding: '20px' }}>
+                                            <Typography variant="body1" color="text.secondary" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 0.5 }}>
+                                                Average Heart Rate
+                                                <CiHeart style={{ fontSize: "25px", color: '#EF4444' }}/>
+                                            </Typography>
+                                            <Typography sx={{fontSize: '18px'}}>
+                                                {holterStudyByPatient?.averageHeartRate} Bpm
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <Card>
+                                        <CardContent sx={{ padding: '20px' }}>
+                                            <Typography variant="body1" color="text.secondary" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 0.5 }}>
+                                                Maximum Heart Rate
+                                                <LuActivity style={{ fontSize: "20px", color: '#44C55E' }} />
+                                            </Typography>
+                                            <Typography sx={{fontSize: '18px'}}>
+                                                {holterStudyByPatient?.maximumHeartRate} Bpm
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <Card>
+                                        <CardContent sx={{ padding: '20px' }}>
+                                            <Typography variant="body1" color="text.secondary" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 0.5 }}>
+                                                Physical Activity
+                                                <LuActivity style={{ fontSize: "20px", color: '#A855F7' }} />
+                                            </Typography>
+                                            <Typography sx={{fontSize: '18px'}}>{holterStudyByPatient?.physicalActivity}</Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            </Grid>
+                            <Card variant="outlined" >
+                                <CardContent sx={{padding: '20px'}}>
+                                    <Typography sx={{fontWeight: '800', fontSize: '20px'}}>
+                                        Type of Heart Rhythm
+                                    </Typography>
+                                    <Typography sx={{ margin: '20px 0 20px 0'}}>
+                                        {holterStudyByPatient?.typeHeartRhythm}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                            <Card variant="outlined">
+                                <CardContent sx={{padding: '20px'}}>
+                                    <Typography sx={{fontWeight: '800', fontSize: '20px'}}>
+                                        Conclusion
+                                    </Typography>
+                                    <Typography sx={{ margin: '20px 0 20px 0'}}>
+                                        {holterStudyByPatient?.conclusion}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Box>
+                    </CardContent>
+                    
+                    <ArrhythmiaEvents holterStudyByPatient={holterStudyByPatient} holterStudyId={holterStudyIdNumber}/>
+                    <MedicationAdministrations holterStudyByPatient={holterStudyByPatient} holterStudyId={holterStudyIdNumber}/>
+                    <PatientSymptoms holterStudyByPatient={holterStudyByPatient} holterStudyId={holterStudyIdNumber}/>
+                    <ClinicalEvaluations holterStudyByPatient={holterStudyByPatient} holterStudyId={holterStudyIdNumber}/>
+                    <AdditionalTestResults holterStudyByPatient={holterStudyByPatient} holterStudyId={holterStudyIdNumber}/>
+               
+                    <CardActions sx={{marginTop: '20px' }}>
+                        <CustomButton
+                            icon={LuPenLine}
+                            color="#fff"
+                            width="130px"
+                            bg="#2377cb"
+                            borderColor="transparent"
+                            hoverColor="#1261a2"
+                            onClick={handleEditClick}
+                        >
+                            Update
+                        </CustomButton>
+                        <CustomButton
+                            icon={MdOutlineDelete}
+                            color="#dc3737"
+                            width="130px"
+                            bg="transparent"
+                            borderColor="#dc3737"
+                            hoverColor="transparent"
+                            onClick={() => handleDeleteHolterStudy(holterStudyByPatient!.id)}
+                        >
+                            Delete
+                        </CustomButton>
+                    </CardActions>
+                    <Drawer anchor='right' open={editMode} onClose={toggleDrawer}>
+                        <Box sx={{width: 600, p:2}}>
+                            <HolterStudyForm 
+                                study={selectedHolterStudy}
+                                cancelEdit={toggleDrawer}
+                                title={'Editing Holter Study'}
+                                patientId={patientIdNumber}
+                            />
+                        </Box>
+                    </Drawer>
+                </Card>
+            </Grid >
+        </Grid>
     )
 }

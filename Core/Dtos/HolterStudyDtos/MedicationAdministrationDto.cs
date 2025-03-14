@@ -7,5 +7,6 @@ namespace Core.Dtos.HolterStudyDtos
         public string MedicationName { get; set; }
         public DateTime AdministrationDateTime { get; set; }
         public string Dosage { get; set; }
+        public int HolterStudyId { get; set; }
     }
 }
