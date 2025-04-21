@@ -29,7 +29,7 @@ import TreatmentDetails from "../../features/patient/treatment/TreatmentDetails"
 import Treatments from "../../features/patient/treatment/Treatments";
 import CardiologySurgery from "../../features/patient/cardiologySurgery/CardiologySurgeriesByPatient";
 import StressTestDetails from "../../features/patient/stressTest/StressTestDetails";
-import StressTest from "../../features/patient/stressTest/StressTests";
+import StressTests from "../../features/patient/stressTest/StressTests";
 import NotFound from "../errors/NotFound";
 import ServerError from "../errors/ServerError";
 import Login from "../../features/account/Login";
@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
             { path: '/holterstudy/patient/:id/holterstudies', element: <HolterStudies /> },
             { path: '/holterstudy/patient/:id/holterstudies/:holterStudyId', element: <HolterStudyDetails /> },
             { path: '/physicalexamination/patient/:id/physicalexaminations', element: <PhysicalExaminations /> },
-            { path: '/physicalexamination/patient/:id/physical-examinations/:physicalExaminationId', element: <PhysicalExaminationDetails /> },
+            { path: '/physicalexamination/patient/:id/physicalexaminations/:physicalExaminationId', element: <PhysicalExaminationDetails /> },
             { path: '/diseasehistory/patient/:id/diseaseshistories', element: <DiseaseHistories /> },
             { path: '/diseasehistory/patient/:id/diseaseshistories/:diseaseHistoryId', element: <DiseaseHistoryDetails /> },
             { path: '/medicalhistory/patient/:id/medicalhistories', element: <MedicalHistories /> },
@@ -68,7 +68,7 @@ export const router = createBrowserRouter([
             { path: '/treatment/patient/:id/treatments', element: <Treatments /> },
             { path: '/treatment/patient/:id/treatments/:treatmentId', element: <TreatmentDetails /> },
             { path: '/cardiologysurgeries/patient/:id/cardiologysurgeries', element: <CardiologySurgery /> },
-            { path: '/stresstest/patient/:id/stresstests', element: <StressTest /> },
+            { path: '/stresstest/patient/:id/stresstests', element: <StressTests /> },
             { path: '/stresstest/patient/:id/stresstests/:stressTestId', element: <StressTestDetails /> },
             { path: 'notes', element: <UserNotes /> },
             { path: 'about', element: <AboutPage /> },

@@ -7,7 +7,8 @@ namespace Core.Dtos.CreateDto
     {
         [Required]
         public DateTime Date { get; set; }
-        public string Time { get; set; }
+        [Required]
+        public string Time { get; set; } = DateTime.Now.ToString("HH:mm");
         [Required]
         public string Duration { get; set; }
         [Required]

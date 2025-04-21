@@ -250,7 +250,9 @@ namespace API.Controllers
                     return BadRequest(new ApiResponse(400, "Problem updating physical examination"));
                 }
 
-                return Ok();
+                var physicalExaminationDto = _mapper.Map<PhysicalExaminationDto>(physicalExamination);
+
+                return Ok(physicalExaminationDto);
             }
             catch (Exception ex)
             {

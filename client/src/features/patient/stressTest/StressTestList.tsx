@@ -44,7 +44,7 @@ export default function StressTestList({ stressTest }: Props) {
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{stressTest.time}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{stressTest.duration}</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{stressTest.maxHeartRate} bpm</TableCell>
-                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{stressTest.peakPressure}mmHg</TableCell>
+                                <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{stressTest.maxBloodPressureSystolic}/{stressTest.maxBloodPressureDiastolic} mmHg</TableCell>
                                 <TableCell sx={{ fontSize: '15px', fontWeight: 300 }} align="right">{stressTest.restingHeartRate} bpm</TableCell>
 
                             </TableRow>

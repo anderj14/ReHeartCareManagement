@@ -2,6 +2,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
+  PayloadAction,
 } from "@reduxjs/toolkit";
 import {
   PhysicalExamination,
@@ -100,6 +101,10 @@ export const physicalExaminationSlice = createSlice({
         ...action.payload,
       };
     },
+    setPhysicalExamination: (state, action) => {
+      physicalExaminationsAdapter.upsertOne(state, action.payload);
+      state.physicalExaminationByPatientLoaded = false;
+    },
     setPageIndex: (state, action) => {
       state.physicalExaminationByPatientLoaded = false;
       state.physicalExaminationParams = {
@@ -112,6 +117,10 @@ export const physicalExaminationSlice = createSlice({
     },
     resetPhysicalExaminationParams: (state) => {
       state.physicalExaminationParams = initParams();
+    },
+    removePhysicalExamination: (state, action) => {
+      physicalExaminationsAdapter.removeOne(state, action.payload);
+      state.physicalExaminationByPatientLoaded = false;
     },
   },
   extraReducers: (builder) => {
@@ -159,7 +168,9 @@ export const physicalExaminationSlice = createSlice({
 
 export const {
   setPhysicalExaminationParams,
+  setPhysicalExamination,
   resetPhysicalExaminationParams,
+  removePhysicalExamination,
   setMetaData,
   setPageIndex,
 } = physicalExaminationSlice.actions;
@@ -167,4 +178,4 @@ export const {
 export const physicalExaminationSelectors =
   physicalExaminationsAdapter.getSelectors(
     (state: RootState) => state.physicalExamination
-  );
+);

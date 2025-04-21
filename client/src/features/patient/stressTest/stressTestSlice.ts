@@ -52,7 +52,7 @@ export const fetchStressTestByPatientAsync = createAsyncThunk<
     try {
       const stressTest = await agent.StressTest.detailsByPatientId(
         patientId,
-        stressTestId
+        stressTestId!
       );
       return stressTest;
     } catch (error: any) {
@@ -88,6 +88,10 @@ export const stressTestSlice = createSlice({
         ...action.payload,
       };
     },
+    setStressTest: (state, action) => {
+      StressTestAdapter.upsertOne(state, action.payload);
+      state.stressTestByPatientLoaded = false;
+    },
     setPageIndex: (state, action) => {
       state.stressTestByPatientLoaded = false;
       state.stressTestParams = {
@@ -101,6 +105,10 @@ export const stressTestSlice = createSlice({
     resetStressTestParams: (state) => {
       state.stressTestParams = initParams();
     },
+    removeStressTest: (state, action) => {
+      StressTestAdapter.removeOne(state, action.payload);
+      state.stressTestByPatientLoaded = false;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchStressTestsByPatientAsync.pending, (state) => {
@@ -141,7 +149,9 @@ export const stressTestSlice = createSlice({
 
 export const {
   setStressTestParams,
+  setStressTest,
   resetStressTestParams,
+  removeStressTest,
   setMetaData,
   setPageIndex,
 } = stressTestSlice.actions;

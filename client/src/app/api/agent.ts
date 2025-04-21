@@ -262,6 +262,11 @@ const PhysicalExamination = {
     requests.get(
       `physicalexamination/patient/${patientId}/physical-examinations/${physicalExaminationId}`
     ),
+  createPhysicalExamination: (physicalExamination: any) =>
+    requests.postForm("physicalexamination", createFormData(physicalExamination)),
+  updatePhysicalExamination: (id: number, physicalExamination: any) =>
+    requests.putForm(`physicalexamination/${id}`, createFormData(physicalExamination)),
+  deletePhysicalExamination: (id: number) => requests.delete(`physicalexamination/${id}`)
 };
 
 const DiseaseHistory = {
@@ -321,6 +326,12 @@ const StressTest = {
     requests.get(`stresstest/patient/${patientId}/stresstests`, params),
   detailsByPatientId: (patientId: number, treatmentId: number) =>
     requests.get(`stresstest/patient/${patientId}/stresstests/${treatmentId}`),
+  createStressTest: (stressTest: any) =>
+    requests.postForm("stresstest", createFormData(stressTest)),
+  updateStressTest: (id: number, stressTest: any) =>
+    requests.putForm(`stresstest/${id}`, createFormData(stressTest)),
+  deleteStressTest: (id: number) =>
+    requests.delete(`stresstest/${id}`),
 };
 
 const TestErrors = {

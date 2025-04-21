@@ -1,5 +1,4 @@
 import { TextField } from "@mui/material";
-import { format } from "date-fns";
 import { Control, useController, UseControllerProps } from "react-hook-form";
 
 interface Props extends UseControllerProps {
@@ -14,20 +13,22 @@ export default function AppTextInput(props: Props) {
     const { fieldState, field } = useController({ ...props, defaultValue: '' });
 
     return (
-        <>
-            <TextField
-                {...props}
-                {...field}
-                multiline={props.multiline}
-                rows={props.rows}
-                type={props.type}
-                fullWidth
-                variant="outlined"
-                error={!!fieldState.error}
-                helperText={fieldState.error?.message}
-                onClick={(e) => e.stopPropagation()}
-                size="small"
-            />
-        </>
-    )
+        <TextField
+            {...props}
+            {...field}
+            multiline={props.multiline}
+            rows={props.rows ?? (props.multiline ? 2 : 1)}
+            type={props.type}
+            fullWidth
+            variant="outlined"
+            error={!!fieldState.error}
+            helperText={fieldState.error?.message}
+            onClick={(e) => e.stopPropagation()}
+            size="small"
+            sx={{
+                minHeight: props.multiline ? "50px" : "auto",
+            }}
+        />
+    );
 }
+            

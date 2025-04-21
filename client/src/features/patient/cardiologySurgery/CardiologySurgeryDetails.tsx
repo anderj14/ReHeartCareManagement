@@ -44,7 +44,6 @@ export default function CardiologySurgeryDetails() {
   const navigate = useNavigate();
 
   
-
   const cardiologySurgery = useAppSelector((state) =>
     surgerySelectors.selectById(state, id)
   );

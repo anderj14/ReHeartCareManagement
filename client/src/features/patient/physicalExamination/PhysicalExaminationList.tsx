@@ -16,7 +16,7 @@ export default function PhysicalExaminationList({ physicalExaminations }: Props)
     const navigate = useNavigate();
 
     const handleRowClick = (physicalExaminationId: string) => {
-        navigate(`/physicalexamination/patient/${patient?.id}/physical-examinations/${physicalExaminationId}`);
+        navigate(`/physicalexamination/patient/${patient?.id}/physicalexaminations/${physicalExaminationId}`);
     };
 
     return (
